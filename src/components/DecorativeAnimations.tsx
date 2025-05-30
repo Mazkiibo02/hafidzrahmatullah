@@ -39,42 +39,44 @@ const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({
     };
   }, []);
 
-  // Generate random positions for stars
+  // Generate realistic starfield
   const generateStars = (count: number) => {
     return Array.from({ length: count }, (_, i) => ({
       id: i,
       left: Math.random() * 100,
       top: Math.random() * 100,
-      animationDelay: Math.random() * 3,
-      size: Math.random() * 2 + 1,
+      animationDelay: Math.random() * 4,
+      size: Math.random() * 1.5 + 0.5,
+      brightness: Math.random() * 0.7 + 0.3,
     }));
   };
 
-  // Generate random positions for birds
+  // Generate clouds for light mode
+  const generateClouds = (count: number) => {
+    return Array.from({ length: count }, (_, i) => ({
+      id: i,
+      top: Math.random() * 40 + 10, // Upper portion of screen
+      animationDelay: Math.random() * 20,
+      animationDuration: Math.random() * 40 + 60, // 60-100 seconds
+      size: Math.random() * 80 + 40, // 40-120px
+      opacity: Math.random() * 0.3 + 0.1, // 0.1-0.4 opacity
+    }));
+  };
+
+  // Generate flying birds
   const generateBirds = (count: number) => {
     return Array.from({ length: count }, (_, i) => ({
       id: i,
-      top: Math.random() * 60 + 10, // Keep birds in upper portion
-      animationDelay: Math.random() * 10,
-      animationDuration: Math.random() * 15 + 20, // 20-35 seconds
+      top: Math.random() * 30 + 15, // Upper portion
+      animationDelay: Math.random() * 15,
+      animationDuration: Math.random() * 20 + 25, // 25-45 seconds
+      size: Math.random() * 0.5 + 0.8, // 0.8-1.3 scale
     }));
   };
 
-  // Generate floating particles for light mode
-  const generateParticles = (count: number) => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      animationDelay: Math.random() * 5,
-      animationDuration: Math.random() * 10 + 8, // 8-18 seconds
-      size: Math.random() * 4 + 2,
-    }));
-  };
-
-  const stars = generateStars(fullBackground ? 50 : 20);
-  const birds = generateBirds(fullBackground ? 4 : 2);
-  const particles = generateParticles(fullBackground ? 15 : 8);
+  const stars = generateStars(fullBackground ? 100 : 40);
+  const clouds = generateClouds(fullBackground ? 6 : 3);
+  const birds = generateBirds(fullBackground ? 5 : 3);
 
   const containerClass = fullBackground 
     ? "fixed inset-0 pointer-events-none z-0" 
@@ -83,91 +85,103 @@ const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({
   return (
     <div className={`${containerClass} ${className}`}>
       {isDarkMode ? (
-        // Dark Mode Animations
+        // Dark Mode - Space Theme
         <>
-          {/* Twinkling Stars */}
+          {/* Realistic Starfield */}
           {stars.map((star) => (
             <div
               key={`star-${star.id}`}
-              className="absolute animate-pulse"
+              className="absolute star-twinkle"
               style={{
                 left: `${star.left}%`,
                 top: `${star.top}%`,
                 animationDelay: `${star.animationDelay}s`,
-                animationDuration: '2s',
+                opacity: star.brightness,
               }}
             >
               <div
-                className="bg-white rounded-full opacity-60"
+                className="bg-white rounded-full"
                 style={{
                   width: `${star.size}px`,
                   height: `${star.size}px`,
+                  boxShadow: `0 0 ${star.size * 2}px rgba(255, 255, 255, ${star.brightness * 0.5})`,
                 }}
               />
             </div>
           ))}
 
-          {/* Satellites */}
-          <div className="satellite-container">
-            <div className="satellite-orbit animate-spin" style={{ animationDuration: '30s' }}>
-              <div className="satellite w-2 h-2 bg-blue-300 rounded-full opacity-70" />
-            </div>
-          </div>
-          <div className="satellite-container-2">
-            <div className="satellite-orbit-2 animate-spin" style={{ animationDuration: '45s' }}>
-              <div className="satellite w-1.5 h-1.5 bg-purple-300 rounded-full opacity-60" />
-            </div>
-          </div>
-
-          {/* Meteors */}
+          {/* Meteors with glowing tails */}
           <div className="meteor meteor-1">
-            <div className="meteor-trail" />
+            <div className="meteor-head" />
+            <div className="meteor-tail" />
           </div>
           <div className="meteor meteor-2">
-            <div className="meteor-trail" />
+            <div className="meteor-head" />
+            <div className="meteor-tail" />
+          </div>
+          <div className="meteor meteor-3">
+            <div className="meteor-head" />
+            <div className="meteor-tail" />
+          </div>
+
+          {/* Subtle orbiting satellite */}
+          <div className="satellite-orbit-container">
+            <div className="satellite-orbit">
+              <div className="satellite-dot" />
+            </div>
           </div>
         </>
       ) : (
-        // Light Mode Animations
+        // Light Mode - Sky Theme
         <>
+          {/* Floating Clouds */}
+          {clouds.map((cloud) => (
+            <div
+              key={`cloud-${cloud.id}`}
+              className="cloud"
+              style={{
+                top: `${cloud.top}%`,
+                animationDelay: `${cloud.animationDelay}s`,
+                animationDuration: `${cloud.animationDuration}s`,
+                width: `${cloud.size}px`,
+                height: `${cloud.size * 0.6}px`,
+                opacity: cloud.opacity,
+              }}
+            />
+          ))}
+
+          {/* Gentle Sun */}
+          <div className="sun-container">
+            <div className="sun-rays" />
+            <div className="sun-core" />
+          </div>
+
           {/* Flying Birds */}
           {birds.map((bird) => (
             <div
               key={`bird-${bird.id}`}
-              className="bird"
+              className="bird-group"
               style={{
                 top: `${bird.top}%`,
                 animationDelay: `${bird.animationDelay}s`,
                 animationDuration: `${bird.animationDuration}s`,
+                transform: `scale(${bird.size})`,
               }}
             >
-              <div className="bird-body">
+              <div className="bird bird-1">
+                <div className="wing wing-left" />
+                <div className="wing wing-right" />
+              </div>
+              <div className="bird bird-2">
+                <div className="wing wing-left" />
+                <div className="wing wing-right" />
+              </div>
+              <div className="bird bird-3">
                 <div className="wing wing-left" />
                 <div className="wing wing-right" />
               </div>
             </div>
           ))}
-
-          {/* Floating Particles */}
-          {particles.map((particle) => (
-            <div
-              key={`particle-${particle.id}`}
-              className="particle"
-              style={{
-                left: `${particle.left}%`,
-                top: `${particle.top}%`,
-                animationDelay: `${particle.animationDelay}s`,
-                animationDuration: `${particle.animationDuration}s`,
-                width: `${particle.size}px`,
-                height: `${particle.size}px`,
-              }}
-            />
-          ))}
-
-          {/* Sun */}
-          <div className="sun">
-            <div className="sun-glow" />
-          </div>
         </>
       )}
     </div>
