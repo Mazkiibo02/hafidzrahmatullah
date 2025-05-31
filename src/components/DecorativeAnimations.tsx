@@ -51,32 +51,33 @@ const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({
     }));
   };
 
-  // Generate clouds for light mode
+  // Generate enhanced clouds for light mode
   const generateClouds = (count: number) => {
     return Array.from({ length: count }, (_, i) => ({
       id: i,
-      top: Math.random() * 40 + 10, // Upper portion of screen
-      animationDelay: Math.random() * 20,
-      animationDuration: Math.random() * 40 + 60, // 60-100 seconds
-      size: Math.random() * 80 + 40, // 40-120px
-      opacity: Math.random() * 0.3 + 0.1, // 0.1-0.4 opacity
+      top: Math.random() * 30 + 10, // Upper portion of screen
+      animationDelay: Math.random() * 25,
+      animationDuration: Math.random() * 50 + 80, // 80-130 seconds for slower movement
+      size: Math.random() * 100 + 60, // 60-160px
+      opacity: Math.random() * 0.4 + 0.2, // 0.2-0.6 opacity
     }));
   };
 
-  // Generate flying birds
-  const generateBirds = (count: number) => {
+  // Generate bird flocks with natural grouping
+  const generateBirdFlocks = (count: number) => {
     return Array.from({ length: count }, (_, i) => ({
       id: i,
-      top: Math.random() * 30 + 15, // Upper portion
-      animationDelay: Math.random() * 15,
-      animationDuration: Math.random() * 20 + 25, // 25-45 seconds
-      size: Math.random() * 0.5 + 0.8, // 0.8-1.3 scale
+      top: Math.random() * 25 + 15, // Upper portion
+      animationDelay: Math.random() * 20 + i * 8, // Stagger flocks more
+      animationDuration: Math.random() * 15 + 30, // 30-45 seconds
+      size: Math.random() * 0.3 + 0.9, // 0.9-1.2 scale
+      flockOffset: Math.random() * 10 + 5, // Vertical spacing between birds
     }));
   };
 
   const stars = generateStars(fullBackground ? 100 : 40);
-  const clouds = generateClouds(fullBackground ? 6 : 3);
-  const birds = generateBirds(fullBackground ? 5 : 3);
+  const clouds = generateClouds(fullBackground ? 8 : 4);
+  const birdFlocks = generateBirdFlocks(fullBackground ? 4 : 2);
 
   const containerClass = fullBackground 
     ? "fixed inset-0 pointer-events-none z-0" 
@@ -132,53 +133,76 @@ const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({
           </div>
         </>
       ) : (
-        // Light Mode - Sky Theme
+        // Light Mode - Enhanced Daytime Sky Theme
         <>
-          {/* Floating Clouds */}
+          {/* Enhanced Floating Clouds */}
           {clouds.map((cloud) => (
             <div
               key={`cloud-${cloud.id}`}
-              className="cloud"
+              className="cloud-enhanced"
               style={{
                 top: `${cloud.top}%`,
                 animationDelay: `${cloud.animationDelay}s`,
                 animationDuration: `${cloud.animationDuration}s`,
                 width: `${cloud.size}px`,
-                height: `${cloud.size * 0.6}px`,
+                height: `${cloud.size * 0.5}px`,
                 opacity: cloud.opacity,
               }}
             />
           ))}
 
-          {/* Gentle Sun */}
-          <div className="sun-container">
-            <div className="sun-rays" />
-            <div className="sun-core" />
+          {/* Enhanced Sun with natural glow */}
+          <div className="sun-container-enhanced">
+            <div className="sun-rays-outer" />
+            <div className="sun-rays-inner" />
+            <div className="sun-core-enhanced" />
           </div>
 
-          {/* Flying Birds */}
-          {birds.map((bird) => (
+          {/* Natural Bird Flocks */}
+          {birdFlocks.map((flock) => (
             <div
-              key={`bird-${bird.id}`}
-              className="bird-group"
+              key={`flock-${flock.id}`}
+              className="bird-flock"
               style={{
-                top: `${bird.top}%`,
-                animationDelay: `${bird.animationDelay}s`,
-                animationDuration: `${bird.animationDuration}s`,
-                transform: `scale(${bird.size})`,
+                top: `${flock.top}%`,
+                animationDelay: `${flock.animationDelay}s`,
+                animationDuration: `${flock.animationDuration}s`,
+                transform: `scale(${flock.size})`,
               }}
             >
-              <div className="bird bird-1">
-                <div className="wing wing-left" />
-                <div className="wing wing-right" />
+              {/* Lead bird */}
+              <div className="bird-natural bird-lead">
+                <div className="wing-natural wing-left" />
+                <div className="wing-natural wing-right" />
+                <div className="bird-body" />
               </div>
-              <div className="bird bird-2">
-                <div className="wing wing-left" />
-                <div className="wing wing-right" />
+              
+              {/* Following birds in V formation */}
+              <div 
+                className="bird-natural bird-follow-1"
+                style={{ top: `${flock.flockOffset}px` }}
+              >
+                <div className="wing-natural wing-left" />
+                <div className="wing-natural wing-right" />
+                <div className="bird-body" />
               </div>
-              <div className="bird bird-3">
-                <div className="wing wing-left" />
-                <div className="wing wing-right" />
+              
+              <div 
+                className="bird-natural bird-follow-2"
+                style={{ top: `-${flock.flockOffset}px` }}
+              >
+                <div className="wing-natural wing-left" />
+                <div className="wing-natural wing-right" />
+                <div className="bird-body" />
+              </div>
+              
+              <div 
+                className="bird-natural bird-follow-3"
+                style={{ top: `${flock.flockOffset * 1.5}px` }}
+              >
+                <div className="wing-natural wing-left" />
+                <div className="wing-natural wing-right" />
+                <div className="bird-body" />
               </div>
             </div>
           ))}
