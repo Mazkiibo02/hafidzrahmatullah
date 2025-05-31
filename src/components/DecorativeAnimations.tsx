@@ -13,29 +13,71 @@ const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    // Check initial theme
+    // Check initial theme more reliably
     const checkTheme = () => {
-      const isDark = document.documentElement.classList.contains('dark') ||
-                    window.matchMedia('(prefers-color-scheme: dark)').matches;
-      setIsDarkMode(isDark);
+      // First check if dark class is explicitly set
+      const hasDarkClass = document.documentElement.classList.contains('dark');
+      
+      // If no explicit dark class, check localStorage and system preference
+      if (!hasDarkClass) {
+        const storedTheme = localStorage.getItem('darkMode');
+        if (storedTheme === 'true') {
+          setIsDarkMode(true);
+          return;
+        } else if (storedTheme === 'false') {
+          setIsDarkMode(false);
+          return;
+        }
+        
+        // Fall back to system preference only if no stored preference
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        setIsDarkMode(systemPrefersDark);
+      } else {
+        setIsDarkMode(true);
+      }
     };
 
+    // Set initial theme immediately
     checkTheme();
 
-    // Listen for theme changes
-    const observer = new MutationObserver(checkTheme);
+    // Listen for theme changes on document element
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+          const isDark = document.documentElement.classList.contains('dark');
+          setIsDarkMode(isDark);
+        }
+      });
+    });
+
     observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['class']
     });
 
-    // Listen for system theme changes
+    // Listen for localStorage changes (for when theme is changed in navbar)
+    const handleStorageChange = () => {
+      checkTheme();
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+
+    // Listen for system theme changes as backup
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    mediaQuery.addEventListener('change', checkTheme);
+    const handleMediaChange = () => {
+      // Only use system preference if no explicit theme is set
+      const storedTheme = localStorage.getItem('darkMode');
+      if (!storedTheme) {
+        setIsDarkMode(mediaQuery.matches);
+      }
+    };
+
+    mediaQuery.addEventListener('change', handleMediaChange);
 
     return () => {
       observer.disconnect();
-      mediaQuery.removeEventListener('change', checkTheme);
+      window.removeEventListener('storage', handleStorageChange);
+      mediaQuery.removeEventListener('change', handleMediaChange);
     };
   }, []);
 
