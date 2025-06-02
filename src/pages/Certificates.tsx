@@ -1,6 +1,6 @@
-
 import React from 'react';
 import { Award, Calendar, ExternalLink, Download } from 'lucide-react';
+import ChromaGrid from '../components/animations/ChromaGrid';
 
 const Certificates = () => {
   const certificates = [
@@ -149,76 +149,75 @@ const Certificates = () => {
           </div>
         </div>
 
-        {/* Certificates Grid */}
+        {/* Certificates Grid with ChromaGrid Animation */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredCertificates.map((certificate) => (
-            <div
-              key={certificate.id}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group"
-            >
-              {/* Certificate Image */}
-              <div className="relative h-48 overflow-hidden">
-                <img
-                  src={certificate.image}
-                  alt={certificate.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-                <div className="absolute top-4 right-4">
-                  {certificate.verified && (
-                    <div className="bg-green-500 text-white p-2 rounded-full">
-                      <Award size={16} />
+          {filteredCertificates.map((certificate, index) => (
+            <ChromaGrid key={certificate.id} index={index}>
+              <div className="h-full overflow-hidden">
+                {/* Certificate Image */}
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={certificate.image}
+                    alt={certificate.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute top-4 right-4">
+                    {certificate.verified && (
+                      <div className="bg-green-500 text-white p-2 rounded-full">
+                        <Award size={16} />
+                      </div>
+                    )}
+                  </div>
+                  <div className="absolute top-4 left-4">
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(certificate.category)}`}>
+                      {certificate.category}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Certificate Content */}
+                <div className="p-6">
+                  <div className="mb-4">
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                      {certificate.title}
+                    </h3>
+                    <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm mb-2">
+                      <Calendar size={16} className="mr-2" />
+                      {certificate.date} • {certificate.issuer}
                     </div>
-                  )}
-                </div>
-                <div className="absolute top-4 left-4">
-                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getCategoryColor(certificate.category)}`}>
-                    {certificate.category}
-                  </span>
-                </div>
-              </div>
-
-              {/* Certificate Content */}
-              <div className="p-6">
-                <div className="mb-4">
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                    {certificate.title}
-                  </h3>
-                  <div className="flex items-center text-gray-600 dark:text-gray-400 text-sm mb-2">
-                    <Calendar size={16} className="mr-2" />
-                    {certificate.date} • {certificate.issuer}
+                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                      {certificate.description}
+                    </p>
                   </div>
-                  <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                    {certificate.description}
-                  </p>
-                </div>
 
-                {/* Skills */}
-                <div className="mb-6">
-                  <div className="flex flex-wrap gap-2">
-                    {certificate.skills.map((skill, index) => (
-                      <span
-                        key={index}
-                        className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded"
-                      >
-                        {skill}
-                      </span>
-                    ))}
+                  {/* Skills */}
+                  <div className="mb-6">
+                    <div className="flex flex-wrap gap-2">
+                      {certificate.skills.map((skill, index) => (
+                        <span
+                          key={index}
+                          className="px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 text-xs rounded"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="flex gap-3">
+                    <button className="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
+                      <ExternalLink size={16} className="mr-2" />
+                      View
+                    </button>
+                    <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                      <Download size={16} className="mr-2" />
+                      Download
+                    </button>
                   </div>
                 </div>
-
-                {/* Action Buttons */}
-                <div className="flex gap-3">
-                  <button className="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors">
-                    <ExternalLink size={16} className="mr-2" />
-                    View
-                  </button>
-                  <button className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
-                    <Download size={16} className="mr-2" />
-                    Download
-                  </button>
-                </div>
               </div>
-            </div>
+            </ChromaGrid>
           ))}
         </div>
 

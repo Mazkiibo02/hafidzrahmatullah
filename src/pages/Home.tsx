@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Download, Code, Smartphone, Shield } from 'lucide-react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
 import ProfileImageUpload from '../components/ProfileImageUpload';
+import ProfileCard from '../components/animations/ProfileCard';
+import TrueFocus from '../components/animations/TrueFocus';
 import { useProfile } from '../hooks/useProfile';
 
 const Home = () => {
@@ -21,9 +23,10 @@ const Home = () => {
             {/* Left Content */}
             <div className="space-y-8 animate-fade-in">
               <div className="space-y-4">
-                <h1 className="text-5xl lg:text-7xl font-bold text-gray-900 dark:text-white">
-                  Rachmaninov
-                </h1>
+                <TrueFocus 
+                  text="Hafidz Rahmatullah"
+                  className="text-5xl lg:text-7xl font-bold text-gray-900 dark:text-white"
+                />
                 <p className="text-xl lg:text-2xl text-gray-600 dark:text-gray-300 leading-relaxed">
                   Mahasiswa Teknik Informatika yang tertarik pada Web, Mobile, dan Cybersecurity
                 </p>
@@ -64,7 +67,7 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Right Content - Profile Image with Upload */}
+            {/* Right Content - Profile Image with Upload and Animation */}
             <div className="relative flex justify-center lg:justify-end">
               <div className="relative">
                 {loading ? (
@@ -74,11 +77,13 @@ const Home = () => {
                     </div>
                   </div>
                 ) : (
-                  <ProfileImageUpload
-                    currentImageUrl={profile?.profile_image_url}
-                    onImageUpdate={updateProfileImage}
-                    size="lg"
-                  />
+                  <ProfileCard>
+                    <ProfileImageUpload
+                      currentImageUrl={profile?.profile_image_url}
+                      onImageUpdate={updateProfileImage}
+                      size="lg"
+                    />
+                  </ProfileCard>
                 )}
                 
                 {/* Floating elements */}
