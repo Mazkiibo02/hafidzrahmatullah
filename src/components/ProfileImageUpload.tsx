@@ -82,19 +82,10 @@ const ProfileImageUpload: React.FC<ProfileImageUploadProps> = ({
         .from('profile-images')
         .getPublicUrl(filePath);
 
-      // Update profile in database
-      const { error: updateError } = await supabase
-        .from('profiles')
-        .upsert({
-          id: 'temp-user-id', // In a real app, this would be the authenticated user's ID
-          profile_image_url: publicUrl,
-          updated_at: new Date().toISOString()
-        });
-
-      if (updateError) {
-        console.warn('Could not update profile in database:', updateError);
-      }
-
+      // For now, just update the local state since we don't have the database table yet
+      // Once the migration is run, this can be updated to store in the database
+      console.log('Profile image uploaded:', publicUrl);
+      
       onImageUpdate(publicUrl);
       setShowUploadOverlay(false);
       
