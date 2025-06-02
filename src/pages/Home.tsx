@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Download, Code, Smartphone, Shield } from 'lucide-react';
@@ -26,6 +25,7 @@ const Home = () => {
                 <TrueFocus 
                   text="Hafidz Rahmatullah"
                   className="text-5xl lg:text-7xl font-bold text-gray-900 dark:text-white"
+                  enableHover={true}
                 />
                 <p className="text-xl lg:text-2xl text-gray-600 dark:text-gray-300 leading-relaxed">
                   Mahasiswa Teknik Informatika yang tertarik pada Web, Mobile, dan Cybersecurity
@@ -106,9 +106,11 @@ const Home = () => {
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-gray-800/50 relative z-10">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-              Area of Interest
-            </h2>
+            <TrueFocus 
+              text="Area of Interest"
+              className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4"
+              enableHover={true}
+            />
             <p className="text-lg text-gray-600 dark:text-gray-300">
               Exploring the frontiers of technology
             </p>

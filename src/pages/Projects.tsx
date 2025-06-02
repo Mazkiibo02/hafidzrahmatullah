@@ -1,6 +1,7 @@
 import React from 'react';
 import { ExternalLink, Github, Code, Smartphone, Globe, Shield } from 'lucide-react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
+import TrueFocus from '../components/animations/TrueFocus';
 
 const Projects = () => {
   const projects = [
@@ -92,9 +93,11 @@ const Projects = () => {
         <div className="text-center mb-16 relative h-32 overflow-hidden">
           <DecorativeAnimations />
           <div className="relative z-10">
-            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              My Projects
-            </h1>
+            <TrueFocus 
+              text="My Projects"
+              className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4"
+              enableHover={true}
+            />
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               A showcase of my technical projects spanning web development, mobile apps, cybersecurity, and more
             </p>

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, Github, Linkedin, Instagram } from 'lucide-react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
+import TrueFocus from '../components/animations/TrueFocus';
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -32,9 +33,11 @@ const Contact = () => {
         <div className="text-center mb-16 relative h-32 overflow-hidden">
           <DecorativeAnimations />
           <div className="relative z-10">
-            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Get In Touch
-            </h1>
+            <TrueFocus 
+              text="Get In Touch"
+              className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4"
+              enableHover={true}
+            />
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               I'm always open to discussing new opportunities, collaborations, or just having a chat about technology
             </p>
@@ -45,9 +48,11 @@ const Contact = () => {
           {/* Contact Information */}
           <div className="lg:col-span-1 space-y-8">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                Contact Information
-              </h2>
+              <TrueFocus 
+                text="Contact Information"
+                className="text-2xl font-bold text-gray-900 dark:text-white mb-6"
+                enableHover={true}
+              />
               
               <div className="space-y-6">
                 <div className="flex items-start">
@@ -84,9 +89,11 @@ const Contact = () => {
 
             {/* Social Links */}
             <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                Social Media
-              </h2>
+              <TrueFocus 
+                text="Social Media"
+                className="text-2xl font-bold text-gray-900 dark:text-white mb-6"
+                enableHover={true}
+              />
               
               <div className="space-y-4">
                 <a
@@ -137,9 +144,11 @@ const Contact = () => {
           {/* Contact Form */}
           <div className="lg:col-span-2">
             <div className="bg-white dark:bg-gray-800 rounded-xl p-8 shadow-lg">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
-                Send me a message
-              </h2>
+              <TrueFocus 
+                text="Send me a message"
+                className="text-2xl font-bold text-gray-900 dark:text-white mb-6"
+                enableHover={true}
+              />
 
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

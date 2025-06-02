@@ -1,6 +1,7 @@
 import React from 'react';
 import { Code, Database, Smartphone, Shield, Globe, Cpu } from 'lucide-react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
+import TrueFocus from '../components/animations/TrueFocus';
 
 const Skills = () => {
   const skillCategories = [
@@ -124,9 +125,11 @@ const Skills = () => {
         <div className="text-center mb-16 relative h-32 overflow-hidden">
           <DecorativeAnimations />
           <div className="relative z-10">
-            <h1 className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-              Technical Skills
-            </h1>
+            <TrueFocus 
+              text="Technical Skills"
+              className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4"
+              enableHover={true}
+            />
             <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
               A comprehensive overview of my technical expertise across various domains
             </p>
@@ -135,9 +138,11 @@ const Skills = () => {
 
         {/* Programming Languages */}
         <div className="mb-16">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">
-            Programming Languages
-          </h2>
+          <TrueFocus 
+            text="Programming Languages"
+            className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center"
+            enableHover={true}
+          />
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {languages.map((language) => (
               <div key={language.name} className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg">
@@ -205,7 +210,11 @@ const Skills = () => {
 
         {/* Additional Skills */}
         <div className="mt-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl p-8 text-white">
-          <h2 className="text-2xl font-bold mb-6 text-center">Additional Competencies</h2>
+          <TrueFocus 
+            text="Additional Competencies"
+            className="text-2xl font-bold mb-6 text-center text-white"
+            enableHover={true}
+          />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
               <div className="text-3xl font-bold">15+</div>
