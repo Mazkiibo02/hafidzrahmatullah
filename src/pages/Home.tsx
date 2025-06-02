@@ -1,9 +1,14 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Download, Code, Smartphone, Shield } from 'lucide-react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
+import ProfileImageUpload from '../components/ProfileImageUpload';
+import { useProfile } from '../hooks/useProfile';
 
 const Home = () => {
+  const { profile, loading, updateProfileImage } = useProfile();
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative">
       {/* Full Background Animations */}
@@ -59,18 +64,23 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Right Content - Profile Image */}
+            {/* Right Content - Profile Image with Upload */}
             <div className="relative flex justify-center lg:justify-end">
               <div className="relative">
-                <div className="w-80 h-80 rounded-full bg-gradient-to-br from-blue-400 to-purple-600 p-1">
-                  <div className="w-full h-full rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                    <img
-                      src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face"
-                      alt="Rachmaninov"
-                      className="w-full h-full rounded-full object-cover"
-                    />
+                {loading ? (
+                  <div className="w-80 h-80 rounded-full bg-gradient-to-br from-blue-400 to-purple-600 p-1">
+                    <div className="w-full h-full rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                    </div>
                   </div>
-                </div>
+                ) : (
+                  <ProfileImageUpload
+                    currentImageUrl={profile?.profile_image_url}
+                    onImageUpdate={updateProfileImage}
+                    size="lg"
+                  />
+                )}
+                
                 {/* Floating elements */}
                 <div className="absolute -top-4 -right-4 bg-blue-500 text-white p-3 rounded-lg shadow-lg animate-pulse">
                   <Code size={24} />
