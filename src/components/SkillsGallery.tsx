@@ -22,19 +22,19 @@ const SkillsGallery: React.FC<SkillsGalleryProps> = ({
 }) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
-  const [userInteracted, setUserInteracted] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const [scrollDirection, setScrollDirection] = useState(direction);
   const animationRef = useRef<number>();
+  const dragStart = useRef<{ x: number; scrollLeft: number } | null>(null);
 
   useEffect(() => {
     const scrollContainer = scrollRef.current;
     if (!scrollContainer) return;
 
-    let lastScrollLeft = scrollContainer.scrollLeft;
     let animationSpeed = speed;
 
     const animate = () => {
-      if (!isHovered && scrollContainer) {
+      if (!isHovered && !isDragging && scrollContainer) {
         if (scrollDirection === 'left') {
           scrollContainer.scrollLeft += animationSpeed / 60;
           
@@ -54,25 +54,73 @@ const SkillsGallery: React.FC<SkillsGalleryProps> = ({
       animationRef.current = requestAnimationFrame(animate);
     };
 
-    const handleScroll = () => {
-      if (!userInteracted) return;
+    const handleMouseDown = (e: MouseEvent) => {
+      setIsDragging(true);
+      dragStart.current = {
+        x: e.pageX - scrollContainer.offsetLeft,
+        scrollLeft: scrollContainer.scrollLeft
+      };
+    };
+
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isDragging || !dragStart.current) return;
+      e.preventDefault();
       
-      const currentScrollLeft = scrollContainer.scrollLeft;
-      if (currentScrollLeft > lastScrollLeft) {
-        setScrollDirection('right');
-      } else if (currentScrollLeft < lastScrollLeft) {
+      const x = e.pageX - scrollContainer.offsetLeft;
+      const walk = (x - dragStart.current.x) * 2;
+      const newScrollLeft = dragStart.current.scrollLeft - walk;
+      
+      scrollContainer.scrollLeft = newScrollLeft;
+      
+      // Determine scroll direction based on movement
+      if (walk > 0) {
         setScrollDirection('left');
+      } else if (walk < 0) {
+        setScrollDirection('right');
       }
-      lastScrollLeft = currentScrollLeft;
     };
 
-    const handleUserInteraction = () => {
-      setUserInteracted(true);
+    const handleMouseUp = () => {
+      setIsDragging(false);
+      dragStart.current = null;
     };
 
-    scrollContainer.addEventListener('scroll', handleScroll);
-    scrollContainer.addEventListener('touchstart', handleUserInteraction);
-    scrollContainer.addEventListener('mousedown', handleUserInteraction);
+    const handleTouchStart = (e: TouchEvent) => {
+      setIsDragging(true);
+      dragStart.current = {
+        x: e.touches[0].pageX - scrollContainer.offsetLeft,
+        scrollLeft: scrollContainer.scrollLeft
+      };
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!isDragging || !dragStart.current) return;
+      
+      const x = e.touches[0].pageX - scrollContainer.offsetLeft;
+      const walk = (x - dragStart.current.x) * 2;
+      const newScrollLeft = dragStart.current.scrollLeft - walk;
+      
+      scrollContainer.scrollLeft = newScrollLeft;
+      
+      // Determine scroll direction based on movement
+      if (walk > 0) {
+        setScrollDirection('left');
+      } else if (walk < 0) {
+        setScrollDirection('right');
+      }
+    };
+
+    const handleTouchEnd = () => {
+      setIsDragging(false);
+      dragStart.current = null;
+    };
+
+    scrollContainer.addEventListener('mousedown', handleMouseDown);
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+    scrollContainer.addEventListener('touchstart', handleTouchStart);
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleTouchEnd);
 
     animationRef.current = requestAnimationFrame(animate);
 
@@ -80,14 +128,20 @@ const SkillsGallery: React.FC<SkillsGalleryProps> = ({
       if (animationRef.current) {
         cancelAnimationFrame(animationRef.current);
       }
-      scrollContainer.removeEventListener('scroll', handleScroll);
-      scrollContainer.removeEventListener('touchstart', handleUserInteraction);
-      scrollContainer.removeEventListener('mousedown', handleUserInteraction);
+      scrollContainer.removeEventListener('mousedown', handleMouseDown);
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+      scrollContainer.removeEventListener('touchstart', handleTouchStart);
+      document.removeEventListener('touchmove', handleTouchMove);
+      document.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [isHovered, scrollDirection, speed, userInteracted]);
+  }, [isHovered, isDragging, scrollDirection, speed]);
 
-  // Duplicate skills for seamless loop
-  const duplicatedSkills = [...skills, ...skills];
+  // Remove duplicates and create seamless loop
+  const uniqueSkills = skills.filter((skill, index, self) => 
+    index === self.findIndex(s => s.name === skill.name)
+  );
+  const duplicatedSkills = [...uniqueSkills, ...uniqueSkills];
 
   return (
     <div className="mb-12">
@@ -101,10 +155,11 @@ const SkillsGallery: React.FC<SkillsGalleryProps> = ({
       >
         <div
           ref={scrollRef}
-          className="flex gap-8 overflow-x-hidden scrollbar-hide py-4"
+          className={`flex gap-8 overflow-x-hidden scrollbar-hide py-4 ${isDragging ? 'cursor-grabbing' : 'cursor-grab'}`}
           style={{
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
+            userSelect: 'none'
           }}
         >
           {duplicatedSkills.map((skill, index) => (
@@ -113,7 +168,7 @@ const SkillsGallery: React.FC<SkillsGalleryProps> = ({
               className="flex-shrink-0 flex flex-col items-center group cursor-pointer"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: (index % skills.length) * 0.1 }}
+              transition={{ delay: (index % uniqueSkills.length) * 0.1 }}
               whileHover={{ scale: 1.1 }}
             >
               <div className="w-16 h-16 mb-3 bg-white dark:bg-gray-800 rounded-xl shadow-lg flex items-center justify-center group-hover:shadow-xl transition-all duration-300 border border-gray-200 dark:border-gray-700">

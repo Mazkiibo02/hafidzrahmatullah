@@ -1,11 +1,10 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Download, Code, Smartphone, Shield } from 'lucide-react';
-import { Facebook, Github, Instagram, Linkedin, Twitter, Youtube } from 'lucide-react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
 import ProfileCard from '../components/animations/ProfileCard';
 import TrueFocus from '../components/animations/TrueFocus';
-import GlassIcon from '../components/animations/GlassIcon';
 import { useProfile } from '../hooks/useProfile';
 import { useDataCounts } from '../hooks/useDataCounts';
 
@@ -66,36 +65,6 @@ const Home = () => {
                 <div className="text-center">
                   <div className="text-3xl font-bold text-green-600 dark:text-green-400">{skillsCount}+</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">Skills</div>
-                </div>
-              </div>
-
-              {/* Social Media Icons */}
-              <div className="pt-8">
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Connect with me</h3>
-                <div className="flex flex-wrap gap-4">
-                  <GlassIcon href="https://github.com">
-                    <Github className="text-gray-700 dark:text-gray-300" size={24} />
-                  </GlassIcon>
-                  <GlassIcon href="https://linkedin.com">
-                    <Linkedin className="text-blue-600 dark:text-blue-400" size={24} />
-                  </GlassIcon>
-                  <GlassIcon href="https://instagram.com">
-                    <Instagram className="text-pink-600 dark:text-pink-400" size={24} />
-                  </GlassIcon>
-                  <GlassIcon href="https://facebook.com">
-                    <Facebook className="text-blue-700 dark:text-blue-500" size={24} />
-                  </GlassIcon>
-                  <GlassIcon href="https://medium.com">
-                    <div className="w-6 h-6 bg-gray-800 dark:bg-gray-200 rounded-sm flex items-center justify-center">
-                      <span className="text-white dark:text-gray-800 text-xs font-bold">M</span>
-                    </div>
-                  </GlassIcon>
-                  <GlassIcon href="https://youtube.com">
-                    <Youtube className="text-red-600 dark:text-red-400" size={24} />
-                  </GlassIcon>
-                  <GlassIcon href="https://twitter.com">
-                    <Twitter className="text-blue-500 dark:text-blue-400" size={24} />
-                  </GlassIcon>
                 </div>
               </div>
             </div>

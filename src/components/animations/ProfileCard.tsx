@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Phone } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface ProfileCardProps {
@@ -81,27 +81,19 @@ const ProfileCard: React.FC<ProfileCardProps> = ({
               </motion.p>
             </div>
 
-            {/* Action Buttons */}
+            {/* Contact Button */}
             <motion.div 
-              className="flex space-x-4 w-full"
+              className="w-full"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
             >
               <Link
                 to="/contact"
-                className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold text-center hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2"
+                className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-3 px-4 rounded-xl font-semibold text-center hover:from-blue-700 hover:to-purple-700 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2"
               >
                 <Mail size={18} />
                 <span>Contact</span>
-              </Link>
-              
-              <Link
-                to="/contact"
-                className="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white py-3 px-4 rounded-xl font-semibold text-center hover:bg-gray-200 dark:hover:bg-gray-600 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center space-x-2"
-              >
-                <Phone size={18} />
-                <span>Call</span>
               </Link>
             </motion.div>
           </div>
