@@ -1,10 +1,8 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Download, Code, Smartphone, Shield } from 'lucide-react';
 import { Facebook, Github, Instagram, Linkedin, Twitter, Youtube } from 'lucide-react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
-import ProfileImageUpload from '../components/ProfileImageUpload';
 import ProfileCard from '../components/animations/ProfileCard';
 import TrueFocus from '../components/animations/TrueFocus';
 import GlassIcon from '../components/animations/GlassIcon';
@@ -12,7 +10,7 @@ import { useProfile } from '../hooks/useProfile';
 import { useDataCounts } from '../hooks/useDataCounts';
 
 const Home = () => {
-  const { profile, loading, updateProfileImage } = useProfile();
+  const { profile, loading } = useProfile();
   const { projectsCount, certificatesCount, skillsCount } = useDataCounts();
 
   return (
@@ -102,36 +100,21 @@ const Home = () => {
               </div>
             </div>
 
-            {/* Right Content - Profile Image with Upload and Animation */}
+            {/* Right Content - Profile Card */}
             <div className="relative flex justify-center lg:justify-end">
-              <div className="relative">
-                {loading ? (
-                  <div className="w-80 h-80 rounded-full bg-gradient-to-br from-blue-400 to-purple-600 p-1">
-                    <div className="w-full h-full rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
-                    </div>
+              {loading ? (
+                <div className="w-80 h-96 rounded-3xl bg-gradient-to-br from-blue-400 to-purple-600 p-1">
+                  <div className="w-full h-full rounded-3xl bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
                   </div>
-                ) : (
-                  <ProfileCard>
-                    <ProfileImageUpload
-                      currentImageUrl={profile?.profile_image_url}
-                      onImageUpdate={updateProfileImage}
-                      size="lg"
-                    />
-                  </ProfileCard>
-                )}
-                
-                {/* Floating elements */}
-                <div className="absolute -top-4 -right-4 bg-blue-500 text-white p-3 rounded-lg shadow-lg animate-pulse">
-                  <Code size={24} />
                 </div>
-                <div className="absolute -bottom-4 -left-4 bg-purple-500 text-white p-3 rounded-lg shadow-lg animate-pulse">
-                  <Smartphone size={24} />
-                </div>
-                <div className="absolute top-1/2 -right-8 bg-green-500 text-white p-3 rounded-lg shadow-lg animate-pulse">
-                  <Shield size={24} />
-                </div>
-              </div>
+              ) : (
+                <ProfileCard
+                  imageUrl={profile?.profile_image_url}
+                  name={profile?.full_name || "Hafidz Rahmatullah"}
+                  role="Teknik Informatika Student"
+                />
+              )}
             </div>
           </div>
         </div>
