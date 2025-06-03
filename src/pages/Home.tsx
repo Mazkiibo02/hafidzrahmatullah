@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Download, Code, Smartphone, Shield } from 'lucide-react';
-import { Facebook, Github, Instagram, Linkedin, Medium, Twitter, Youtube } from 'lucide-react';
+import { Facebook, Github, Instagram, Linkedin, Twitter, Youtube } from 'lucide-react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
 import ProfileImageUpload from '../components/ProfileImageUpload';
 import ProfileCard from '../components/animations/ProfileCard';
@@ -88,7 +88,9 @@ const Home = () => {
                     <Facebook className="text-blue-700 dark:text-blue-500" size={24} />
                   </GlassIcon>
                   <GlassIcon href="https://medium.com">
-                    <Medium className="text-gray-800 dark:text-gray-200" size={24} />
+                    <div className="w-6 h-6 bg-gray-800 dark:bg-gray-200 rounded-sm flex items-center justify-center">
+                      <span className="text-white dark:text-gray-800 text-xs font-bold">M</span>
+                    </div>
                   </GlassIcon>
                   <GlassIcon href="https://youtube.com">
                     <Youtube className="text-red-600 dark:text-red-400" size={24} />
