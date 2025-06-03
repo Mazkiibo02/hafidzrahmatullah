@@ -1,6 +1,6 @@
 import React from 'react';
 import { Award, Calendar, ExternalLink, Download } from 'lucide-react';
-import ChromaGrid from '../components/animations/ChromaGrid';
+import TiltedCard from '../components/animations/TiltedCard';
 
 const Certificates = () => {
   const certificates = [
@@ -149,11 +149,11 @@ const Certificates = () => {
           </div>
         </div>
 
-        {/* Certificates Grid with ChromaGrid Animation */}
+        {/* Certificates Grid with TiltedCard Animation */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {filteredCertificates.map((certificate, index) => (
-            <ChromaGrid key={certificate.id} index={index}>
-              <div className="h-full overflow-hidden">
+            <TiltedCard key={certificate.id} className="h-full">
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full">
                 {/* Certificate Image */}
                 <div className="relative h-48 overflow-hidden">
                   <img
@@ -217,7 +217,7 @@ const Certificates = () => {
                   </div>
                 </div>
               </div>
-            </ChromaGrid>
+            </TiltedCard>
           ))}
         </div>
 

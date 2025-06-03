@@ -1,14 +1,19 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Download, Code, Smartphone, Shield } from 'lucide-react';
+import { Facebook, Github, Instagram, Linkedin, Medium, Twitter, Youtube } from 'lucide-react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
 import ProfileImageUpload from '../components/ProfileImageUpload';
 import ProfileCard from '../components/animations/ProfileCard';
 import TrueFocus from '../components/animations/TrueFocus';
+import GlassIcon from '../components/animations/GlassIcon';
 import { useProfile } from '../hooks/useProfile';
+import { useDataCounts } from '../hooks/useDataCounts';
 
 const Home = () => {
   const { profile, loading, updateProfileImage } = useProfile();
+  const { projectsCount, certificatesCount, skillsCount } = useDataCounts();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative">
@@ -53,16 +58,44 @@ const Home = () => {
               {/* Quick Stats */}
               <div className="grid grid-cols-3 gap-6 pt-8">
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">10+</div>
+                  <div className="text-3xl font-bold text-blue-600 dark:text-blue-400">{projectsCount}+</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">Projects</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">5+</div>
+                  <div className="text-3xl font-bold text-purple-600 dark:text-purple-400">{certificatesCount}+</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">Certificates</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-bold text-green-600 dark:text-green-400">15+</div>
+                  <div className="text-3xl font-bold text-green-600 dark:text-green-400">{skillsCount}+</div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">Skills</div>
+                </div>
+              </div>
+
+              {/* Social Media Icons */}
+              <div className="pt-8">
+                <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Connect with me</h3>
+                <div className="flex flex-wrap gap-4">
+                  <GlassIcon href="https://github.com">
+                    <Github className="text-gray-700 dark:text-gray-300" size={24} />
+                  </GlassIcon>
+                  <GlassIcon href="https://linkedin.com">
+                    <Linkedin className="text-blue-600 dark:text-blue-400" size={24} />
+                  </GlassIcon>
+                  <GlassIcon href="https://instagram.com">
+                    <Instagram className="text-pink-600 dark:text-pink-400" size={24} />
+                  </GlassIcon>
+                  <GlassIcon href="https://facebook.com">
+                    <Facebook className="text-blue-700 dark:text-blue-500" size={24} />
+                  </GlassIcon>
+                  <GlassIcon href="https://medium.com">
+                    <Medium className="text-gray-800 dark:text-gray-200" size={24} />
+                  </GlassIcon>
+                  <GlassIcon href="https://youtube.com">
+                    <Youtube className="text-red-600 dark:text-red-400" size={24} />
+                  </GlassIcon>
+                  <GlassIcon href="https://twitter.com">
+                    <Twitter className="text-blue-500 dark:text-blue-400" size={24} />
+                  </GlassIcon>
                 </div>
               </div>
             </div>
