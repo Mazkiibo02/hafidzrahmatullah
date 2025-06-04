@@ -5,12 +5,22 @@ import { ArrowRight, Download, Code, Smartphone, Shield } from 'lucide-react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
 import ProfileCard from '../components/animations/ProfileCard';
 import TrueFocus from '../components/animations/TrueFocus';
+import EducationalGallery from '../components/EducationalGallery';
 import { useProfile } from '../hooks/useProfile';
 import { useDataCounts } from '../hooks/useDataCounts';
+import { downloadCV } from '../hooks/useCV';
 
 const Home = () => {
   const { profile, loading } = useProfile();
   const { projectsCount, certificatesCount, skillsCount } = useDataCounts();
+
+  const handleDownloadCV = async () => {
+    try {
+      await downloadCV();
+    } catch (error) {
+      console.error('Error downloading CV:', error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 relative">
@@ -46,7 +56,10 @@ const Home = () => {
                   Lihat Portofolio
                   <ArrowRight className="ml-2" size={20} />
                 </Link>
-                <button className="inline-flex items-center px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-lg border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 shadow-lg">
+                <button 
+                  onClick={handleDownloadCV}
+                  className="inline-flex items-center px-8 py-4 bg-white dark:bg-gray-800 text-gray-900 dark:text-white font-semibold rounded-lg border-2 border-gray-300 dark:border-gray-600 hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 shadow-lg"
+                >
                   <Download className="mr-2" size={20} />
                   Download CV
                 </button>
@@ -142,6 +155,9 @@ const Home = () => {
           </div>
         </div>
       </section>
+
+      {/* Educational Gallery Section */}
+      <EducationalGallery />
     </div>
   );
 };
