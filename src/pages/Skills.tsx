@@ -3,8 +3,11 @@ import React from 'react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
 import TrueFocus from '../components/animations/TrueFocus';
 import SkillsGallery from '../components/SkillsGallery';
+import { useDataCounts } from '../hooks/useDataCounts';
 
 const Skills = () => {
+  const { projectsCount, skillsCount } = useDataCounts();
+
   const skillCategories = [
     {
       category: "Frontend Development",
@@ -73,6 +76,12 @@ const Skills = () => {
     }
   ];
 
+  // Calculate frameworks count from specific categories
+  const frameworkCategories = ["Backend Development", "Mobile Development", "Database & Storage"];
+  const frameworksCount = skillCategories
+    .filter(category => frameworkCategories.includes(category.category))
+    .reduce((total, category) => total + category.skills.length, 0);
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -104,7 +113,7 @@ const Skills = () => {
           ))}
         </div>
 
-        {/* Stats Section */}
+        {/* Dynamic Stats Section */}
         <div className="mt-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl p-8 text-white">
           <TrueFocus 
             text="Technical Proficiency"
@@ -113,15 +122,15 @@ const Skills = () => {
           />
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
-              <div className="text-3xl font-bold">25+</div>
+              <div className="text-3xl font-bold">{skillsCount}+</div>
               <div className="text-blue-100">Technologies</div>
             </div>
             <div>
-              <div className="text-3xl font-bold">6+</div>
+              <div className="text-3xl font-bold">{frameworksCount}+</div>
               <div className="text-blue-100">Frameworks</div>
             </div>
             <div>
-              <div className="text-3xl font-bold">15+</div>
+              <div className="text-3xl font-bold">{projectsCount}+</div>
               <div className="text-blue-100">Projects</div>
             </div>
             <div>

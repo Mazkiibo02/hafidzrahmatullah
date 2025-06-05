@@ -2,6 +2,7 @@
 import React from 'react';
 import { Award, Calendar, ExternalLink, Download } from 'lucide-react';
 import TiltedCard from '../components/animations/TiltedCard';
+import ClickSpark from '../components/animations/ClickSpark';
 import { useCertificates } from '../hooks/useCertificates';
 
 const Certificates = () => {
@@ -26,6 +27,11 @@ const Certificates = () => {
       "IoT": "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-400"
     };
     return colors[category as keyof typeof colors] || "bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400";
+  };
+
+  const isImageFile = (url: string) => {
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'];
+    return imageExtensions.some(ext => url.toLowerCase().includes(ext));
   };
 
   const handleView = (fileUrl: string) => {
@@ -116,19 +122,46 @@ const Certificates = () => {
           {filteredCertificates.map((certificate, index) => (
             <TiltedCard key={certificate.id} className="h-full">
               <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group h-full">
-                {/* Certificate Header */}
-                <div className="relative h-48 bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                  <div className="text-center text-white p-6">
+                {/* Certificate Header with Image or Fallback */}
+                <div className="relative h-48 bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center overflow-hidden">
+                  {isImageFile(certificate.file_url) ? (
+                    <div className="relative w-full h-full group-hover:scale-105 transition-transform duration-300">
+                      <img
+                        src={certificate.file_url}
+                        alt={certificate.title}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Fallback to icon if image fails to load
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.nextElementSibling!.classList.remove('hidden');
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-300"></div>
+                    </div>
+                  ) : null}
+                  
+                  {/* Fallback content - always rendered but hidden if image loads */}
+                  <div className={`text-center text-white p-6 ${isImageFile(certificate.file_url) ? 'hidden' : ''}`}>
                     <Award size={48} className="mx-auto mb-4" />
-                    <span className={`px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white`}>
+                    <span className="px-3 py-1 rounded-full text-xs font-medium bg-white/20 text-white">
                       {certificate.category}
                     </span>
                   </div>
+                  
                   <div className="absolute top-4 right-4">
                     <div className="bg-green-500 text-white p-2 rounded-full">
                       <Award size={16} />
                     </div>
                   </div>
+                  
+                  {/* Category badge for image certificates */}
+                  {isImageFile(certificate.file_url) && (
+                    <div className="absolute bottom-4 left-4">
+                      <span className="px-3 py-1 rounded-full text-xs font-medium bg-black/50 text-white backdrop-blur-sm">
+                        {certificate.category}
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Certificate Content */}
@@ -162,22 +195,26 @@ const Certificates = () => {
                     </div>
                   )}
 
-                  {/* Action Buttons */}
+                  {/* Action Buttons with Click Spark Animation */}
                   <div className="flex gap-3">
-                    <button 
-                      onClick={() => handleView(certificate.file_url)}
-                      className="flex items-center px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
-                    >
-                      <ExternalLink size={16} className="mr-2" />
-                      View
-                    </button>
-                    <button 
-                      onClick={() => handleDownload(certificate.file_url, certificate.title)}
-                      className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                    >
-                      <Download size={16} className="mr-2" />
-                      Download
-                    </button>
+                    <ClickSpark className="flex-1">
+                      <button 
+                        onClick={() => handleView(certificate.file_url)}
+                        className="w-full flex items-center justify-center px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+                      >
+                        <ExternalLink size={16} className="mr-2" />
+                        View
+                      </button>
+                    </ClickSpark>
+                    <ClickSpark className="flex-1">
+                      <button 
+                        onClick={() => handleDownload(certificate.file_url, certificate.title)}
+                        className="w-full flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                      >
+                        <Download size={16} className="mr-2" />
+                        Download
+                      </button>
+                    </ClickSpark>
                   </div>
                 </div>
               </div>
