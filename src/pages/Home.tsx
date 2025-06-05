@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Download, Code, Smartphone, Shield } from 'lucide-react';
@@ -92,7 +91,7 @@ const Home = () => {
                 </div>
               ) : (
                 <ProfileCard
-                  imageUrl={profile?.profile_image_url}
+                  imageUrl="https://eiotqtgmyswcalxbinkr.supabase.co/storage/v1/object/public/profile-images//profile-20240819.JPG"
                   name={profile?.full_name || "Hafidz Rahmatullah"}
                   role="Teknik Informatika Student"
                 />

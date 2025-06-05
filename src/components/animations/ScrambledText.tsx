@@ -11,7 +11,7 @@ interface ScrambledTextProps {
 const ScrambledText: React.FC<ScrambledTextProps> = ({
   text,
   className = "",
-  scrambleSpeed = 50,
+  scrambleSpeed = 30,
   revealSpeed = 100,
 }) => {
   const [displayText, setDisplayText] = useState("");

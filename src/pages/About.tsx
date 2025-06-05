@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { GraduationCap, Users, Award, Calendar } from 'lucide-react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
@@ -35,28 +34,28 @@ const About = () => {
               />
               <div className="space-y-4 text-gray-600 dark:text-gray-300 leading-relaxed">
                 <ScrambledText
-                  text="Hello! I'm Rachmaninov, a passionate Computer Science student currently pursuing my D4 degree in Teknik Informatika at Politeknik Harapan Bersama. My journey in technology began with a curiosity about how digital systems work and has evolved into a deep passion for creating innovative solutions."
+                  text="Hello! I'm Hafidz Rahmatullah, a passionate Computer Science student currently pursuing my D4 degree in Teknik Informatika at Politeknik Harapan Bersama. My journey in technology began with a curiosity about how digital systems work and has evolved into a deep passion for creating innovative solutions."
                   className="text-gray-600 dark:text-gray-300 leading-relaxed"
                   scrambleSpeed={30}
-                  revealSpeed={200}
+                  revealSpeed={100}
                 />
                 <ScrambledText
                   text="I specialize in web and mobile development, with a particular interest in creating user-friendly applications that solve real-world problems. My technical expertise spans across multiple domains including frontend and backend development, mobile app creation, and cybersecurity."
                   className="text-gray-600 dark:text-gray-300 leading-relaxed"
                   scrambleSpeed={30}
-                  revealSpeed={400}
+                  revealSpeed={200}
                 />
                 <ScrambledText
                   text="Beyond coding, I'm fascinated by the intersection of technology and security. Cybersecurity has become one of my primary interests, as I believe in the importance of building secure and robust digital systems in our increasingly connected world."
                   className="text-gray-600 dark:text-gray-300 leading-relaxed"
                   scrambleSpeed={30}
-                  revealSpeed={600}
+                  revealSpeed={300}
                 />
                 <ScrambledText
                   text="I'm always eager to learn new technologies and collaborate on projects that challenge me to grow as a developer. Whether it's exploring AI and data analysis or diving deep into the latest web frameworks, I approach every learning opportunity with enthusiasm and dedication."
                   className="text-gray-600 dark:text-gray-300 leading-relaxed"
                   scrambleSpeed={30}
-                  revealSpeed={800}
+                  revealSpeed={400}
                 />
               </div>
             </div>

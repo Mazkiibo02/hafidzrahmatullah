@@ -67,7 +67,7 @@ const SkillsGallery: React.FC<SkillsGalleryProps> = ({
       e.preventDefault();
       
       const x = e.pageX - scrollContainer.offsetLeft;
-      const walk = (x - dragStart.current.x) * 2;
+      const walk = (x - dragStart.current.x) * 3;
       const newScrollLeft = dragStart.current.scrollLeft - walk;
       
       scrollContainer.scrollLeft = newScrollLeft;

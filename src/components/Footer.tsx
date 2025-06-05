@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Github, Linkedin, Instagram, Mail } from 'lucide-react';
 
@@ -10,7 +9,7 @@ const Footer = () => {
           {/* Brand */}
           <div className="col-span-1">
             <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              Rachmaninov
+              Hafidz Rahmatullah
             </h3>
             <p className="text-gray-600 dark:text-gray-400 mb-4">
               Mahasiswa Teknik Informatika yang tertarik pada Web, Mobile, dan Cybersecurity
@@ -25,7 +24,7 @@ const Footer = () => {
               <a href="#" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                 <Instagram size={20} />
               </a>
-              <a href="mailto:rachmaninov@example.com" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+              <a href="mailto:vdz.rach02@gmail.com" className="text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
                 <Mail size={20} />
               </a>
             </div>
@@ -67,7 +66,7 @@ const Footer = () => {
             </h4>
             <div className="space-y-2">
               <p className="text-gray-600 dark:text-gray-400">
-                Email: rachmaninov@example.com
+                Email: vdz.rach02@gmail.com
               </p>
               <p className="text-gray-600 dark:text-gray-400">
                 Politeknik Harapan Bersama
@@ -82,7 +81,7 @@ const Footer = () => {
         <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
           <div className="flex flex-col sm:flex-row justify-between items-center">
             <p className="text-gray-600 dark:text-gray-400 text-sm">
-              © 2024 Rachmaninov. All rights reserved.
+              © 2024 Hafidz Rahmatullah. All rights reserved.
             </p>
             <p className="text-gray-600 dark:text-gray-400 text-sm mt-2 sm:mt-0">
               Built with React & TailwindCSS

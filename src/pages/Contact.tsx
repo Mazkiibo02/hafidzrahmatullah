@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Mail, Phone, MapPin, Send, Github, Linkedin, Instagram, Facebook, Youtube, Twitter } from 'lucide-react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
@@ -63,7 +62,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Email</h3>
-                    <p className="text-gray-600 dark:text-gray-300">rachmaninov@example.com</p>
+                    <p className="text-gray-600 dark:text-gray-300">vdz.rach02@gmail.com</p>
                   </div>
                 </div>
 
