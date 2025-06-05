@@ -72,7 +72,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Phone</h3>
-                    <p className="text-gray-600 dark:text-gray-300">+62 123 456 7890</p>
+                    <p className="text-gray-600 dark:text-gray-300">+62... You can contact me via DM or Email</p>
                   </div>
                 </div>
 
@@ -82,7 +82,7 @@ const Contact = () => {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 dark:text-white mb-1">Location</h3>
-                    <p className="text-gray-600 dark:text-gray-300">Tegal, Jawa Tengah, Indonesia</p>
+                    <p className="text-gray-600 dark:text-gray-300">Tegal City, Jawa Tengah, Indonesia</p>
                   </div>
                 </div>
               </div>
@@ -97,27 +97,27 @@ const Contact = () => {
               />
               
               <div className="grid grid-cols-3 gap-4">
-                <GlassIcon href="https://github.com">
+                <GlassIcon href="https://github.com/Mazkiibo02">
                   <Github className="text-gray-700 dark:text-gray-300" size={24} />
                 </GlassIcon>
-                <GlassIcon href="https://linkedin.com">
+                <GlassIcon href="https://www.linkedin.com/in/hafidz-rahmatullah-a16700256">
                   <Linkedin className="text-blue-600 dark:text-blue-400" size={24} />
                 </GlassIcon>
-                <GlassIcon href="https://instagram.com">
+                <GlassIcon href="https://www.instagram.com/kiibo0202/">
                   <Instagram className="text-pink-600 dark:text-pink-400" size={24} />
                 </GlassIcon>
                 <GlassIcon href="https://facebook.com">
                   <Facebook className="text-blue-700 dark:text-blue-500" size={24} />
                 </GlassIcon>
-                <GlassIcon href="https://medium.com">
+                <GlassIcon href="https://medium.com/@hafidzr.smkn3tgl">
                   <div className="w-6 h-6 bg-gray-800 dark:bg-gray-200 rounded-sm flex items-center justify-center">
                     <span className="text-white dark:text-gray-800 text-xs font-bold">M</span>
                   </div>
                 </GlassIcon>
-                <GlassIcon href="https://youtube.com">
+                <GlassIcon href="https://www.youtube.com/channel/UChOAWmlq_FEY2w0RDkIi1HQ">
                   <Youtube className="text-red-600 dark:text-red-400" size={24} />
                 </GlassIcon>
-                <GlassIcon href="https://twitter.com">
+                <GlassIcon href="https://x.com/hafidzpanca5">
                   <Twitter className="text-blue-500 dark:text-blue-400" size={24} />
                 </GlassIcon>
               </div>

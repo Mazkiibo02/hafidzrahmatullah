@@ -39,7 +39,7 @@ const Home = () => {
                   enableHover={true}
                 />
                 <p className="text-xl lg:text-2xl text-gray-600 dark:text-gray-300 leading-relaxed">
-                  Mahasiswa Teknik Informatika yang tertarik pada Web, Mobile, dan Cybersecurity
+                  Teknik Informatika students who are interested in Web, Mobile, and Cybersecurity
                 </p>
                 <p className="text-lg text-gray-500 dark:text-gray-400">
                   D4 Teknik Informatika • Politeknik Harapan Bersama
