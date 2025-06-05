@@ -2,7 +2,7 @@
 import React from 'react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
 import TrueFocus from '../components/animations/TrueFocus';
-import SkillsGallery from '../components/SkillsGallery';
+import CircularGallery from '../components/animations/CircularGallery';
 import { useDataCounts } from '../hooks/useDataCounts';
 
 const Skills = () => {
@@ -103,7 +103,7 @@ const Skills = () => {
         {/* Skills Galleries */}
         <div className="space-y-16">
           {skillCategories.map((category) => (
-            <SkillsGallery
+            <CircularGallery
               key={category.category}
               title={category.category}
               skills={category.skills}
