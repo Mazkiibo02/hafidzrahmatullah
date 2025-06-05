@@ -81,30 +81,16 @@ const ClickSpark: React.FC<ClickSparkProps> = ({
   };
 
   return (
-    <>
-      <style jsx>{`
-        @keyframes sparkFly {
-          0% {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-          }
-          100% {
-            opacity: 0;
-            transform: translate(calc(-50% + var(--end-x)), calc(-50% + var(--end-y))) scale(0);
-          }
-        }
-      `}</style>
-      <div
-        ref={containerRef}
-        className={`relative ${className}`}
-        onClick={handleClick}
-      >
-        {children}
-        {sparks.map((spark) => (
-          <Spark key={spark.id} x={spark.x} y={spark.y} id={spark.id} />
-        ))}
-      </div>
-    </>
+    <div
+      ref={containerRef}
+      className={`relative ${className}`}
+      onClick={handleClick}
+    >
+      {children}
+      {sparks.map((spark) => (
+        <Spark key={spark.id} x={spark.x} y={spark.y} id={spark.id} />
+      ))}
+    </div>
   );
 };
 
