@@ -1,5 +1,5 @@
-
-import React, { useRef, useState } from 'react';
+import { useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
 
 interface TiltedCardProps {
   children: React.ReactNode;
@@ -7,40 +7,62 @@ interface TiltedCardProps {
   tiltAngle?: number;
 }
 
-const TiltedCard: React.FC<TiltedCardProps> = ({ 
-  children, 
-  className = "",
-  tiltAngle = 10 
+const TiltedCard: React.FC<TiltedCardProps> = ({
+  children,
+  className = '',
+  tiltAngle = 10,
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const [transform, setTransform] = useState("");
+  const rotateX = useRef<gsap.QuickToFunc | null>(null);
+  const rotateY = useRef<gsap.QuickToFunc | null>(null);
+  const scale   = useRef<gsap.QuickToFunc | null>(null);
+
+  useEffect(() => {
+    if (!cardRef.current) return;
+
+    gsap.set(cardRef.current, { transformPerspective: 1000 });
+
+    rotateX.current = gsap.quickTo(cardRef.current, 'rotateX', {
+      duration: 0.4,
+      ease: 'power3.out',
+    });
+    rotateY.current = gsap.quickTo(cardRef.current, 'rotateY', {
+      duration: 0.4,
+      ease: 'power3.out',
+    });
+    scale.current = gsap.quickTo(cardRef.current, 'scale', {
+      duration: 0.4,
+      ease: 'power3.out',
+    });
+
+    return () => {
+      rotateX.current = null;
+      rotateY.current = null;
+      scale.current   = null;
+    };
+  }, []);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
+    const rect    = cardRef.current.getBoundingClientRect();
+    const percentX = (e.clientX - (rect.left + rect.width  / 2)) / (rect.width  / 2);
+    const percentY = (e.clientY - (rect.top  + rect.height / 2)) / (rect.height / 2);
 
-    const card = cardRef.current;
-    const rect = card.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateX = (y - centerY) / centerY * tiltAngle;
-    const rotateY = (centerX - x) / centerX * tiltAngle;
-
-    setTransform(`perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.05, 1.05, 1.05)`);
+    rotateY.current?.(percentX  * tiltAngle);
+    rotateX.current?.(-percentY * tiltAngle);
+    scale.current?.(1.04);
   };
 
   const handleMouseLeave = () => {
-    setTransform("perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)");
+    rotateX.current?.(0);
+    rotateY.current?.(0);
+    scale.current?.(1);
   };
 
   return (
     <div
       ref={cardRef}
-      className={`transition-transform duration-300 ease-out ${className}`}
-      style={{ transform }}
+      className={className}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
     >
