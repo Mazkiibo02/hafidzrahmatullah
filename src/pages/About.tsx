@@ -21,7 +21,7 @@ const SideCard = ({
       ref={ref}
       initial={{ opacity: 0, x: 40 }}
       animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.6, delay, ease: "easeOut" }}
       className="glass-card glow-border rounded-2xl p-6"
     >
       <div className="flex items-center mb-4 gap-3">
@@ -82,7 +82,7 @@ const About = () => {
               ref={bioRef}
               initial={{ opacity: 0, y: 40 }}
               animate={bioInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
               className="glass-card glow-border rounded-2xl p-8"
             >
               <TrueFocus
@@ -113,7 +113,7 @@ const About = () => {
               initial={{ opacity: 0, y: 40 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
               className="glass-card glow-border rounded-2xl p-8"
             >
               <TrueFocus

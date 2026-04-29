@@ -30,17 +30,11 @@ export const useCV = () => {
   });
 };
 
-export const downloadCV = async () => {
-  const { data: urlData } = supabase.storage
-    .from('cv')
-    .getPublicUrl('HafidzRahmatullah-CV.pdf');
-  
-  if (urlData.publicUrl) {
-    const link = document.createElement('a');
-    link.href = urlData.publicUrl;
-    link.download = 'HafidzRahmatullah-CV.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }
+export const downloadCV = () => {
+  const link = document.createElement('a');
+  link.href = '/cv/Hafidz-Rahmatullah-CV.pdf';
+  link.download = 'Hafidz-Rahmatullah-CV.pdf';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };

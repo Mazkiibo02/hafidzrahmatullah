@@ -78,7 +78,7 @@ const Contact = () => {
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
               className="glass-card glow-border rounded-2xl p-6 space-y-5"
             >
               <TrueFocus
@@ -107,7 +107,7 @@ const Contact = () => {
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
               className="glass-card glow-border rounded-2xl p-6"
             >
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">Social Media</h3>
@@ -130,7 +130,7 @@ const Contact = () => {
             <motion.div
               initial={{ opacity: 0, x: -40 }}
               animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
               className="rounded-2xl p-6 text-white relative overflow-hidden"
               style={{ background: 'linear-gradient(135deg, #6366f1, #a855f7)' }}
             >
@@ -147,7 +147,7 @@ const Contact = () => {
             <motion.div
               initial={{ opacity: 0, x: 40 }}
               animate={formInView ? { opacity: 1, x: 0 } : {}}
-              transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
               className="glass-card glow-border rounded-2xl p-8"
             >
               <TrueFocus
