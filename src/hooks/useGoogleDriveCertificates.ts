@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-const API_KEY = import.meta.env.VITE_GOOGLE_DRIVE_API_KEY as string;
+const API_KEY   = import.meta.env.VITE_GOOGLE_DRIVE_API_KEY as string;
 const FOLDER_ID = import.meta.env.VITE_GOOGLE_DRIVE_FOLDER_ID as string;
 
 export interface DriveCertificate {
@@ -56,15 +56,15 @@ const parseFilename = (filename: string) => {
  */
 const extractIssuer = (name: string): string => {
   const lower = name.toLowerCase();
-  if (lower.includes('udemy')) return 'Udemy';
-  if (lower.includes('huawei')) return 'Huawei';
+  if (lower.includes('udemy'))    return 'Udemy';
+  if (lower.includes('huawei'))   return 'Huawei';
   if (lower.includes('coursera')) return 'Coursera';
   if (lower.includes('dicoding')) return 'Dicoding';
-  if (lower.includes('google')) return 'Google';
-  if (lower.includes('nshc')) return 'SMT Program x NSHC Korea';
-  if (lower.includes('ielts')) return 'EF / IELTS';
-  if (lower.includes('toefl')) return 'TOEFL';
-  if (lower.includes('seminar')) return 'Seminar Nasional';
+  if (lower.includes('google'))   return 'Google';
+  if (lower.includes('nshc'))     return 'SMT Program x NSHC Korea';
+  if (lower.includes('ielts'))    return 'EF / IELTS';
+  if (lower.includes('toefl'))    return 'TOEFL';
+  if (lower.includes('seminar'))  return 'Seminar Nasional';
   if (lower.includes('morbis') || lower.includes('medika')) return 'PT Medika Digital Nusantara';
   if (lower.includes('innolegalist') || lower.includes('tricipta')) return 'PT Tricipta Karsa Inovasi';
   return 'Certificate';
