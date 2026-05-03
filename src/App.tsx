@@ -15,6 +15,7 @@ import Projects from "./pages/Projects";
 import Skills from "./pages/Skills";
 import Certificates from "./pages/Certificates";
 import Contact from "./pages/Contact";
+import Experience from "./pages/Experience";
 import NotFound from "./pages/NotFound";
 import { useLenis } from "./hooks/useLenis";
 
@@ -104,6 +105,7 @@ const AnimatedRoutes = () => {
           <Route path="/projects"    element={<Projects />} />
           <Route path="/skills"      element={<Skills />} />
           <Route path="/certificates" element={<Certificates />} />
+          <Route path="/experience"  element={<Experience />} />
           <Route path="/contact"     element={<Contact />} />
           <Route path="*"            element={<NotFound />} />
         </Routes>

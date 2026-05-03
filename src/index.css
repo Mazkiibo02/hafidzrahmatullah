@@ -77,12 +77,25 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
+  *,
+*::before,
+*::after {
+  transition:
+    background-color 0.4s ease,
+    border-color 0.4s ease,
+    color 0.3s ease,
+    fill 0.3s ease,
+    stroke 0.3s ease,
+    box-shadow 0.3s ease !important;
+}
+ 
+/* Kecualikan elemen yang tidak boleh ter-transition (animasi GSAP, cursor, dll) */
+.cursor-dot,
+.cursor-ring,
+.page-transition,
+[data-no-transition] {
+  transition: none !important;
+}
 }
 
 /* Custom animations */
