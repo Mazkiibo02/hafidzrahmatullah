@@ -58,11 +58,11 @@ const ScrambleHeroTitle = ({ text }: { text: string }) => {
     };
   }, [text]);
 
-  return (
-    <h1
-      ref={ref}
-      className="text-5xl lg:text-7xl font-bold text-white font-mono tracking-tight"
-    >
+   return (
+     <h1
+       ref={ref}
+       className="text-5xl lg:text-7xl font-bold text-gray-900 dark:text-white font-mono tracking-tight"
+     >
       {text}
     </h1>
   );
@@ -220,11 +220,10 @@ const ExperienceCard = ({
         }}
       />
 
-      {/* Inner card (overflow hidden for content clipping) */}
-      <div
-        className="absolute inset-0 rounded-3xl overflow-hidden"
-        style={{ background: 'rgba(8, 8, 18, 0.96)' }}
-      >
+        {/* Inner card (overflow hidden for content clipping) */}
+        <div
+          className="absolute inset-0 rounded-3xl overflow-hidden bg-white dark:bg-gray-900"
+        >
         {/* Top accent line */}
         <div
           className="absolute top-0 left-0 right-0 h-[2px] z-10"
@@ -237,7 +236,7 @@ const ExperienceCard = ({
 
         {/* Decorative large number */}
         <div
-          className="absolute -right-8 -bottom-12 font-black text-white select-none pointer-events-none leading-none"
+          className="absolute -right-8 -bottom-12 font-black text-gray-900 dark:text-white select-none pointer-events-none leading-none"
           style={{ fontSize: '240px', opacity: 0.028 }}
         >
           {String(index + 1).padStart(2, '0')}
@@ -270,13 +269,13 @@ const ExperienceCard = ({
               >
                 {exp.type}
               </span>
-              <span className="text-gray-700 text-sm font-mono tabular-nums">
+               <span className="text-gray-700 dark:text-gray-300 text-sm font-mono tabular-nums">
                 {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
               </span>
             </div>
 
             {/* Company name with scramble */}
-            <h2 className="text-xl sm:text-2xl lg:text-[1.65rem] font-bold text-white leading-tight mb-1 flex-shrink-0">
+            <h2 className="text-xl sm:text-2xl lg:text-[1.65rem] font-bold text-gray-900 dark:text-white leading-tight mb-1 flex-shrink-0">
               <ScrambleText text={exp.company} trigger={isActive} />
             </h2>
 
@@ -286,7 +285,7 @@ const ExperienceCard = ({
             </p>
 
             {/* Period */}
-            <div className="flex items-center gap-2 text-gray-500 text-sm mb-5 flex-shrink-0">
+            <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-sm mb-5 flex-shrink-0">
               <Calendar size={13} style={{ color: color.primary }} />
               <span>{exp.period}</span>
             </div>
@@ -315,7 +314,7 @@ const ExperienceCard = ({
 
             {/* Tech stack */}
             <div className="flex-shrink-0">
-              <p className="text-gray-600 text-[10px] font-mono uppercase tracking-widest mb-2.5">
+              <p className="text-gray-600 dark:text-gray-400 text-[10px] font-mono uppercase tracking-widest mb-2.5">
                 Tech Stack
               </p>
               <div className="flex flex-wrap gap-1.5">
@@ -407,7 +406,7 @@ const Experience: React.FC = () => {
   const freelance = experiences.filter((e) => e.type === 'Freelance').length;
 
   return (
-    <div className="min-h-screen bg-gray-950">
+    <div className="min-h-screen bg-white dark:bg-gray-950">
 
       {/* ── Hero ── */}
       <section className="pt-32 pb-16 px-8 lg:px-16 relative overflow-hidden">
@@ -434,26 +433,26 @@ const Experience: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.5, duration: 0.6 }}
-            className="text-gray-500 text-lg mt-4 max-w-xl leading-relaxed"
+            className="text-gray-600 dark:text-gray-400 text-lg mt-4 max-w-xl leading-relaxed"
           >
             Setiap pengalaman adalah bab baru dalam perjalanan karir yang terus berkembang.
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="flex items-center gap-4 mt-8 text-sm text-gray-700 font-mono"
-          >
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-              {N} pengalaman
-            </span>
-            <span>·</span>
-            <span>{magang} magang</span>
-            <span>·</span>
-            <span>{freelance} freelance</span>
-          </motion.div>
+           <motion.div
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             transition={{ delay: 0.8 }}
+             className="flex items-center gap-4 mt-8 text-sm text-gray-600 dark:text-gray-400 font-mono"
+           >
+             <span className="flex items-center gap-1.5">
+               <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
+               {N} pengalaman
+             </span>
+             <span>·</span>
+             <span>{magang} magang</span>
+             <span>·</span>
+             <span>{freelance} freelance</span>
+           </motion.div>
         </div>
       </section>
 
@@ -464,7 +463,7 @@ const Experience: React.FC = () => {
         transition={{ delay: 1.1, duration: 0.5 }}
         className="text-center pb-10"
       >
-        <div className="inline-flex flex-col items-center gap-2 text-gray-600 text-xs font-mono">
+        <div className="inline-flex flex-col items-center gap-2 text-gray-500 dark:text-gray-400 text-xs font-mono">
           <span>scroll untuk menjelajahi</span>
           <motion.div
             animate={{ y: [0, 5, 0] }}
@@ -479,7 +478,7 @@ const Experience: React.FC = () => {
       {/* ── Sticky Stack Section ── */}
       <div
         ref={sectionRef}
-        style={{ height: `${(N + 1) * 100}vh` }}
+        style={{ height: `${N * 100}vh` }}
         className="relative"
       >
         {/* Sticky viewport — overflow hidden to clip off-screen cards */}
@@ -519,10 +518,10 @@ const Experience: React.FC = () => {
           </div>
 
           {/* Cards container */}
-          <div className="absolute inset-0 flex items-center justify-center px-4 sm:px-8 lg:px-14 py-24">
+          <div className="absolute inset-0 flex items-center justify-center px-4 sm:px-8 lg:px-14 py-24 pb-32">
             <div
               className="relative w-full"
-              style={{ maxWidth: '1200px', height: 'calc(100vh - 160px)' }}
+              style={{ maxWidth: '1200px', height: 'calc(100vh - 200px)' }}
             >
               {experiences.map((exp, i) => (
                 <ExperienceCard
@@ -541,8 +540,8 @@ const Experience: React.FC = () => {
         </div>
       </div>
 
-      {/* Bottom spacer */}
-      <div className="h-24" />
+      {/* Bottom spacer — prevents footer overlap */}
+      <div className="h-40" />
     </div>
   );
 };

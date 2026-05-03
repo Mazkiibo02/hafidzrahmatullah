@@ -102,7 +102,7 @@ const ProfileImage = () => {
         <div className="w-64 h-64 rounded-full p-[3px] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-2xl shadow-indigo-500/30">
           <div className="w-full h-full rounded-full overflow-hidden bg-gray-900">
             <img
-              src="images/me.jpg"
+              src="/images/me.jpg"
               alt="Hafidz Rahmatullah"
               className={`w-full h-full object-cover object-top transition-opacity duration-500 ${
                 loaded ? 'opacity-100' : 'opacity-0'
@@ -234,7 +234,7 @@ const Home = () => {
                   <span className="gradient-text font-semibold">Cybersecurity</span>
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-500">
-                  Politeknik Harapan Bersama · Currently open to work
+                  Universitas Harkat Negeri · Currently open to work
                 </p>
               </motion.div>
 

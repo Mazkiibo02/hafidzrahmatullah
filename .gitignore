@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 .blackboxcli/
 .env
+.kilo
+.qodo
+.blackbox
+.blackboxcli
