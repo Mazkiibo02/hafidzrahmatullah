@@ -7,17 +7,33 @@ export interface ProjectExtra {
 
 export const projectsExtra: ProjectExtra[] = [
   {
-    repoName: 'saka-digital',
-    screenshot: '/images/projects/saka-digital.jpg',
+    repoName: 'hafidzrahmatullah',
+    screenshot: '/images/projects/hafidzrahmatullah.jpg',
     youtubeUrl: undefined,
     featured: true,
   },
   {
-    repoName: 'morintern',
-    screenshot: '/images/projects/morintern.jpg',
+    repoName: 'rch-store',
+    screenshot: '/images/projects/rch-store.jpg',
     youtubeUrl: undefined,
     featured: true,
   },
-  // Tambahkan entry per repo yang punya screenshot/youtube
-  // Repo yang tidak ada di sini tetap tampil dengan placeholder
+  {
+    repoName: 'krandon-vote-sim',
+    screenshot: '/images/projects/krandon-vote-sim.jpg',
+    youtubeUrl: undefined,
+    featured: true,
+  },
+  {
+    repoName: 'Morintern',
+    screenshot: '/images/projects/Morintern.jpg',
+    youtubeUrl: undefined,
+    featured: true,
+  },
+  {
+    repoName: 'innolegalist-web-studio',
+    screenshot: '/images/projects/innolegalist-web-studio.jpg',
+    youtubeUrl: undefined,
+    featured: true,
+  },
 ];

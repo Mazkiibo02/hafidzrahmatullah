@@ -167,6 +167,27 @@
 .cursor-dot.hovering  { width: 12px; height: 12px; background: #a855f7; }
 .cursor-ring.hovering { width: 56px; height: 56px; border-color: rgba(168, 85, 247, 0.5); }
 
+/* Cursor: hide on touch/mobile devices */
+/* Tambahkan ini di src/index.css, di dalam blok cursor yang sudah ada */
+
+@media (hover: none) and (pointer: coarse) {
+  .cursor-dot,
+  .cursor-ring {
+    display: none !important;
+  }
+
+  /* Restore native cursor on touch devices */
+  *,
+  *::before,
+  *::after {
+    cursor: auto !important;
+  }
+
+  a, button, [role="button"], select, input[type="submit"], input[type="button"] {
+    cursor: pointer !important;
+  }
+}
+
 /* Gradient text */
 .gradient-text {
   background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);

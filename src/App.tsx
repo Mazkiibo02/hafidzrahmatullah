@@ -1,4 +1,3 @@
-
 import { useEffect, useRef } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -21,20 +20,32 @@ import { useLenis } from "./hooks/useLenis";
 
 const queryClient = new QueryClient();
 
-/* ─── Custom Cursor ─────────────────────────────────────────── */
+/* ─── Detect touch/mobile device ───────────────────────────── */
+const isTouchDevice = () =>
+  typeof window !== 'undefined' &&
+  ('ontouchstart' in window || navigator.maxTouchPoints > 0);
+
+/* ─── Custom Cursor (desktop only) ──────────────────────────── */
 const CustomCursor = () => {
   const dotRef  = useRef<HTMLDivElement>(null);
   const ringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Do not mount cursor logic on touch devices
+    if (isTouchDevice()) return;
+
     const dot  = dotRef.current;
     const ring = ringRef.current;
     if (!dot || !ring) return;
 
-    const moveDot = gsap.quickTo(dot, "left", { duration: 0.05, ease: "none" });
-    const moveDotY = gsap.quickTo(dot, "top", { duration: 0.05, ease: "none" });
-    const moveRing = gsap.quickTo(ring, "left", { duration: 0.18, ease: "power2.out" });
-    const moveRingY = gsap.quickTo(ring, "top", { duration: 0.18, ease: "power2.out" });
+    // Make elements visible only on non-touch
+    dot.style.display  = 'block';
+    ring.style.display = 'block';
+
+    const moveDot   = gsap.quickTo(dot,  "left", { duration: 0.05, ease: "none" });
+    const moveDotY  = gsap.quickTo(dot,  "top",  { duration: 0.05, ease: "none" });
+    const moveRing  = gsap.quickTo(ring, "left", { duration: 0.18, ease: "power2.out" });
+    const moveRingY = gsap.quickTo(ring, "top",  { duration: 0.18, ease: "power2.out" });
 
     const onMove = (e: MouseEvent) => {
       moveDot(e.clientX);
@@ -54,7 +65,6 @@ const CustomCursor = () => {
 
     window.addEventListener("mousemove", onMove);
 
-    // Add hover effect to interactive elements
     const hoverEls = document.querySelectorAll("a, button, [role='button'], input, textarea, select, label");
     hoverEls.forEach((el) => {
       el.addEventListener("mouseenter", onEnter);
@@ -70,10 +80,13 @@ const CustomCursor = () => {
     };
   }, []);
 
+  // On touch devices render nothing
+  if (isTouchDevice()) return null;
+
   return (
     <>
-      <div ref={dotRef}  className="cursor-dot"  />
-      <div ref={ringRef} className="cursor-ring" />
+      <div ref={dotRef}  className="cursor-dot"  style={{ display: 'none' }} />
+      <div ref={ringRef} className="cursor-ring" style={{ display: 'none' }} />
     </>
   );
 };
@@ -81,14 +94,13 @@ const CustomCursor = () => {
 /* ─── Page transition variants ──────────────────────────────── */
 const pageVariants = {
   initial: { opacity: 0, y: 18 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.45, ease: "easeOut" } },
-  exit:    { opacity: 0, y: -12, transition: { duration: 0.3, ease: "easeIn" } },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const } },
+  exit:    { opacity: 0, y: -12, transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] as const } },
 };
 
 /* ─── Animated Routes ───────────────────────────────────────── */
 const AnimatedRoutes = () => {
   const location = useLocation();
-
   return (
     <AnimatePresence mode="wait">
       <motion.div
@@ -100,14 +112,14 @@ const AnimatedRoutes = () => {
         exit="exit"
       >
         <Routes location={location}>
-          <Route path="/"            element={<Home />} />
-          <Route path="/about"       element={<About />} />
-          <Route path="/projects"    element={<Projects />} />
-          <Route path="/skills"      element={<Skills />} />
-          <Route path="/certificates" element={<Certificates />} />
-          <Route path="/experience"  element={<Experience />} />
-          <Route path="/contact"     element={<Contact />} />
-          <Route path="*"            element={<NotFound />} />
+          <Route path="/"             element={<Home />}        />
+          <Route path="/about"        element={<About />}       />
+          <Route path="/projects"     element={<Projects />}    />
+          <Route path="/skills"       element={<Skills />}      />
+          <Route path="/experience"   element={<Experience />}  />
+          <Route path="/certificates" element={<Certificates />}/>
+          <Route path="/contact"      element={<Contact />}     />
+          <Route path="*"             element={<NotFound />}    />
         </Routes>
       </motion.div>
     </AnimatePresence>
@@ -117,7 +129,6 @@ const AnimatedRoutes = () => {
 /* ─── App Content ───────────────────────────────────────────── */
 const AppContent = () => {
   useLenis();
-
   return (
     <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900 transition-colors duration-300">
       <CustomCursor />

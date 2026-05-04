@@ -1,198 +1,279 @@
-
-import React, { useRef, useLayoutEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { Calendar } from 'lucide-react';
-import TrueFocus from './animations/TrueFocus';
-import { useGallery } from '../hooks/useGallery';
+import React, { useRef, useEffect, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { Calendar, BookOpen, Cpu, Code2, GraduationCap } from 'lucide-react';
+import { educationalActivities, type EducationalActivity } from '../data/EducationalActivities';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const EducationalGallery = () => {
-  const { data: galleryItems, isLoading } = useGallery();
-  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const [activeImgIndices, setActiveImgIndices] = useState<Record<string, number>>({});
+/* ─── Category config ───────────────────────────────────────── */
+const CATEGORY_CONFIG = {
+  seminar:   { label: 'Seminar',   color: '#6366f1', Icon: GraduationCap },
+  workshop:  { label: 'Workshop',  color: '#06b6d4', Icon: Code2         },
+  course:    { label: 'Course',    color: '#a855f7', Icon: BookOpen      },
+  pelatihan: { label: 'Pelatihan', color: '#22c55e', Icon: Cpu           },
+};
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('id-ID', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
-  };
+/* ─── Placeholder image (SVG data URI) ──────────────────────── */
+const makePlaceholder = (color: string, index: number) =>
+  `data:image/svg+xml,${encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="800" height="500">
+      <rect width="800" height="500" fill="${color}18"/>
+      <rect x="0" y="0" width="800" height="2" fill="${color}60"/>
+      <text x="400" y="250" text-anchor="middle" dominant-baseline="middle"
+        font-family="monospace" font-size="48" fill="${color}40">
+        ${index + 1}
+      </text>
+    </svg>
+  `)}`;
 
-  // Setup scroll-based image carousel for each card
-  useLayoutEffect(() => {
-    if (!galleryItems || galleryItems.length === 0) return;
+/* ─── Photo Strip ───────────────────────────────────────────── */
+const PhotoStrip = ({
+  activity,
+  color,
+}: {
+  activity: EducationalActivity;
+  color: string;
+}) => {
+  const [active, setActive] = useState(0);
+  const stripRef = useRef<HTMLDivElement>(null);
+  const imgRefs  = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    const images = activity.images;
+    if (images.length <= 1) return;
 
     const ctx = gsap.context(() => {
-      galleryItems.forEach((item, cardIdx) => {
-        if (!item.images || item.images.length <= 1) return;
+      // Initial state: only first visible
+      imgRefs.current.forEach((el, i) => {
+        if (!el) return;
+        gsap.set(el, { opacity: i === 0 ? 1 : 0, scale: i === 0 ? 1 : 1.06 });
+      });
 
-        const cardRef = cardRefs.current[cardIdx];
-        if (!cardRef) return;
+      // For each subsequent image, create a ScrollTrigger
+      images.forEach((_, i) => {
+        if (i === 0) return;
+        const prev = imgRefs.current[i - 1];
+        const curr = imgRefs.current[i];
+        if (!prev || !curr) return;
 
-        const images = item.images;
-        const imgContainers = Array.from(cardRef.querySelectorAll<HTMLElement>('[data-img-index]'));
-        
-        // Set initial states
-        imgContainers.forEach((container, idx) => {
-          gsap.set(container, {
-            zIndex: idx === 0 ? 10 : 0,
-            opacity: idx === 0 ? 1 : 0,
-            scale: idx === 0 ? 1 : 0.97
-          });
-        });
-
-        let lastIdx = 0;
-
-        // Scroll-triggered image progression
         ScrollTrigger.create({
-          trigger: cardRef,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: true,
-          onUpdate: (self) => {
-            const progress = self.progress;
-            const newIdx = Math.min(Math.floor(progress * images.length), images.length - 1);
-            
-            if (newIdx !== lastIdx) {
-              const prevImg = imgContainers[lastIdx];
-              const currImg = imgContainers[newIdx];
-              
-              if (prevImg && currImg) {
-                // Animate previous out
-                gsap.to(prevImg, {
-                  opacity: 0,
-                  scale: 0.97,
-                  duration: 0.3,
-                  ease: 'power2.inOut',
-                  onComplete: () => gsap.set(prevImg, { zIndex: 0 })
-                });
-                
-                // Animate current in
-                gsap.fromTo(currImg,
-                  { opacity: 0, scale: 1.04 },
-                  {
-                    opacity: 1,
-                    scale: 1,
-                    duration: 0.3,
-                    ease: 'power2.inOut',
-                    onStart: () => gsap.set(currImg, { zIndex: 10 })
-                  }
-                );
-                
-                setActiveImgIndices(prev => ({ ...prev, [item.id]: newIdx }));
-                lastIdx = newIdx;
-              }
-            }
-          }
+          trigger: strip,
+          start: `top+=${(i / images.length) * 60}% center`,
+          end:   `top+=${((i + 1) / images.length) * 60}% center`,
+          onEnter: () => {
+            gsap.to(prev, { opacity: 0, scale: 0.95, duration: 0.5, ease: 'power2.inOut' });
+            gsap.fromTo(curr,
+              { opacity: 0, scale: 1.06 },
+              { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.inOut' }
+            );
+            setActive(i);
+          },
+          onLeaveBack: () => {
+            gsap.to(curr, { opacity: 0, scale: 1.06, duration: 0.4, ease: 'power2.inOut' });
+            gsap.to(prev, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.inOut' });
+            setActive(i - 1);
+          },
         });
       });
-    }, cardRefs);
+    }, strip);
 
     return () => ctx.revert();
-  }, [galleryItems]);
-
-  if (isLoading) {
-    return (
-      <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center justify-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-          </div>
-        </div>
-      </section>
-    );
-  }
+  }, [activity.images]);
 
   return (
-    <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-800/50 relative z-10">
-      <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <TrueFocus 
-            text="Educational Activities"
-            className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4"
-            enableHover={true}
+    <div ref={stripRef} className="relative">
+      {/* Main image frame */}
+      <div
+        className="relative rounded-2xl overflow-hidden"
+        style={{
+          aspectRatio: '16/9',
+          boxShadow: `0 0 0 1px ${color}30, 0 20px 60px rgba(0,0,0,0.3)`,
+        }}
+      >
+        {activity.images.map((src, i) => (
+          <div
+            key={i}
+            ref={(el) => { imgRefs.current[i] = el; }}
+            className="absolute inset-0"
+          >
+            <img
+              src={src}
+              alt={`${activity.title} ${i + 1}`}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).src = makePlaceholder(color, i);
+              }}
+            />
+          </div>
+        ))}
+
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-950/50 to-transparent pointer-events-none" />
+
+        {/* Counter badge */}
+        <div
+          className="absolute bottom-3 left-3 px-2 py-0.5 rounded-md text-[10px] font-mono backdrop-blur-sm"
+          style={{ background: 'rgba(0,0,0,0.55)', color, border: `1px solid ${color}30` }}
+        >
+          {active + 1} / {activity.images.length}
+        </div>
+      </div>
+
+      {/* Dot indicators */}
+      <div className="flex justify-center gap-2 mt-3">
+        {activity.images.map((_, i) => (
+          <div
+            key={i}
+            className="rounded-full transition-all duration-300"
+            style={{
+              width:  active === i ? '20px' : '6px',
+              height: '6px',
+              background: active === i ? color : `${color}30`,
+            }}
           />
-          <p className="text-lg text-gray-600 dark:text-gray-300">
-            Highlights from my learning journey and educational experiences
+        ))}
+      </div>
+    </div>
+  );
+};
+
+/* ─── Activity Card ─────────────────────────────────────────── */
+const ActivityCard = ({
+  activity,
+  index,
+}: {
+  activity: EducationalActivity;
+  index: number;
+}) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const cfg     = CATEGORY_CONFIG[activity.category];
+  const color   = cfg.color;
+
+  const formattedDate = new Date(activity.date).toLocaleDateString('id-ID', {
+    year: 'numeric', month: 'long', day: 'numeric',
+  });
+
+  // Card entrance animation
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        cardRef.current,
+        { opacity: 0, y: 60, scale: 0.97 },
+        {
+          opacity: 1, y: 0, scale: 1,
+          duration: 0.8,
+          ease: 'power3.out',
+          scrollTrigger: {
+            trigger: cardRef.current,
+            start: 'top 88%',
+            once: true,
+          },
+        }
+      );
+    });
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <div
+      ref={cardRef}
+      className="rounded-3xl overflow-hidden opacity-0"
+      style={{
+        background: 'rgba(15,15,26,0.7)',
+        backdropFilter: 'blur(16px)',
+        border: `1px solid ${color}25`,
+        boxShadow: `0 4px 40px rgba(0,0,0,0.3)`,
+      }}
+    >
+      {/* Top accent */}
+      <div className="h-px w-full" style={{ background: `linear-gradient(90deg, transparent, ${color}70, transparent)` }} />
+
+      <div className="p-6 space-y-5">
+        {/* Header */}
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex-1">
+            <div
+              className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold mb-2"
+              style={{ background: `${color}15`, color, border: `1px solid ${color}30` }}
+            >
+              <cfg.Icon size={11} />
+              {cfg.label}
+            </div>
+            <h3 className="text-white font-bold text-lg leading-snug">{activity.title}</h3>
+          </div>
+          <div
+            className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
+            style={{ background: `${color}15`, border: `1px solid ${color}30` }}
+          >
+            <span className="text-sm font-mono font-bold" style={{ color }}>
+              {String(index + 1).padStart(2, '0')}
+            </span>
+          </div>
+        </div>
+
+        {/* Photo strip */}
+        <PhotoStrip activity={activity} color={color} />
+
+        {/* Date */}
+        <div className="flex items-center gap-2 text-sm" style={{ color: `${color}cc` }}>
+          <Calendar size={13} />
+          <span className="font-mono">{formattedDate}</span>
+        </div>
+
+        {/* Description */}
+        <p className="text-gray-400 text-sm leading-relaxed">{activity.description}</p>
+      </div>
+    </div>
+  );
+};
+
+/* ─── Main Section ──────────────────────────────────────────── */
+const EducationalGallery: React.FC = () => {
+  const headerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.fromTo(
+        headerRef.current,
+        { opacity: 0, y: 30 },
+        {
+          opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+          scrollTrigger: { trigger: headerRef.current, start: 'top 85%', once: true },
+        }
+      );
+    });
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-950/50 relative z-10">
+      <div className="max-w-7xl mx-auto">
+
+        {/* Header */}
+        <div ref={headerRef} className="mb-14 opacity-0">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-0.5 bg-indigo-500" />
+            <span className="text-indigo-400 text-xs font-mono uppercase tracking-widest">
+              Learning Journey
+            </span>
+          </div>
+          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-3">
+            Educational Activities
+          </h2>
+          <p className="text-gray-500 text-base max-w-xl">
+            Highlights from seminars, workshops, and training programs attended throughout my academic journey.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
-          {galleryItems?.map((item, index) => {
-            const images = item.images || [];
-            const activeIdx = activeImgIndices[item.id] ?? 0;
-            
-            return (
-              <motion.div
-                key={item.id}
-                ref={(el) => { cardRefs.current[index] = el; }}
-                className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group cursor-pointer"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-              >
-                {/* Image Container with Scroll-based Carousel */}
-                <div className="relative h-64 overflow-hidden">
-                  {images.map((img, imgIdx) => (
-                    <div
-                      key={imgIdx}
-                      data-img-index={imgIdx}
-                      className="absolute inset-0"
-                      style={{
-                        zIndex: imgIdx === activeIdx ? 10 : 0,
-                        opacity: imgIdx === activeIdx ? 1 : 0,
-                        transform: imgIdx === activeIdx ? 'scale(1)' : 'scale(0.97)',
-                        transition: 'opacity 0.4s ease, transform 0.4s ease'
-                      }}
-                    >
-                      <img
-                        src={img}
-                        alt={`${item.title} ${imgIdx + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  ))}
-
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  {/* Image counter */}
-                  <div className="absolute bottom-3 left-3 px-2 py-0.5 rounded-md text-[10px] font-mono backdrop-blur-sm bg-black/60 text-white border border-white/20">
-                    {activeIdx + 1} / {images.length}
-                  </div>
-                </div>
-
-                {/* Content */}
-                <div className="p-6">
-                  <div className="flex items-center text-gray-500 dark:text-gray-400 text-sm mb-2">
-                    <Calendar size={16} className="mr-2" />
-                    {formatDate(item.date)}
-                  </div>
-                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
-                    {item.title}
-                  </h3>
-                  {item.description && (
-                    <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                      {item.description}
-                    </p>
-                  )}
-                </div>
-              </motion.div>
-            );
-          })}
+        {/* Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {educationalActivities.map((activity, i) => (
+            <ActivityCard key={activity.id} activity={activity} index={i} />
+          ))}
         </div>
-
-        {(!galleryItems || galleryItems.length === 0) && (
-          <div className="text-center py-12">
-            <p className="text-gray-500 dark:text-gray-400 text-lg">
-              No educational activities found.
-            </p>
-          </div>
-        )}
       </div>
     </section>
   );
