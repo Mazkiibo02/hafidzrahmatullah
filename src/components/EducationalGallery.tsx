@@ -1,10 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { loadGsap } from '@/lib/loadGsap';
 import { Calendar, BookOpen, Cpu, Code2, GraduationCap } from 'lucide-react';
 import { educationalActivities, type EducationalActivity } from '../data/EducationalActivities';
-
-gsap.registerPlugin(ScrollTrigger);
 
 /* ─── Category config ───────────────────────────────────────── */
 const CATEGORY_CONFIG = {
@@ -45,42 +42,50 @@ const PhotoStrip = ({
     const images = activity.images;
     if (images.length <= 1) return;
 
-    const ctx = gsap.context(() => {
-      // Initial state: only first visible
-      imgRefs.current.forEach((el, i) => {
-        if (!el) return;
-        gsap.set(el, { opacity: i === 0 ? 1 : 0, scale: i === 0 ? 1 : 1.06 });
-      });
+    let ctx: any;
+    let canceled = false;
 
-      // For each subsequent image, create a ScrollTrigger
-      images.forEach((_, i) => {
-        if (i === 0) return;
-        const prev = imgRefs.current[i - 1];
-        const curr = imgRefs.current[i];
-        if (!prev || !curr) return;
+    loadGsap().then(({ gsap, ScrollTrigger }) => {
+      if (canceled) return;
 
-        ScrollTrigger.create({
-          trigger: strip,
-          start: `top+=${(i / images.length) * 60}% center`,
-          end:   `top+=${((i + 1) / images.length) * 60}% center`,
-          onEnter: () => {
-            gsap.to(prev, { opacity: 0, scale: 0.95, duration: 0.5, ease: 'power2.inOut' });
-            gsap.fromTo(curr,
-              { opacity: 0, scale: 1.06 },
-              { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.inOut' }
-            );
-            setActive(i);
-          },
-          onLeaveBack: () => {
-            gsap.to(curr, { opacity: 0, scale: 1.06, duration: 0.4, ease: 'power2.inOut' });
-            gsap.to(prev, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.inOut' });
-            setActive(i - 1);
-          },
+      ctx = gsap.context(() => {
+        imgRefs.current.forEach((el, i) => {
+          if (!el) return;
+          gsap.set(el, { opacity: i === 0 ? 1 : 0, scale: i === 0 ? 1 : 1.06 });
         });
-      });
-    }, strip);
 
-    return () => ctx.revert();
+        images.forEach((_, i) => {
+          if (i === 0) return;
+          const prev = imgRefs.current[i - 1];
+          const curr = imgRefs.current[i];
+          if (!prev || !curr) return;
+
+          ScrollTrigger.create({
+            trigger: strip,
+            start: `top+=${(i / images.length) * 60}% center`,
+            end:   `top+=${((i + 1) / images.length) * 60}% center`,
+            onEnter: () => {
+              gsap.to(prev, { opacity: 0, scale: 0.95, duration: 0.5, ease: 'power2.inOut' });
+              gsap.fromTo(curr,
+                { opacity: 0, scale: 1.06 },
+                { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.inOut' }
+              );
+              setActive(i);
+            },
+            onLeaveBack: () => {
+              gsap.to(curr, { opacity: 0, scale: 1.06, duration: 0.4, ease: 'power2.inOut' });
+              gsap.to(prev, { opacity: 1, scale: 1, duration: 0.4, ease: 'power2.inOut' });
+              setActive(i - 1);
+            },
+          });
+        });
+      }, strip);
+    });
+
+    return () => {
+      canceled = true;
+      ctx?.revert();
+    };
   }, [activity.images]);
 
   return (
@@ -158,23 +163,34 @@ const ActivityCard = ({
 
   // Card entrance animation
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        cardRef.current,
-        { opacity: 0, y: 60, scale: 0.97 },
-        {
-          opacity: 1, y: 0, scale: 1,
-          duration: 0.8,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: cardRef.current,
-            start: 'top 88%',
-            once: true,
-          },
-        }
-      );
+    let ctx: any;
+    let canceled = false;
+
+    loadGsap().then(({ gsap, ScrollTrigger }) => {
+      if (canceled) return;
+
+      ctx = gsap.context(() => {
+        gsap.fromTo(
+          cardRef.current,
+          { opacity: 0, y: 60, scale: 0.97 },
+          {
+            opacity: 1, y: 0, scale: 1,
+            duration: 0.8,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: cardRef.current,
+              start: 'top 88%',
+              once: true,
+            },
+          }
+        );
+      });
     });
-    return () => ctx.revert();
+
+    return () => {
+      canceled = true;
+      ctx?.revert();
+    };
   }, []);
 
   return (
@@ -235,17 +251,28 @@ const EducationalGallery: React.FC = () => {
   const headerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        headerRef.current,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
-          scrollTrigger: { trigger: headerRef.current, start: 'top 85%', once: true },
-        }
-      );
+    let ctx: any;
+    let canceled = false;
+
+    loadGsap().then(({ gsap }) => {
+      if (canceled) return;
+
+      ctx = gsap.context(() => {
+        gsap.fromTo(
+          headerRef.current,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+            scrollTrigger: { trigger: headerRef.current, start: 'top 85%', once: true },
+          }
+        );
+      });
     });
-    return () => ctx.revert();
+
+    return () => {
+      canceled = true;
+      ctx?.revert();
+    };
   }, []);
 
   return (

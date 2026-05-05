@@ -1,12 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Github, ExternalLink, Youtube, Star, GitFork, X, ArrowRight } from 'lucide-react';
 import TrueFocus from '../components/animations/TrueFocus';
 import { useGitHubRepos, GitHubRepo } from '../hooks/useGitHubRepos';
-
-gsap.registerPlugin(ScrollTrigger);
+import { loadGsap } from '../lib/loadGsap';
 
 /* ─── Language color map ────────────────────────────────────── */
 const LANG_COLORS: Record<string, { bg: string; text: string; border: string; dot: string }> = {
@@ -36,13 +33,21 @@ const CodeBg = ({ color }: { color: string }) => (
 /* ─── Magnetic Button ───────────────────────────────────────── */
 const MagneticBtn = ({ href, children, className }: { href: string; children: React.ReactNode; className: string }) => {
   const ref = useRef<HTMLAnchorElement>(null);
-  const onMove = useCallback((e: React.MouseEvent) => {
+  const onMove = useCallback(async (e: React.MouseEvent) => {
+    const clientX = e.clientX;
+    const clientY = e.clientY;
     if (!ref.current) return;
-    const r = ref.current.getBoundingClientRect();
-    gsap.to(ref.current, { x: (e.clientX - r.left - r.width / 2) * 0.3, y: (e.clientY - r.top - r.height / 2) * 0.3, duration: 0.3, ease: 'power2.out' });
+    const { gsap } = await loadGsap();
+    const target = ref.current;
+    if (!target) return;
+    const r = target.getBoundingClientRect();
+    gsap.to(target, { x: (clientX - r.left - r.width / 2) * 0.3, y: (clientY - r.top - r.height / 2) * 0.3, duration: 0.3, ease: 'power2.out' });
   }, []);
-  const onLeave = useCallback(() => {
-    gsap.to(ref.current, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1,0.5)' });
+  const onLeave = useCallback(async () => {
+    const { gsap } = await loadGsap();
+    const target = ref.current;
+    if (!target) return;
+    gsap.to(target, { x: 0, y: 0, duration: 0.5, ease: 'elastic.out(1,0.5)' });
   }, []);
   return (
     <a ref={ref} href={href} target="_blank" rel="noopener noreferrer" className={className}
@@ -93,11 +98,21 @@ const FilterBar = ({ languages, active, onChange }: { languages: string[]; activ
   const indicatorRef = useRef<HTMLDivElement>(null);
   const barRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
+    let cancelled = false;
     const bar = barRef.current;
-    if (!bar || !indicatorRef.current) return;
-    const btn = bar.querySelector(`[data-lang="${active}"]`) as HTMLElement;
-    if (!btn) return;
-    gsap.to(indicatorRef.current, { x: btn.offsetLeft, width: btn.offsetWidth, duration: 0.4, ease: 'power3.out' });
+    const indicator = indicatorRef.current;
+    if (!bar || !indicator) return;
+
+    const updateIndicator = async () => {
+      const { gsap } = await loadGsap();
+      if (cancelled) return;
+      const btn = bar.querySelector(`[data-lang="${active}"]`) as HTMLElement;
+      if (!btn) return;
+      gsap.to(indicator, { x: btn.offsetLeft, width: btn.offsetWidth, duration: 0.4, ease: 'power3.out' });
+    };
+
+    updateIndicator();
+    return () => { cancelled = true; };
   }, [active, languages]);
   return (
     <div ref={barRef} className="relative flex flex-wrap gap-1 p-1 rounded-2xl bg-white/5 border border-white/10 w-fit mx-auto">
@@ -181,15 +196,25 @@ const GridCard = ({ repo, index, onClick }: { repo: GitHubRepo; index: number; o
   const ref = useRef<HTMLDivElement>(null);
   const lang = getLang(repo.language);
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(ref.current,
-        { opacity: 0, y: 40, scale: 0.97 },
-        {
-          opacity: 1, y: 0, scale: 1, duration: 0.6, delay: (index % 8) * 0.07, ease: 'power3.out',
-          scrollTrigger: { trigger: ref.current, start: 'top 92%', once: true }
-        });
-    });
-    return () => ctx.revert();
+    let isCancelled = false;
+    const animate = async () => {
+      const { gsap } = await loadGsap();
+      if (isCancelled || !ref.current) return;
+      const ctx = gsap.context(() => {
+        gsap.fromTo(ref.current,
+          { opacity: 0, y: 40, scale: 0.97 },
+          {
+            opacity: 1, y: 0, scale: 1, duration: 0.6, delay: (index % 8) * 0.07, ease: 'power3.out',
+            scrollTrigger: { trigger: ref.current, start: 'top 92%', once: true }
+          });
+      });
+      return () => ctx.revert();
+    };
+    const cleanupPromise = animate();
+    return () => {
+      isCancelled = true;
+      cleanupPromise.then((cleanup) => cleanup?.());
+    };
   }, [index]);
   return (
     <div ref={ref} onClick={onClick}
@@ -227,34 +252,46 @@ const HorizontalScroll = ({ repos, onSelect }: { repos: GitHubRepo[]; onSelect: 
   useEffect(() => {
     if (!sectionRef.current || !trackRef.current || repos.length === 0) return;
     const track = trackRef.current;
+    let isCancelled = false;
+    let cleanup: (() => void) | undefined;
 
     // Wait for layout
     const timer = setTimeout(() => {
-      const totalWidth = track.scrollWidth - window.innerWidth + 128;
-      const ctx = gsap.context(() => {
-        gsap.fromTo(headerRef.current,
-          { opacity: 0, y: 30 },
-          {
-            opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
-            scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', once: true }
+      const initScroll = async () => {
+        if (isCancelled) return;
+        const { gsap } = await loadGsap();
+        if (isCancelled || !sectionRef.current || !trackRef.current) return;
+        const totalWidth = track.scrollWidth - window.innerWidth + 128;
+        const ctx = gsap.context(() => {
+          gsap.fromTo(headerRef.current,
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+              scrollTrigger: { trigger: sectionRef.current, start: 'top 80%', once: true }
+            });
+          gsap.to(track, {
+            x: -totalWidth,
+            ease: 'none',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: 'top top',
+              end: () => `+=${totalWidth + 200}`,
+              scrub: 1.2,
+              pin: true,
+              anticipatePin: 1,
+            },
           });
-        gsap.to(track, {
-          x: -totalWidth,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: () => `+=${totalWidth + 200}`,
-            scrub: 1.2,
-            pin: true,
-            anticipatePin: 1,
-          },
-        });
-      }, sectionRef);
-      return () => ctx.revert();
+        }, sectionRef);
+        cleanup = () => ctx.revert();
+      };
+      initScroll();
     }, 100);
 
-    return () => clearTimeout(timer);
+    return () => {
+      isCancelled = true;
+      clearTimeout(timer);
+      cleanup?.();
+    };
   }, [repos]);
 
   if (repos.length === 0) return null;
@@ -366,15 +403,28 @@ const Projects: React.FC = () => {
 
   useEffect(() => {
     if (!gridRef.current || isLoading) return;
-    const ctx = gsap.context(() => {
-      gsap.fromTo('.grid-header',
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
-          scrollTrigger: { trigger: gridRef.current, start: 'top 80%', once: true }
-        });
-    }, gridRef);
-    return () => ctx.revert();
+    let isCancelled = false;
+    let cleanup: (() => void) | undefined;
+
+    const animateGrid = async () => {
+      const { gsap } = await loadGsap();
+      if (isCancelled || !gridRef.current) return;
+      const ctx = gsap.context(() => {
+        gsap.fromTo('.grid-header',
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1, y: 0, duration: 0.7, ease: 'power3.out',
+            scrollTrigger: { trigger: gridRef.current, start: 'top 80%', once: true }
+          });
+      }, gridRef);
+      cleanup = () => ctx.revert();
+    };
+
+    animateGrid();
+    return () => {
+      isCancelled = true;
+      cleanup?.();
+    };
   }, [repos, isLoading]);
 
   // Update featured repos in projectsExtra

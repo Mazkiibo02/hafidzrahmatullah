@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,15 +8,16 @@ import { AnimatePresence, motion } from "framer-motion";
 import { gsap } from "gsap";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import Projects from "./pages/Projects";
-import Skills from "./pages/Skills";
-import Certificates from "./pages/Certificates";
-import Contact from "./pages/Contact";
-import Experience from "./pages/Experience";
-import NotFound from "./pages/NotFound";
 import { useLenis } from "./hooks/useLenis";
+
+const Home = lazy(() => import("./pages/Home"));
+const About = lazy(() => import("./pages/About"));
+const Projects = lazy(() => import("./pages/Projects"));
+const Skills = lazy(() => import("./pages/Skills"));
+const Certificates = lazy(() => import("./pages/Certificates"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Experience = lazy(() => import("./pages/Experience"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
@@ -111,16 +112,18 @@ const AnimatedRoutes = () => {
         animate="animate"
         exit="exit"
       >
-        <Routes location={location}>
-          <Route path="/"             element={<Home />}        />
-          <Route path="/about"        element={<About />}       />
-          <Route path="/projects"     element={<Projects />}    />
-          <Route path="/skills"       element={<Skills />}      />
-          <Route path="/experience"   element={<Experience />}  />
-          <Route path="/certificates" element={<Certificates />}/>
-          <Route path="/contact"      element={<Contact />}     />
-          <Route path="*"             element={<NotFound />}    />
-        </Routes>
+        <Suspense fallback={null}>
+          <Routes location={location}>
+            <Route path="/"             element={<Home />}        />
+            <Route path="/about"        element={<About />}       />
+            <Route path="/projects"     element={<Projects />}    />
+            <Route path="/skills"       element={<Skills />}      />
+            <Route path="/experience"   element={<Experience />}  />
+            <Route path="/certificates" element={<Certificates />}/>
+            <Route path="/contact"      element={<Contact />}     />
+            <Route path="*"             element={<NotFound />}    />
+          </Routes>
+        </Suspense>
       </motion.div>
     </AnimatePresence>
   );

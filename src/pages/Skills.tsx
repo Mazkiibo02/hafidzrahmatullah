@@ -1,12 +1,9 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { loadGsap } from '@/lib/loadGsap';
 import DecorativeAnimations from '../components/DecorativeAnimations';
 import TrueFocus from '../components/animations/TrueFocus';
 import { useDataCounts } from '../hooks/useDataCounts';
-
-gsap.registerPlugin(ScrollTrigger);
 
 /* Data */
 
@@ -123,13 +120,22 @@ const useCounter = (target: number, inView: boolean) => {
   const [value, setValue] = useState(0);
   useEffect(() => {
     if (!inView) return;
+    let canceled = false;
+    let tween: any;
     const obj = { val: 0 };
-    gsap.to(obj, {
-      val: target,
-      duration: 1.8,
-      ease: 'power2.out',
-      onUpdate: () => setValue(Math.round(obj.val)),
+    loadGsap().then(({ gsap }) => {
+      if (canceled) return;
+      tween = gsap.to(obj, {
+        val: target,
+        duration: 1.8,
+        ease: 'power2.out',
+        onUpdate: () => setValue(Math.round(obj.val)),
+      });
     });
+    return () => {
+      canceled = true;
+      tween?.kill();
+    };
   }, [inView, target]);
   return value;
 };
@@ -189,24 +195,33 @@ const FeaturedCard = ({
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        cardRef.current,
-        { opacity: 0, y: 60 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 0.9,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: cardRef.current,
-            start: 'top 85%',
-            once: true,
-          },
-        }
-      );
+    let cancelled = false;
+    let cleanup: (() => void) | undefined;
+    loadGsap().then(({ gsap }) => {
+      if (cancelled) return;
+      const ctx = gsap.context(() => {
+        gsap.fromTo(
+          cardRef.current,
+          { opacity: 0, y: 60 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.9,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: cardRef.current,
+              start: 'top 85%',
+              once: true,
+            },
+          }
+        );
+      });
+      cleanup = () => ctx.revert();
     });
-    return () => ctx.revert();
+    return () => {
+      cancelled = true;
+      cleanup?.();
+    };
   }, []);
 
   return (
@@ -283,25 +298,34 @@ const RegularCard = ({
   const cardRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        cardRef.current,
-        { opacity: 0, y: 50, scale: 0.95 },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          duration: 0.7,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: cardRef.current,
-            start: 'top 88%',
-            once: true,
-          },
-        }
-      );
+    let cancelled = false;
+    let cleanup: (() => void) | undefined;
+    loadGsap().then(({ gsap }) => {
+      if (cancelled) return;
+      const ctx = gsap.context(() => {
+        gsap.fromTo(
+          cardRef.current,
+          { opacity: 0, y: 50, scale: 0.95 },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.7,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: cardRef.current,
+              start: 'top 88%',
+              once: true,
+            },
+          }
+        );
+      });
+      cleanup = () => ctx.revert();
     });
-    return () => ctx.revert();
+    return () => {
+      cancelled = true;
+      cleanup?.();
+    };
   }, []);
 
   return (

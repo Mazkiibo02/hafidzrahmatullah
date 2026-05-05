@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, Moon, Sun, Github, Linkedin, Instagram } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { gsap } from 'gsap';
+import { loadGsap } from '@/lib/loadGsap';
 
 const navItems = [
   { path: '/',             label: 'Home' },
@@ -22,6 +22,7 @@ const Navbar = () => {
   const location   = useLocation();
   const navRef     = useRef<HTMLElement>(null);
   const lastScrollY = useRef(0);
+  const gsapRef    = useRef<any>(null);
 
   /* ── Dark mode init ── */
   useEffect(() => {
@@ -32,10 +33,22 @@ const Navbar = () => {
 
   /* ── GSAP scroll hide/show + scrolled state ── */
   useEffect(() => {
+    let mounted = true;
+
+    loadGsap().then(({ gsap }) => {
+      if (mounted) gsapRef.current = gsap;
+    });
+
     const handleScroll = () => {
       const y = window.scrollY;
       setScrolled(y > 20);
       const dir = y > lastScrollY.current ? 'down' : 'up';
+      const gsap = gsapRef.current;
+
+      if (!gsap || !navRef.current) {
+        lastScrollY.current = y;
+        return;
+      }
 
       if (y < 50) {
         gsap.to(navRef.current, { y: 0, duration: 0.3, ease: 'power2.out' });
@@ -47,13 +60,22 @@ const Navbar = () => {
       }
       lastScrollY.current = y;
     };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      mounted = false;
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   /* ── Reset on route change ── */
   useEffect(() => {
-    gsap.to(navRef.current, { y: 0, duration: 0.3, ease: 'power2.out' });
+    const animate = async () => {
+      const { gsap } = await loadGsap();
+      if (!navRef.current) return;
+      gsap.to(navRef.current, { y: 0, duration: 0.3, ease: 'power2.out' });
+    };
+    animate();
     setIsOpen(false);
   }, [location.pathname]);
 

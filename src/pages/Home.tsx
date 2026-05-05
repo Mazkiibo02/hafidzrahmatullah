@@ -1,8 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Download, Code, Smartphone, Shield, MapPin, GraduationCap } from 'lucide-react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { loadGsap } from '@/lib/loadGsap';
 import { motion } from 'framer-motion';
 import DecorativeAnimations from '../components/DecorativeAnimations';
 import TrueFocus from '../components/animations/TrueFocus';
@@ -10,20 +9,31 @@ import EducationalGallery from '../components/EducationalGallery';
 import { useDataCounts } from '../hooks/useDataCounts';
 import { downloadCV } from '../hooks/useCV';
 
-gsap.registerPlugin(ScrollTrigger);
-
 /* Animated counter */
 const useCounter = (target: number, inView: boolean) => {
   const [value, setValue] = useState(0);
   useEffect(() => {
     if (!inView) return;
+    let tween: any;
+    let canceled = false;
+
     const obj = { val: 0 };
-    gsap.to(obj, {
-      val: target,
-      duration: 1.8,
-      ease: 'power2.out',
-      onUpdate: () => setValue(Math.round(obj.val)),
+    loadGsap().then(({ gsap }) => {
+      if (canceled) return;
+      tween = gsap.to(obj, {
+        val: target,
+        duration: 1.8,
+        ease: 'power2.out',
+        onUpdate: () => {
+          setValue(Math.round(obj.val));
+        },
+      });
     });
+
+    return () => {
+      canceled = true;
+      tween?.kill();
+    };
   }, [inView, target]);
   return value;
 };
@@ -158,14 +168,24 @@ const Home = () => {
   const [statsInView, setStatsInView] = useState(false);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        heroLeftRef.current,
-        { x: -50, opacity: 0 },
-        { x: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.1 }
-      );
+    let ctx: any;
+    let canceled = false;
+
+    loadGsap().then(({ gsap }) => {
+      if (canceled) return;
+      ctx = gsap.context(() => {
+        gsap.fromTo(
+          heroLeftRef.current,
+          { x: -50, opacity: 0 },
+          { x: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.1 }
+        );
+      });
     });
-    return () => ctx.revert();
+
+    return () => {
+      canceled = true;
+      ctx?.revert();
+    };
   }, []);
 
   useEffect(() => {

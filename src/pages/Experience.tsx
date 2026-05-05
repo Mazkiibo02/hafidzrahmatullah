@@ -1,11 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { loadGsap } from '@/lib/loadGsap';
 import { Calendar, ChevronRight } from 'lucide-react';
 import { experiences, type Experience as ExperienceData } from '@/data/experiences';
-
-gsap.registerPlugin(ScrollTrigger);
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&';
 
@@ -93,29 +90,38 @@ const MobileImageGallery = ({
 
     // Reset to first image
     setActiveImg(0);
-    imgRefs.current.forEach((el, i) => {
-      if (!el) return;
-      gsap.set(el, { opacity: i === 0 ? 1 : 0, scale: i === 0 ? 1 : 1.05 });
+    let canceled = false;
+    let timeline: any;
+
+    loadGsap().then(({ gsap }) => {
+      if (canceled) return;
+      imgRefs.current.forEach((el, i) => {
+        if (!el) return;
+        gsap.set(el, { opacity: i === 0 ? 1 : 0, scale: i === 0 ? 1 : 1.05 });
+      });
+
+      // Cycle through images with timeline
+      timeline = gsap.timeline({ repeat: -1 });
+      images.forEach((_, i) => {
+        const next = (i + 1) % images.length;
+        timeline.add(() => {
+          const curr = imgRefs.current[i];
+          const nextEl = imgRefs.current[next];
+          if (!curr || !nextEl) return;
+          gsap.to(curr,   { opacity: 0, scale: 0.97, duration: 0.5, ease: 'power2.inOut' });
+          gsap.fromTo(nextEl,
+            { opacity: 0, scale: 1.05 },
+            { opacity: 1, scale: 1,    duration: 0.5, ease: 'power2.inOut',
+              onStart: () => setActiveImg(next) }
+          );
+        }).addPause(`+=${i === 0 ? 2.5 : 2}`);
+      });
     });
 
-    // Cycle through images with timeline
-    const tl = gsap.timeline({ repeat: -1 });
-    images.forEach((_, i) => {
-      const next = (i + 1) % images.length;
-      tl.add(() => {
-        const curr = imgRefs.current[i];
-        const nextEl = imgRefs.current[next];
-        if (!curr || !nextEl) return;
-        gsap.to(curr,   { opacity: 0, scale: 0.97, duration: 0.5, ease: 'power2.inOut' });
-        gsap.fromTo(nextEl,
-          { opacity: 0, scale: 1.05 },
-          { opacity: 1, scale: 1,    duration: 0.5, ease: 'power2.inOut',
-            onStart: () => setActiveImg(next) }
-        );
-      }).addPause(`+=${i === 0 ? 2.5 : 2}`);
-    });
-
-    return () => { tl.kill(); };
+    return () => {
+      canceled = true;
+      timeline?.kill();
+    };
   }, [isActive, images]);
 
   return (
@@ -353,38 +359,49 @@ const Experience: React.FC = () => {
 
   useEffect(() => {
     if (!sectionRef.current) return;
-    const ctx = gsap.context(() => {
-      cardRefs.current.forEach((card, i) => {
-        if (i > 0 && card) gsap.set(card, { y: '110vh' });
-      });
-      experiences.forEach((_, i) => {
-        if (i === 0) return;
-        const card     = cardRefs.current[i];
-        const prevCard = cardRefs.current[i - 1];
-        if (!card || !prevCard) return;
-        const pct    = Math.round((i / N) * 100);
-        const pctEnd = Math.round(((i + 0.65) / N) * 100);
-        gsap.fromTo(card, { y: '110vh' }, {
-          y: 0, ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: `${pct}% top`, end: `${pctEnd}% top`,
-            scrub: 1.4,
-            onEnter:     () => setActiveIndex(i),
-            onLeaveBack: () => setActiveIndex(i - 1),
-          },
+    let cleanup: (() => void) | undefined;
+    let canceled = false;
+
+    loadGsap().then(({ gsap }) => {
+      if (canceled || !sectionRef.current) return;
+      const ctx = gsap.context(() => {
+        cardRefs.current.forEach((card, i) => {
+          if (i > 0 && card) gsap.set(card, { y: '110vh' });
         });
-        gsap.fromTo(prevCard, { scale: 1, opacity: 1 }, {
-          scale: 0.93, opacity: 0.55, ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: `${pct}% top`, end: `${pctEnd}% top`,
-            scrub: 1.4,
-          },
+        experiences.forEach((_, i) => {
+          if (i === 0) return;
+          const card     = cardRefs.current[i];
+          const prevCard = cardRefs.current[i - 1];
+          if (!card || !prevCard) return;
+          const pct    = Math.round((i / N) * 100);
+          const pctEnd = Math.round(((i + 0.65) / N) * 100);
+          gsap.fromTo(card, { y: '110vh' }, {
+            y: 0, ease: 'none',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: `${pct}% top`, end: `${pctEnd}% top`,
+              scrub: 1.4,
+              onEnter:     () => setActiveIndex(i),
+              onLeaveBack: () => setActiveIndex(i - 1),
+            },
+          });
+          gsap.fromTo(prevCard, { scale: 1, opacity: 1 }, {
+            scale: 0.93, opacity: 0.55, ease: 'none',
+            scrollTrigger: {
+              trigger: sectionRef.current,
+              start: `${pct}% top`, end: `${pctEnd}% top`,
+              scrub: 1.4,
+            },
+          });
         });
-      });
-    }, sectionRef);
-    return () => ctx.revert();
+      }, sectionRef);
+      cleanup = () => ctx.revert();
+    });
+
+    return () => {
+      canceled = true;
+      cleanup?.();
+    };
   }, [N]);
 
   const magang    = experiences.filter((e) => e.type === 'Magang').length;

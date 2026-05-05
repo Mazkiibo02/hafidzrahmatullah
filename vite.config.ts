@@ -21,4 +21,25 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (!id.includes('node_modules')) return;
+          if (id.includes('react-dom') || id.includes('/react/') || id.includes('react/jsx-runtime')) {
+            return 'react-core';
+          }
+          if (id.includes('framer-motion') || id.includes('/gsap')) {
+            return 'animation';
+          }
+          if (id.includes('@radix-ui')) {
+            return 'ui';
+          }
+          if (id.includes('recharts')) {
+            return 'charts';
+          }
+        },
+      },
+    },
+  },
 }));

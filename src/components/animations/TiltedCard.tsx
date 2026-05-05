@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import { gsap } from 'gsap';
+import { loadGsap } from '@/lib/loadGsap';
 
 interface TiltedCardProps {
   children: React.ReactNode;
@@ -13,29 +13,36 @@ const TiltedCard: React.FC<TiltedCardProps> = ({
   tiltAngle = 10,
 }) => {
   const cardRef = useRef<HTMLDivElement>(null);
-  const rotateX = useRef<gsap.QuickToFunc | null>(null);
-  const rotateY = useRef<gsap.QuickToFunc | null>(null);
-  const scale   = useRef<gsap.QuickToFunc | null>(null);
+  const rotateX = useRef<any>(null);
+  const rotateY = useRef<any>(null);
+  const scale   = useRef<any>(null);
 
   useEffect(() => {
     if (!cardRef.current) return;
 
-    gsap.set(cardRef.current, { transformPerspective: 1000 });
+    let canceled = false;
 
-    rotateX.current = gsap.quickTo(cardRef.current, 'rotateX', {
-      duration: 0.4,
-      ease: 'power3.out',
-    });
-    rotateY.current = gsap.quickTo(cardRef.current, 'rotateY', {
-      duration: 0.4,
-      ease: 'power3.out',
-    });
-    scale.current = gsap.quickTo(cardRef.current, 'scale', {
-      duration: 0.4,
-      ease: 'power3.out',
+    loadGsap().then(({ gsap }) => {
+      if (canceled || !cardRef.current) return;
+
+      gsap.set(cardRef.current, { transformPerspective: 1000 });
+
+      rotateX.current = gsap.quickTo(cardRef.current, 'rotateX', {
+        duration: 0.4,
+        ease: 'power3.out',
+      });
+      rotateY.current = gsap.quickTo(cardRef.current, 'rotateY', {
+        duration: 0.4,
+        ease: 'power3.out',
+      });
+      scale.current = gsap.quickTo(cardRef.current, 'scale', {
+        duration: 0.4,
+        ease: 'power3.out',
+      });
     });
 
     return () => {
+      canceled = true;
       rotateX.current = null;
       rotateY.current = null;
       scale.current   = null;
