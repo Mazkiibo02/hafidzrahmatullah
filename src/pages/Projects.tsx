@@ -219,7 +219,7 @@ const GridCard = ({ repo, index, onClick }: { repo: GitHubRepo; index: number; o
   }, [index]);
   return (
     <div ref={ref} onClick={onClick}
-      className={`rounded-2xl border ${lang.border} bg-gray-950/60 backdrop-blur-sm cursor-pointer group relative overflow-hidden opacity-0 hover:border-opacity-60 transition-all duration-400 hover:-translate-y-1`}>
+      className={`rounded-2xl border ${lang.border} bg-gray-800 dark:bg-gray-800 cursor-pointer group relative overflow-hidden opacity-0 hover:border-opacity-60 transition-all duration-400 hover:-translate-y-1`}>
       <CodeBg color={lang.dot} />
       <div className="absolute left-0 top-4 bottom-4 w-0.5 rounded-full opacity-40" style={{ backgroundColor: lang.dot }} />
       <div className="relative z-10 p-5">

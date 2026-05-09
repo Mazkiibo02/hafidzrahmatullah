@@ -1,13 +1,13 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Download, Code, Smartphone, Shield, MapPin, GraduationCap } from 'lucide-react';
+import { ArrowRight, Eye, Code, Smartphone, Shield, MapPin, GraduationCap } from 'lucide-react';
 import { loadGsap } from '@/lib/loadGsap';
 import { motion } from 'framer-motion';
 import DecorativeAnimations from '../components/DecorativeAnimations';
+import CVPreviewModal from '../components/CVpreviewmodal';
 import TrueFocus from '../components/animations/TrueFocus';
 import EducationalGallery from '../components/EducationalGallery';
 import { useDataCounts } from '../hooks/useDataCounts';
-import { downloadCV } from '../hooks/useCV';
 
 /* Animated counter */
 const useCounter = (target: number, inView: boolean) => {
@@ -160,6 +160,7 @@ const Home = () => {
   const heroLeftRef  = useRef<HTMLDivElement>(null);
   const statsRef     = useRef<HTMLDivElement>(null);
   const [statsInView, setStatsInView] = useState(false);
+  const [isCVOpen, setIsCVOpen] = useState(false);
 
   useEffect(() => {
     let ctx: any;
@@ -191,10 +192,6 @@ const Home = () => {
     observer.observe(statsRef.current);
     return () => observer.disconnect();
   }, []);
-
-  const handleDownloadCV = async () => {
-    try { await downloadCV(); } catch (e) { console.error(e); }
-  };
 
   return (
     <div className="min-h-screen mesh-bg relative overflow-x-hidden">
@@ -267,11 +264,11 @@ const Home = () => {
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
                 </Link>
                 <button
-                  onClick={handleDownloadCV}
+                  onClick={() => setIsCVOpen(true)}
                   className="inline-flex items-center justify-center px-8 py-4 glass-card text-gray-900 dark:text-white font-semibold rounded-xl border border-gray-200 dark:border-gray-700 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-300 hover:scale-105"
                 >
-                  <Download className="mr-2" size={20} />
-                  Download CV
+                  <Eye className="mr-2" size={20} />
+                  Lihat CV
                 </button>
               </motion.div>
 
@@ -343,6 +340,7 @@ const Home = () => {
       </section>
 
       <EducationalGallery />
+      <CVPreviewModal isOpen={isCVOpen} onClose={() => setIsCVOpen(false)} />
     </div>
   );
 };

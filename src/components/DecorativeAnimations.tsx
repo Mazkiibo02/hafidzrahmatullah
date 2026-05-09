@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 
 interface DecorativeAnimationsProps {
@@ -6,72 +5,43 @@ interface DecorativeAnimationsProps {
   className?: string;
 }
 
-const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({ 
-  fullBackground = false, 
-  className = "" 
+const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({
+  fullBackground = false,
+  className = '',
 }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   useEffect(() => {
-    // Check initial theme more reliably
     const checkTheme = () => {
-      // First check if dark class is explicitly set
       const hasDarkClass = document.documentElement.classList.contains('dark');
-      
-      // If no explicit dark class, check localStorage and system preference
       if (!hasDarkClass) {
         const storedTheme = localStorage.getItem('darkMode');
-        if (storedTheme === 'true') {
-          setIsDarkMode(true);
-          return;
-        } else if (storedTheme === 'false') {
-          setIsDarkMode(false);
-          return;
-        }
-        
-        // Fall back to system preference only if no stored preference
-        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        setIsDarkMode(systemPrefersDark);
+        if (storedTheme === 'true') { setIsDarkMode(true); return; }
+        if (storedTheme === 'false') { setIsDarkMode(false); return; }
+        setIsDarkMode(window.matchMedia('(prefers-color-scheme: dark)').matches);
       } else {
         setIsDarkMode(true);
       }
     };
 
-    // Set initial theme immediately
     checkTheme();
 
-    // Listen for theme changes on document element
     const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-          const isDark = document.documentElement.classList.contains('dark');
-          setIsDarkMode(isDark);
+      mutations.forEach((m) => {
+        if (m.type === 'attributes' && m.attributeName === 'class') {
+          setIsDarkMode(document.documentElement.classList.contains('dark'));
         }
       });
     });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ['class']
-    });
-
-    // Listen for localStorage changes (for when theme is changed in navbar)
-    const handleStorageChange = () => {
-      checkTheme();
-    };
-
+    const handleStorageChange = () => checkTheme();
     window.addEventListener('storage', handleStorageChange);
 
-    // Listen for system theme changes as backup
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     const handleMediaChange = () => {
-      // Only use system preference if no explicit theme is set
-      const storedTheme = localStorage.getItem('darkMode');
-      if (!storedTheme) {
-        setIsDarkMode(mediaQuery.matches);
-      }
+      if (!localStorage.getItem('darkMode')) setIsDarkMode(mediaQuery.matches);
     };
-
     mediaQuery.addEventListener('change', handleMediaChange);
 
     return () => {
@@ -81,31 +51,25 @@ const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({
     };
   }, []);
 
-  // Generate realistic starfield
-  const generateStars = (count: number) => {
-    return Array.from({ length: count }, (_, i) => ({
-      id: i,
-      left: Math.random() * 100,
-      top: Math.random() * 100,
-      animationDelay: Math.random() * 4,
-      size: Math.random() * 1.5 + 0.5,
-      brightness: Math.random() * 0.7 + 0.3,
-    }));
-  };
-  // (Removed generateClouds and generateBirdFlocks - not needed for dot-grid light theme)
+  const stars = Array.from({ length: fullBackground ? 50 : 30 }, (_, i) => ({
+    id: i,
+    left: Math.random() * 100,
+    top: Math.random() * 100,
+    animationDelay: Math.random() * 4,
+    size: Math.random() * 1.5 + 0.5,
+    brightness: Math.random() * 0.7 + 0.3,
+  }));
 
-  const stars = generateStars(fullBackground ? 100 : 40);
-
-  const containerClass = fullBackground 
-    ? "fixed inset-0 pointer-events-none z-0" 
-    : "absolute inset-0 pointer-events-none overflow-hidden";
+  // FIX: overflow-hidden pada semua container agar meteor tidak sebabkan scrollbar
+  const containerClass = fullBackground
+    ? 'fixed inset-0 pointer-events-none z-0 overflow-hidden'
+    : 'absolute inset-0 pointer-events-none overflow-hidden';
 
   return (
     <div className={`${containerClass} ${className}`}>
       {isDarkMode ? (
-        // Dark Mode - Space Theme
         <>
-          {/* Realistic Starfield */}
+          {/* Starfield — dikurangi dari 100 ke 50 */}
           {stars.map((star) => (
             <div
               key={`star-${star.id}`}
@@ -122,13 +86,13 @@ const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({
                 style={{
                   width: `${star.size}px`,
                   height: `${star.size}px`,
-                  boxShadow: `0 0 ${star.size * 2}px rgba(255, 255, 255, ${star.brightness * 0.5})`,
+                  boxShadow: `0 0 ${star.size * 2}px rgba(255,255,255,${star.brightness * 0.5})`,
                 }}
               />
             </div>
           ))}
 
-          {/* Meteors with glowing tails */}
+          {/* Meteor — hanya 2, dihapus meteor-3 agar lebih ringan */}
           <div className="meteor meteor-1">
             <div className="meteor-head" />
             <div className="meteor-tail" />
@@ -137,12 +101,8 @@ const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({
             <div className="meteor-head" />
             <div className="meteor-tail" />
           </div>
-          <div className="meteor meteor-3">
-            <div className="meteor-head" />
-            <div className="meteor-tail" />
-          </div>
 
-          {/* Subtle orbiting satellite */}
+          {/* Satellite */}
           <div className="satellite-orbit-container">
             <div className="satellite-orbit">
               <div className="satellite-dot" />
@@ -150,18 +110,18 @@ const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({
           </div>
         </>
       ) : (
-        // Light Mode - Enhanced Daytime Sky Theme
         <>
+          {/* Light Mode — grid lines */}
           <svg
-            className="absolute inset-0 w-full h-full opacity-[0.18] pointer-events-none"
+            className="absolute inset-0 w-full h-full opacity-[0.12] pointer-events-none"
             xmlns="http://www.w3.org/2000/svg"
           >
             <defs>
-              <pattern id="dot-grid" x="0" y="0" width="24" height="24" patternUnits="userSpaceOnUse">
-                <circle cx="1" cy="1" r="1" fill="#818cf8" />
+              <pattern id="grid-lines" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#6366f1" strokeWidth="0.8" />
               </pattern>
             </defs>
-            <rect width="100%" height="100%" fill="url(#dot-grid)" />
+            <rect width="100%" height="100%" fill="url(#grid-lines)" />
           </svg>
         </>
       )}
