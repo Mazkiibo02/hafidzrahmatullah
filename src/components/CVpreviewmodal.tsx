@@ -1,6 +1,12 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Download, ExternalLink } from 'lucide-react';
+import { X, Download, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Document, Page, pdfjs } from 'react-pdf';
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
+
+// Wajib: set worker path (pakai CDN yang match versi react-pdf)
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 interface CVPreviewModalProps {
   isOpen: boolean;
@@ -9,22 +15,51 @@ interface CVPreviewModalProps {
 
 const CV_PATH = '/cv/Hafidz-Rahmatullah-CV.pdf';
 
-// Google Docs Viewer — reliable di semua browser termasuk mobile
-const getGoogleDocsViewerUrl = (pdfUrl: string) => {
-  const absolute = window.location.origin + pdfUrl;
-  return `https://docs.google.com/viewer?url=${encodeURIComponent(absolute)}&embedded=true`;
-};
-
 const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose }) => {
+  const [numPages, setNumPages] = React.useState<number>(0);
+  const [pageNumber, setPageNumber] = React.useState<number>(1);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [viewerUrl, setViewerUrl] = React.useState('');
+  const [error, setError] = React.useState(false);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = React.useState(800);
 
-  // Generate viewer URL saat modal dibuka
+  // Ukur lebar container untuk responsive page width
+  React.useEffect(() => {
+    if (!isOpen || !containerRef.current) return;
+    const ro = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        setContainerWidth(entry.contentRect.width);
+      }
+    });
+    ro.observe(containerRef.current);
+    return () => ro.disconnect();
+  }, [isOpen]);
+
+  // Reset state saat modal dibuka
   React.useEffect(() => {
     if (isOpen) {
+      setPageNumber(1);
       setIsLoading(true);
-      setViewerUrl(getGoogleDocsViewerUrl(CV_PATH));
+      setError(false);
     }
+  }, [isOpen]);
+
+  // Escape key
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+      if (e.key === 'ArrowRight') setPageNumber((p) => Math.min(p + 1, numPages));
+      if (e.key === 'ArrowLeft') setPageNumber((p) => Math.max(p - 1, 1));
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [isOpen, onClose, numPages]);
+
+  // Lock body scroll
+  React.useEffect(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
   const handleDownload = () => {
@@ -36,19 +71,16 @@ const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose }) => {
     document.body.removeChild(link);
   };
 
-  // Close on Escape
-  React.useEffect(() => {
-    if (!isOpen) return;
-    const onKey = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose(); };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [isOpen, onClose]);
+  const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
+    setNumPages(numPages);
+    setIsLoading(false);
+    setError(false);
+  };
 
-  // Lock body scroll
-  React.useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [isOpen]);
+  const onDocumentLoadError = () => {
+    setIsLoading(false);
+    setError(true);
+  };
 
   return (
     <AnimatePresence>
@@ -62,32 +94,28 @@ const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose }) => {
         >
           {/* Backdrop */}
           <motion.div
-            className="absolute inset-0 bg-black/75 backdrop-blur-md"
+            className="absolute inset-0 bg-black/80 backdrop-blur-md"
             onClick={onClose}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
           />
 
           {/* Modal */}
           <motion.div
-            className="relative z-10 w-full max-w-4xl flex flex-col rounded-2xl overflow-hidden border border-white/10 bg-gray-950 shadow-2xl"
+            className="relative z-10 w-full max-w-3xl flex flex-col rounded-2xl overflow-hidden border border-white/10 bg-gray-950 shadow-2xl"
             style={{ height: '90vh' }}
             initial={{ opacity: 0, scale: 0.94, y: 24 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.94, y: 24 }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
           >
-            {/* Header */}
+            {/* ── Header ── */}
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/10 bg-gray-900/80 backdrop-blur-sm flex-shrink-0">
               <div className="flex items-center gap-3">
-                {/* macOS dots */}
                 <div className="flex items-center gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-500/80" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
                   <div className="w-3 h-3 rounded-full bg-green-500/80" />
                 </div>
-                <span className="text-gray-400 text-xs font-mono ml-1">
+                <span className="text-gray-400 text-xs font-mono ml-1 hidden sm:block">
                   Hafidz-Rahmatullah-CV.pdf
                 </span>
               </div>
@@ -120,64 +148,94 @@ const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose }) => {
               </div>
             </div>
 
-            {/* PDF Viewer */}
-            <div className="flex-1 min-h-0 bg-gray-800 relative">
-              {/* Loading skeleton */}
+            {/* ── PDF Viewer ── */}
+            <div
+              ref={containerRef}
+              className="flex-1 min-h-0 overflow-y-auto bg-gray-800/50 flex flex-col items-center py-6 px-4 gap-4"
+            >
+              {/* Loading state */}
               {isLoading && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-gray-800 z-10">
-                  <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-2">
-                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-gray-500">
-                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-                      <polyline points="14 2 14 8 20 8" />
-                      <line x1="16" y1="13" x2="8" y2="13" />
-                      <line x1="16" y1="17" x2="8" y2="17" />
-                      <polyline points="10 9 9 9 8 9" />
-                    </svg>
+                <div className="flex flex-col items-center justify-center gap-4 py-20">
+                  <div className="flex gap-1.5">
+                    {[0, 1, 2].map((i) => (
+                      <div
+                        key={i}
+                        className="w-2 h-2 rounded-full bg-indigo-500 animate-bounce"
+                        style={{ animationDelay: `${i * 0.15}s` }}
+                      />
+                    ))}
                   </div>
-                  <div className="flex flex-col items-center gap-2">
-                    <div className="flex gap-1.5">
-                      {[0, 1, 2].map((i) => (
-                        <div
-                          key={i}
-                          className="w-1.5 h-1.5 rounded-full bg-indigo-500 animate-bounce"
-                          style={{ animationDelay: `${i * 0.15}s` }}
-                        />
-                      ))}
-                    </div>
-                    <p className="text-gray-500 text-xs font-mono">Memuat CV...</p>
+                  <p className="text-gray-500 text-xs font-mono">Memuat CV...</p>
+                </div>
+              )}
+
+              {/* Error state */}
+              {error && (
+                <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
+                  <p className="text-gray-400 text-sm">Gagal memuat PDF.</p>
+                  <div className="flex gap-3">
+                    <a
+                      href={CV_PATH}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm hover:bg-white/10 transition-colors"
+                    >
+                      <ExternalLink size={14} /> Buka di tab baru
+                    </a>
+                    <button
+                      onClick={handleDownload}
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-sm transition-colors"
+                    >
+                      <Download size={14} /> Download
+                    </button>
                   </div>
                 </div>
               )}
 
-              <iframe
-                key={viewerUrl}
-                src={viewerUrl}
-                className="w-full h-full"
-                title="CV Preview"
-                style={{ border: 'none' }}
-                onLoad={() => setIsLoading(false)}
-              />
+              {/* PDF Document */}
+              <Document
+                file={CV_PATH}
+                onLoadSuccess={onDocumentLoadSuccess}
+                onLoadError={onDocumentLoadError}
+                loading={null}
+                className="flex flex-col items-center gap-4"
+              >
+                {/* Render semua page sekaligus agar bisa scroll */}
+                {Array.from({ length: numPages }, (_, i) => (
+                  <div key={i} className="rounded-xl overflow-hidden shadow-2xl">
+                    <Page
+                      pageNumber={i + 1}
+                      width={Math.min(containerWidth - 32, 760)}
+                      renderTextLayer={true}
+                      renderAnnotationLayer={true}
+                    />
+                  </div>
+                ))}
+              </Document>
             </div>
 
-            {/* Footer fallback */}
-            <div className="flex items-center justify-center gap-3 px-5 py-3 border-t border-white/10 bg-gray-900/80 flex-shrink-0">
-              <span className="text-gray-500 text-xs font-mono">Tidak bisa melihat PDF?</span>
-              <a
-                href={CV_PATH}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-indigo-400 hover:text-indigo-300 text-xs font-medium underline underline-offset-2 transition-colors"
-              >
-                Buka di tab baru
-              </a>
-              <span className="text-gray-700 text-xs">·</span>
-              <button
-                onClick={handleDownload}
-                className="text-indigo-400 hover:text-indigo-300 text-xs font-medium underline underline-offset-2 transition-colors"
-              >
-                Download langsung
-              </button>
-            </div>
+            {/* ── Footer — page indicator ── */}
+            {numPages > 1 && (
+              <div className="flex items-center justify-center gap-4 px-5 py-3 border-t border-white/10 bg-gray-900/80 flex-shrink-0">
+                <button
+                  onClick={() => setPageNumber((p) => Math.max(p - 1, 1))}
+                  disabled={pageNumber <= 1}
+                  className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <span className="text-gray-400 text-xs font-mono">
+                  {pageNumber} / {numPages}
+                </span>
+                <button
+                  onClick={() => setPageNumber((p) => Math.min(p + 1, numPages))}
+                  disabled={pageNumber >= numPages}
+                  className="p-1.5 rounded-lg text-gray-500 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-all"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </div>
+            )}
           </motion.div>
         </motion.div>
       )}
