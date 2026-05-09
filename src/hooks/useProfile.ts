@@ -19,7 +19,7 @@ export const useProfile = () => {
   const mockProfile: Profile = {
     id: 'demo-user',
     full_name: 'Hafidz Rahmatullah',
-    profile_image_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=400&fit=crop&crop=face",
+    profile_image_url: "/images/me.jpg",
     created_at: new Date().toISOString(),
     updated_at: new Date().toISOString()
   };

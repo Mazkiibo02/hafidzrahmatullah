@@ -15,7 +15,7 @@ export const educationalActivities: EducationalActivity[] = [
     description:
       'Hafidz Rahmatullah menghadiri seminar Invofest yang wajib dihadiri oleh seluruh mahasiswa prodi Teknik Informatika Semester 4.',
     images: [
-      '/images/educational/invofest-1.jpg',
+      '/images/educational/invofest-1.PNG',
       '/images/educational/invofest-2.jpg',
       '/images/educational/invofest-3.jpg',
     ],

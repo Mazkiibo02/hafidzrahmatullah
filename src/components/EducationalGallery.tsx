@@ -196,12 +196,11 @@ const ActivityCard = ({
   return (
     <div
       ref={cardRef}
-      className="rounded-3xl overflow-hidden opacity-0"
+      className="rounded-3xl overflow-hidden opacity-0 bg-white dark:bg-gray-900/80"
       style={{
-        background: 'rgba(15,15,26,0.7)',
         backdropFilter: 'blur(16px)',
         border: `1px solid ${color}25`,
-        boxShadow: `0 4px 40px rgba(0,0,0,0.3)`,
+        boxShadow: `0 4px 40px rgba(0,0,0,0.08)`,
       }}
     >
       {/* Top accent */}
@@ -218,7 +217,7 @@ const ActivityCard = ({
               <cfg.Icon size={11} />
               {cfg.label}
             </div>
-            <h3 className="text-white font-bold text-lg leading-snug">{activity.title}</h3>
+            <h3 className="text-gray-900 dark:text-white font-bold text-lg leading-snug">{activity.title}</h3>
           </div>
           <div
             className="w-10 h-10 rounded-2xl flex items-center justify-center flex-shrink-0"
@@ -240,7 +239,7 @@ const ActivityCard = ({
         </div>
 
         {/* Description */}
-        <p className="text-gray-400 text-sm leading-relaxed">{activity.description}</p>
+        <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed">{activity.description}</p>
       </div>
     </div>
   );
@@ -276,7 +275,7 @@ const EducationalGallery: React.FC = () => {
   }, []);
 
   return (
-    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-950/50 relative z-10">
+    <section className="py-20 px-4 sm:px-6 lg:px-8 bg-white dark:bg-gray-900 relative z-10">
       <div className="max-w-7xl mx-auto">
 
         {/* Header */}
@@ -287,10 +286,10 @@ const EducationalGallery: React.FC = () => {
               Learning Journey
             </span>
           </div>
-          <h2 className="text-3xl lg:text-4xl font-bold text-white mb-3">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3">
             Educational Activities
           </h2>
-          <p className="text-gray-500 text-base max-w-xl">
+          <p className="text-gray-500 dark:text-gray-500 text-base max-w-xl">
             Highlights from seminars, workshops, and training programs attended throughout my academic journey.
           </p>
         </div>

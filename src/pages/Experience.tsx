@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { loadGsap } from '@/lib/loadGsap';
 import { Calendar, ChevronRight } from 'lucide-react';
 import { experiences, type Experience as ExperienceData } from '@/data/experiences';
+import DecorativeAnimations from '../components/DecorativeAnimations';
 
 const CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@#$%&';
 
@@ -408,8 +409,8 @@ const Experience: React.FC = () => {
   const freelance = experiences.filter((e) => e.type === 'Freelance').length;
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950">
-
+    <div className="min-h-screen bg-white dark:bg-gray-950 relative overflow-x-hidden">
+      <DecorativeAnimations fullBackground={true} />
       {/* Hero */}
       <section className="pt-24 sm:pt-32 pb-12 sm:pb-16 px-5 sm:px-8 lg:px-16 relative overflow-hidden">
         <div className="absolute top-20 left-1/4 w-96 h-96 bg-indigo-600/8 rounded-full blur-3xl pointer-events-none" />
@@ -449,7 +450,7 @@ const Experience: React.FC = () => {
       </motion.div>
 
       {/* Sticky Stack */}
-      <div ref={sectionRef} style={{ height: `${N * 100}vh` }} className="relative">
+      <div ref={sectionRef} style={{ height: `${N * 120}vh` }} className="relative">
         <div className="sticky top-0 h-screen overflow-hidden">
 
           {/* Progress dots */}
@@ -490,7 +491,7 @@ const Experience: React.FC = () => {
         </div>
       </div>
 
-      <div className="h-32 sm:h-40" />
+      <div className="h-[60vh] sm:h-[70vh]" />
     </div>
   );
 };

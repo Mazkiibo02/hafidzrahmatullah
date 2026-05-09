@@ -4,6 +4,7 @@ import { Github, ExternalLink, Youtube, Star, GitFork, X, ArrowRight } from 'luc
 import TrueFocus from '../components/animations/TrueFocus';
 import { useGitHubRepos, GitHubRepo } from '../hooks/useGitHubRepos';
 import { loadGsap } from '../lib/loadGsap';
+import DecorativeAnimations from '../components/DecorativeAnimations';
 
 /* ─── Language color map ────────────────────────────────────── */
 const LANG_COLORS: Record<string, { bg: string; text: string; border: string; dot: string }> = {
@@ -87,7 +88,7 @@ const ScrambleTitle = ({ text }: { text: string }) => {
     return () => { cancelAnimationFrame(raf); obs.disconnect(); };
   }, [text]);
   return (
-    <h1 ref={ref} className="text-5xl lg:text-7xl font-bold text-white font-mono tracking-tight">
+    <h1 ref={ref} className="text-5xl lg:text-7xl font-bold text-gray-900 dark:text-white font-mono tracking-tight">
       {text}
     </h1>
   );
@@ -248,14 +249,18 @@ const HorizontalScroll = ({ repos, onSelect }: { repos: GitHubRepo[]; onSelect: 
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
   const headerRef = useRef<HTMLDivElement>(null);
+  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
 
   useEffect(() => {
     if (!sectionRef.current || !trackRef.current || repos.length === 0) return;
+
+    // On mobile: skip GSAP pin entirely, use native horizontal scroll
+    if (window.innerWidth < 768) return;
+
     const track = trackRef.current;
     let isCancelled = false;
     let cleanup: (() => void) | undefined;
 
-    // Wait for layout
     const timer = setTimeout(() => {
       const initScroll = async () => {
         if (isCancelled) return;
@@ -294,10 +299,55 @@ const HorizontalScroll = ({ repos, onSelect }: { repos: GitHubRepo[]; onSelect: 
     };
   }, [repos]);
 
+  // Animate header on mobile too
+  useEffect(() => {
+    if (window.innerWidth >= 768 || !headerRef.current) return;
+    let cancelled = false;
+    loadGsap().then(({ gsap }) => {
+      if (cancelled || !headerRef.current) return;
+      gsap.fromTo(headerRef.current,
+        { opacity: 0, y: 30 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out',
+          scrollTrigger: { trigger: headerRef.current, start: 'top 85%', once: true } }
+      );
+    });
+    return () => { cancelled = true; };
+  }, [repos]);
+
   if (repos.length === 0) return null;
 
+  // Mobile: native horizontal scroll layout
+  if (typeof window !== 'undefined' && window.innerWidth < 768) {
+    return (
+      <section ref={sectionRef} className="relative bg-gray-50 dark:bg-gray-950 py-12">
+        <div ref={headerRef} className="px-6 mb-8 opacity-0">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-8 h-0.5 bg-indigo-500" />
+            <span className="text-indigo-400 text-xs font-mono uppercase tracking-widest">Featured Work</span>
+          </div>
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Selected Projects</h2>
+          <p className="text-gray-500 dark:text-gray-600 text-sm mt-2 flex items-center gap-2 font-mono">
+            swipe to explore <ArrowRight size={14} className="animate-[pulse_1.5s_ease-in-out_infinite]" />
+          </p>
+        </div>
+        <div
+          ref={trackRef}
+          className="flex gap-5 px-6 overflow-x-auto scrollbar-hide pb-4"
+          style={{ WebkitOverflowScrolling: 'touch' }}
+        >
+          {repos.map((repo) => (
+            <div key={repo.id} className="flex-shrink-0 w-[300px]">
+              <FeaturedCard repo={repo} onClick={() => onSelect(repo)} />
+            </div>
+          ))}
+          <div className="w-4 flex-shrink-0" />
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-gray-950">
+    <section ref={sectionRef} className="relative overflow-hidden bg-gray-50 dark:bg-gray-950">
       <div className="absolute inset-0">
         <div className="absolute top-1/2 left-1/4 w-96 h-96 bg-indigo-600/5 rounded-full blur-3xl" />
         <div className="absolute top-1/3 right-1/4 w-64 h-64 bg-purple-600/5 rounded-full blur-3xl" />
@@ -308,8 +358,8 @@ const HorizontalScroll = ({ repos, onSelect }: { repos: GitHubRepo[]; onSelect: 
             <div className="w-8 h-0.5 bg-indigo-500" />
             <span className="text-indigo-400 text-xs font-mono uppercase tracking-widest">Featured Work</span>
           </div>
-          <h2 className="text-3xl lg:text-4xl font-bold text-white">Selected Projects</h2>
-          <p className="text-gray-600 text-sm mt-2 flex items-center gap-2 font-mono">
+          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">Selected Projects</h2>
+          <p className="text-gray-500 dark:text-gray-600 text-sm mt-2 flex items-center gap-2 font-mono">
             scroll to explore <ArrowRight size={14} className="animate-[pulse_1.5s_ease-in-out_infinite]" />
           </p>
         </div>
@@ -431,8 +481,8 @@ const Projects: React.FC = () => {
   // hafidzrahmatullah, rch-store, krandon-vote-sim, Morintern, innolegalist-web-studio
 
   return (
-    <div className="min-h-screen bg-gray-950">
-
+    <div className="min-h-screen bg-white dark:bg-gray-950 relative overflow-x-hidden">
+      <DecorativeAnimations fullBackground={true} />
       {/* Hero */}
       <section className="pt-32 pb-20 px-8 lg:px-16 relative overflow-hidden">
         <div className="absolute top-20 left-1/4 w-96 h-96 bg-indigo-600/8 rounded-full blur-3xl pointer-events-none" />
@@ -445,12 +495,12 @@ const Projects: React.FC = () => {
           </motion.div>
           <ScrambleTitle text="My Projects" />
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.6 }}
-            className="text-gray-500 text-lg mt-4 max-w-xl leading-relaxed">
+            className="text-gray-500 dark:text-gray-500 text-lg mt-4 max-w-xl leading-relaxed">
             Public repositories from GitHub — each one a chapter of the journey.
           </motion.p>
           {!isLoading && !isError && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
-              className="flex items-center gap-4 mt-8 text-sm text-gray-700 font-mono">
+              className="flex items-center gap-4 mt-8 text-sm text-gray-600 dark:text-gray-700 font-mono">
               <span className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
                 {(repos ?? []).length} repos

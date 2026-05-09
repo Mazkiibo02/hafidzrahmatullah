@@ -315,3 +315,216 @@
 img[src="/images/projects/placeholder.jpg"] {
   background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
 }
+
+/* ============================================================
+   DECORATIVE ANIMATIONS — Stars / Meteors / Clouds / Birds
+   ============================================================ */
+
+/* ── Star twinkle ─────────────────────────────────────────── */
+@keyframes starTwinkle {
+  0%, 100% { opacity: var(--star-opacity, 0.6); transform: scale(1); }
+  50%       { opacity: calc(var(--star-opacity, 0.6) * 0.25); transform: scale(0.7); }
+}
+.star-twinkle {
+  animation: starTwinkle 3s ease-in-out infinite;
+}
+
+/* ── Meteors ──────────────────────────────────────────────── */
+@keyframes meteorFall {
+  0%   { transform: translate(0, 0) rotate(215deg); opacity: 1; }
+  100% { transform: translate(600px, 600px) rotate(215deg); opacity: 0; }
+}
+
+.meteor {
+  position: absolute;
+  pointer-events: none;
+}
+.meteor-head {
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 6px 2px rgba(255,255,255,0.8);
+}
+.meteor-tail {
+  position: absolute;
+  top: 1px;
+  left: 3px;
+  width: 80px;
+  height: 1.5px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.8), transparent);
+  border-radius: 999px;
+}
+
+.meteor-1 {
+  top: 8%;
+  left: 15%;
+  animation: meteorFall 6s linear infinite;
+  animation-delay: 0s;
+}
+.meteor-2 {
+  top: 18%;
+  left: 55%;
+  animation: meteorFall 6s linear infinite;
+  animation-delay: 3.5s;
+}
+.meteor-3 {
+  top: 5%;
+  left: 75%;
+  animation: meteorFall 6s linear infinite;
+  animation-delay: 7s;
+}
+
+/* ── Satellite ────────────────────────────────────────────── */
+@keyframes satelliteOrbit {
+  from { transform: rotate(0deg) translateX(140px) rotate(0deg); }
+  to   { transform: rotate(360deg) translateX(140px) rotate(-360deg); }
+}
+
+.satellite-orbit-container {
+  position: absolute;
+  top: 12%;
+  right: 10%;
+  width: 8px;
+  height: 8px;
+  pointer-events: none;
+}
+.satellite-orbit {
+  position: absolute;
+  inset: -140px;
+  animation: satelliteOrbit 28s linear infinite;
+}
+.satellite-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(200, 220, 255, 0.85);
+  box-shadow: 0 0 8px 2px rgba(150, 200, 255, 0.5), -12px 0 6px -3px rgba(150,200,255,0.2);
+}
+
+/* ── Clouds ───────────────────────────────────────────────── */
+@keyframes cloudDrift {
+  0%   { transform: translateX(-220px); }
+  100% { transform: translateX(110vw); }
+}
+
+.cloud-enhanced {
+  position: absolute;
+  left: -220px;
+  border-radius: 50px;
+  background: white;
+  box-shadow:
+    0 8px 24px rgba(255,255,255,0.6),
+    20px -10px 0 -5px white,
+    -20px -5px 0 -8px white,
+    40px -5px 0 -10px rgba(255,255,255,0.8),
+    -40px 5px 0 -12px rgba(255,255,255,0.7);
+  filter: blur(2px);
+  animation-name: cloudDrift;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  /* animation-duration & animation-delay set via inline style */
+}
+
+/* ── Sun ──────────────────────────────────────────────────── */
+@keyframes sunPulseOuter {
+  0%, 100% { transform: scale(1);   opacity: 0.15; }
+  50%       { transform: scale(1.12); opacity: 0.08; }
+}
+@keyframes sunPulseInner {
+  0%, 100% { transform: scale(1);   opacity: 0.25; }
+  50%       { transform: scale(1.08); opacity: 0.15; }
+}
+@keyframes sunGlow {
+  0%, 100% { box-shadow: 0 0 40px 20px rgba(255,200,50,0.25), 0 0 80px 40px rgba(255,180,0,0.12); }
+  50%       { box-shadow: 0 0 55px 28px rgba(255,200,50,0.35), 0 0 110px 55px rgba(255,180,0,0.18); }
+}
+
+.sun-container-enhanced {
+  position: absolute;
+  top: 6%;
+  right: 8%;
+  width: 56px;
+  height: 56px;
+  pointer-events: none;
+}
+.sun-rays-outer {
+  position: absolute;
+  inset: -28px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,210,60,0.18) 0%, transparent 70%);
+  animation: sunPulseOuter 4s ease-in-out infinite;
+}
+.sun-rays-inner {
+  position: absolute;
+  inset: -14px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,200,50,0.28) 0%, transparent 70%);
+  animation: sunPulseInner 4s ease-in-out infinite;
+}
+.sun-core-enhanced {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(circle at 38% 38%, #ffe87a, #ffcc00 55%, #ffaa00);
+  animation: sunGlow 4s ease-in-out infinite;
+}
+
+/* ── Birds ────────────────────────────────────────────────── */
+@keyframes birdFly {
+  0%   { transform: translateX(-160px); }
+  100% { transform: translateX(110vw); }
+}
+@keyframes wingFlap {
+  0%, 100% { transform: rotateX(0deg) scaleY(1); }
+  25%       { transform: rotateX(40deg) scaleY(0.6); }
+  50%       { transform: rotateX(0deg) scaleY(1); }
+  75%       { transform: rotateX(-20deg) scaleY(1.1); }
+}
+@keyframes birdBob {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-4px); }
+}
+
+.bird-flock {
+  position: absolute;
+  left: 0;
+  animation: birdFly linear infinite;
+  pointer-events: none;
+}
+
+.bird-natural {
+  position: absolute;
+  width: 22px;
+  height: 8px;
+  animation: birdBob 1.4s ease-in-out infinite;
+}
+
+.bird-lead    { top: 0;    left: 0; }
+.bird-follow-1 { left: -28px; animation-delay: 0.15s; }
+.bird-follow-2 { left: -28px; animation-delay: 0.3s; }
+.bird-follow-3 { left: -56px; animation-delay: 0.45s; }
+
+.wing-natural {
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 5px;
+  border-radius: 50% 50% 0 0;
+  background: rgba(55, 65, 81, 0.75);
+  transform-origin: bottom center;
+  animation: wingFlap 0.55s ease-in-out infinite;
+}
+.wing-left  { left: 0;    transform-origin: right bottom; }
+.wing-right { right: 0;   transform-origin: left bottom; animation-delay: 0.05s; }
+
+.bird-body {
+  position: absolute;
+  top: 2px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 5px;
+  height: 4px;
+  border-radius: 50%;
+  background: rgba(55, 65, 81, 0.75);
+}

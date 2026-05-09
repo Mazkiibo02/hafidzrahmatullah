@@ -110,24 +110,18 @@ const ProfileImage = () => {
       >
         {/* Gradient border */}
         <div className="w-64 h-64 rounded-full p-[3px] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-2xl shadow-indigo-500/30">
-          <div className="w-full h-full rounded-full overflow-hidden bg-gray-900">
+          <div className="w-full h-full rounded-full overflow-hidden bg-gray-900 relative">
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-700">
+              <span className="text-white text-4xl font-bold">HR</span>
+            </div>
             <img
-              src="/images/me.jpg"
+              src="/images/me.jpeg"
               alt="Hafidz Rahmatullah"
-              className={`w-full h-full object-cover object-top transition-opacity duration-500 ${
+              className={`relative z-10 w-full h-full object-cover object-top transition-opacity duration-500 ${
                 loaded ? 'opacity-100' : 'opacity-0'
               }`}
               onLoad={() => setLoaded(true)}
-              onError={(e) => {
-                // Fallback ke initials kalau foto tidak ada
-                e.currentTarget.style.display = 'none';
-              }}
             />
-            {!loaded && (
-              <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-700">
-                <span className="text-white text-4xl font-bold">HR</span>
-              </div>
-            )}
           </div>
         </div>
 
