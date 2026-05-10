@@ -1,4 +1,5 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Download, ExternalLink, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Document, Page, pdfjs } from 'react-pdf';
@@ -82,7 +83,7 @@ const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose }) => {
     setError(true);
   };
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <motion.div
@@ -165,14 +166,14 @@ const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose }) => {
                       />
                     ))}
                   </div>
-                  <p className="text-gray-500 text-xs font-mono">Memuat CV...</p>
+                  <p className="text-gray-500 text-xs font-mono">Loading CV...</p>
                 </div>
               )}
 
               {/* Error state */}
               {error && (
                 <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-                  <p className="text-gray-400 text-sm">Gagal memuat PDF.</p>
+                  <p className="text-gray-400 text-sm">Failed to load PDF.</p>
                   <div className="flex gap-3">
                     <a
                       href={CV_PATH}
@@ -180,7 +181,7 @@ const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose }) => {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-white text-sm hover:bg-white/10 transition-colors"
                     >
-                      <ExternalLink size={14} /> Buka di tab baru
+                      <ExternalLink size={14} /> Open in new tab
                     </a>
                     <button
                       onClick={handleDownload}
@@ -239,7 +240,8 @@ const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose }) => {
           </motion.div>
         </motion.div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 

@@ -92,7 +92,7 @@ const About = () => {
               />
               <div className="space-y-4">
                 {[
-                  { text: "Hello! I'm Hafidz Rahmatullah, a passionate Computer Science student currently pursuing my D4 degree in Teknik Informatika at Politeknik Harapan Bersama. My journey in technology began with a curiosity about how digital systems work and has evolved into a deep passion for creating innovative solutions.", speed: 100 },
+                  { text: "Hello! I'm Hafidz Rahmatullah, a passionate Computer Science student currently pursuing my D4 degree in Informatics Engineering at Universitas Harkat Negeri. My journey in technology began with a curiosity about how digital systems work and has evolved into a deep passion for creating innovative solutions.", speed: 100 },
                   { text: "I specialize in web and mobile development, with a particular interest in creating user-friendly applications that solve real-world problems. My technical expertise spans across multiple domains including frontend and backend development, mobile app creation, and cybersecurity.", speed: 200 },
                   { text: "Beyond coding, I'm fascinated by the intersection of technology and security. Cybersecurity has become one of my primary interests, as I believe in the importance of building secure and robust digital systems in our increasingly connected world.", speed: 300 },
                   { text: "I'm always eager to learn new technologies and collaborate on projects that challenge me to grow as a developer. Whether it's exploring AI and data analysis or diving deep into the latest web frameworks, I approach every learning opportunity with enthusiasm and dedication.", speed: 400 },
@@ -156,8 +156,8 @@ const About = () => {
           <div className="space-y-6">
             <SideCard icon={GraduationCap} iconColor="bg-gradient-to-br from-blue-500 to-indigo-600" title="Education" delay={0}>
               <div>
-                <h4 className="font-semibold text-gray-900 dark:text-white text-sm">D4 Teknik Informatika</h4>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mt-0.5">Politeknik Harapan Bersama</p>
+                <h4 className="font-semibold text-gray-900 dark:text-white text-sm">D4 Informatics Engineering</h4>
+                <p className="text-gray-600 dark:text-gray-300 text-sm mt-0.5">Universitas Harkat Negeri</p>
                 <span className="inline-block mt-2 px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-xs font-medium">
                   2021 – Present
                 </span>

@@ -19,7 +19,7 @@ const socialLinks = [
 const contactInfo = [
   { Icon: Mail,   color: 'from-indigo-500 to-blue-600',   label: 'Email',    value: 'vdz.rach02@gmail.com',                href: 'mailto:vdz.rach02@gmail.com' },
   { Icon: Phone,  color: 'from-purple-500 to-violet-600', label: 'Phone',    value: 'Contact via DM or Email',             href: undefined },
-  { Icon: MapPin, color: 'from-pink-500 to-rose-600',     label: 'Location', value: 'Tegal City, Jawa Tengah, Indonesia',  href: undefined },
+  { Icon: MapPin, color: 'from-pink-500 to-rose-600',     label: 'Location', value: 'Tegal City, Central Java, Indonesia',  href: undefined },
 ];
 
 const inputClass =

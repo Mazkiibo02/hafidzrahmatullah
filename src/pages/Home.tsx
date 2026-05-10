@@ -214,7 +214,7 @@ const Home = () => {
               >
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 text-xs font-medium border border-indigo-200 dark:border-indigo-800">
                   <GraduationCap size={12} />
-                  D4 Teknik Informatika
+                  D4 Informatics Engineering
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-xs font-medium border border-purple-200 dark:border-purple-800">
                   <MapPin size={12} />
@@ -260,7 +260,7 @@ const Home = () => {
                   to="/projects"
                   className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-105"
                 >
-                  Lihat Portofolio
+                  View Portfolio
                   <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
                 </Link>
                 <button
@@ -268,7 +268,7 @@ const Home = () => {
                   className="inline-flex items-center justify-center px-8 py-4 glass-card text-gray-900 dark:text-white font-semibold rounded-xl border border-gray-200 dark:border-gray-700 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-300 hover:scale-105"
                 >
                   <Eye className="mr-2" size={20} />
-                  Lihat CV
+                  View CV
                 </button>
               </motion.div>
 

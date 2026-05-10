@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Download, ExternalLink, FileText, Loader2 } from 'lucide-react';
 import DecorativeAnimations from '../components/DecorativeAnimations';
@@ -37,7 +38,7 @@ const CertModal = ({
 }) => {
   const [iframeLoading, setIframeLoading] = useState(true);
 
-  return (
+  return createPortal(
     <AnimatePresence>
       <motion.div
         className="fixed inset-0 z-50 flex items-center justify-center p-4"
@@ -127,7 +128,8 @@ const CertModal = ({
           </div>
         </motion.div>
       </motion.div>
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body
   );
 };
 
@@ -320,8 +322,8 @@ const Certificates: React.FC = () => {
               {(error as Error)?.message ?? 'Unknown error'}
             </p>
             <p className="text-gray-400 dark:text-gray-500 text-xs max-w-md mx-auto">
-              Pastikan folder Drive sudah di-share sebagai "Anyone with the link"
-              dan API key sudah benar di file .env
+              Make sure the Drive folder is shared as &quot;Anyone with the link&quot;
+              and the API key is set correctly in your .env file.
             </p>
           </div>
         )}

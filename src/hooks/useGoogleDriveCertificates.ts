@@ -64,7 +64,7 @@ const extractIssuer = (name: string): string => {
   if (lower.includes('nshc'))     return 'SMT Program x NSHC Korea';
   if (lower.includes('ielts'))    return 'EF / IELTS';
   if (lower.includes('toefl'))    return 'TOEFL';
-  if (lower.includes('seminar'))  return 'Seminar Nasional';
+  if (lower.includes('seminar'))  return 'National Seminar';
   if (lower.includes('morbis') || lower.includes('medika')) return 'PT Medika Digital Nusantara';
   if (lower.includes('innolegalist') || lower.includes('tricipta')) return 'PT Tricipta Karsa Inovasi';
   return 'Certificate';

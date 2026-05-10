@@ -12,7 +12,7 @@ export const certificates: Certificate[] = [
   // Internship
   {
     id: 1,
-    title: 'Sertifikat Magang',
+    title: 'Internship Certificate',
     issuer: 'PT Medika Digital Nusantara (MORBIS)',
     date: '2024',
     category: 'internship',
@@ -21,7 +21,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 2,
-    title: 'Sertifikat Magang',
+    title: 'Internship Certificate',
     issuer: 'PT Tricipta Karsa Inovasi (Innolegalist)',
     date: '2024',
     category: 'internship',
@@ -40,7 +40,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 4,
-    title: 'Sertifikat Pelatihan 4',
+    title: 'Training Certificate 4',
     issuer: 'Issuer',
     date: '2023',
     category: 'course',
@@ -49,7 +49,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 5,
-    title: 'Sertifikat Pelatihan 5',
+    title: 'Training Certificate 5',
     issuer: 'Issuer',
     date: '2023',
     category: 'course',
@@ -58,7 +58,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 6,
-    title: 'Sertifikat Pelatihan 6',
+    title: 'Training Certificate 6',
     issuer: 'Issuer',
     date: '2023',
     category: 'course',
@@ -67,7 +67,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 7,
-    title: 'Sertifikat Pelatihan 7',
+    title: 'Training Certificate 7',
     issuer: 'Issuer',
     date: '2023',
     category: 'course',
@@ -76,7 +76,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 8,
-    title: 'Sertifikat Pelatihan 8',
+    title: 'Training Certificate 8',
     issuer: 'Issuer',
     date: '2023',
     category: 'course',
@@ -85,7 +85,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 9,
-    title: 'Sertifikat Pelatihan 9',
+    title: 'Training Certificate 9',
     issuer: 'Issuer',
     date: '2023',
     category: 'course',
@@ -94,7 +94,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 10,
-    title: 'Sertifikat Pelatihan 10',
+    title: 'Training Certificate 10',
     issuer: 'Issuer',
     date: '2023',
     category: 'course',
@@ -103,7 +103,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 11,
-    title: 'Sertifikat Pelatihan 11',
+    title: 'Training Certificate 11',
     issuer: 'Issuer',
     date: '2022',
     category: 'course',
@@ -112,7 +112,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 12,
-    title: 'Sertifikat Pelatihan 12',
+    title: 'Training Certificate 12',
     issuer: 'Issuer',
     date: '2022',
     category: 'course',
@@ -121,7 +121,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 13,
-    title: 'Sertifikat Pelatihan 13',
+    title: 'Training Certificate 13',
     issuer: 'Issuer',
     date: '2022',
     category: 'course',
@@ -130,7 +130,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 14,
-    title: 'Sertifikat Pelatihan 14',
+    title: 'Training Certificate 14',
     issuer: 'Issuer',
     date: '2022',
     category: 'course',
@@ -139,7 +139,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 15,
-    title: 'Sertifikat Pelatihan 15',
+    title: 'Training Certificate 15',
     issuer: 'Issuer',
     date: '2022',
     category: 'course',
@@ -148,7 +148,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 16,
-    title: 'Sertifikat Pelatihan 16',
+    title: 'Training Certificate 16',
     issuer: 'Issuer',
     date: '2022',
     category: 'course',
@@ -157,7 +157,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 17,
-    title: 'Sertifikat Pelatihan 17',
+    title: 'Training Certificate 17',
     issuer: 'Issuer',
     date: '2022',
     category: 'course',
@@ -166,7 +166,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 18,
-    title: 'Sertifikat Pelatihan 18',
+    title: 'Training Certificate 18',
     issuer: 'Issuer',
     date: '2022',
     category: 'course',
@@ -175,7 +175,7 @@ export const certificates: Certificate[] = [
   },
   {
     id: 19,
-    title: 'Sertifikat Pelatihan 19',
+    title: 'Training Certificate 19',
     issuer: 'Issuer',
     date: '2022',
     category: 'course',

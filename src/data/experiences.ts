@@ -23,13 +23,13 @@ export const experiences: Experience[] = [
   {
     id: 1,
     company: 'PT Duta Pratama Teknologi',
-    role: 'Teknisi',
+    role: 'Technician',
     period: 'Feb 2024 – Mar 2024',
     type: 'Freelance',
     description: [
-      'Melaksanakan instalasi fisik dan konfigurasi infrastruktur rak server baru untuk pusat data klien, termasuk instalasi PDU yang efisien, manajemen kabel, dan panel patch.',
-      'Mengelola pengkabelan dan pelabelan, serta mengintegrasikan perangkat jaringan (switch, router, server) untuk memastikan keteraturan sistem dan keterbacaan struktur jaringan.',
-      'Berpartisipasi dalam pengujian dan komisioning sistem jaringan dan server setelah instalasi untuk memastikan keandalan dan kinerja operasional teknis yang optimal.',
+      'Performed physical installation and configuration of new server rack infrastructure for the client data center, including efficient PDU installation, cable management, and patch panels.',
+      'Managed cabling and labeling and integrated network devices (switch, router, server) to keep the system organized and the network structure clear.',
+      'Participated in testing and commissioning of network and server systems after installation to ensure reliability and optimal technical operations.',
     ],
     techStack: [
       'Server Rack',
@@ -60,9 +60,9 @@ export const experiences: Experience[] = [
     period: 'Aug 2025 – Dec 2025',
     type: 'Magang',
     description: [
-      'Terlibat dalam pengembangan dan pemeliharaan sistem kepegawaian MorHuman (SIMRS), memastikan stabilitas dan performa sistem yang optimal.',
-      'Mengimplementasikan fitur baru dan perbaikan bug berdasarkan dokumen QA dan tiket internal secara efisien dan terstruktur.',
-      'Menyelesaikan masalah pada modul kepegawaian, penjadwalan, kehadiran, transfer, dan lembur dalam lingkungan produksi aktif.',
+      'Contributed to development and maintenance of the MorHuman HR module (HIS), supporting system stability and performance.',
+      'Implemented new features and bug fixes from QA documentation and internal tickets in an efficient, structured way.',
+      'Resolved issues in HR, scheduling, attendance, transfer, and overtime modules in an active production environment.',
     ],
     techStack: [
       'Laravel 5.7',
@@ -95,9 +95,9 @@ export const experiences: Experience[] = [
     period: 'Oct 2025 – Jan 2026',
     type: 'Freelance',
     description: [
-      'Membangun dan meluncurkan situs web siap produksi untuk klien nyata sebagai pengembang web tunggal, meliputi UI/UX, frontend, dan persiapan penyebaran.',
-      'Mengembangkan Single Page Application (SPA) menggunakan React, Vite, dan TypeScript dengan struktur kode modular dan mudah dipelihara.',
-      'Mengimplementasikan UI responsif dan profesional menggunakan Tailwind CSS dan shadcn/ui, disesuaikan dengan kebutuhan merek dan kredibilitas layanan hukum.',
+      'Built and launched a production-ready website for a real client as the sole web developer, covering UI/UX, frontend, and deployment preparation.',
+      'Developed a Single Page Application (SPA) using React, Vite, and TypeScript with a modular, maintainable codebase.',
+      'Implemented a responsive, professional UI with Tailwind CSS and shadcn/ui tailored to the brand and credibility of the legal services offering.',
     ],
     techStack: [
       'React 18',

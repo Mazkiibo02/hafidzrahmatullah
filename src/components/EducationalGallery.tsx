@@ -8,7 +8,7 @@ const CATEGORY_CONFIG = {
   seminar:   { label: 'Seminar',   color: '#6366f1', Icon: GraduationCap },
   workshop:  { label: 'Workshop',  color: '#06b6d4', Icon: Code2         },
   course:    { label: 'Course',    color: '#a855f7', Icon: BookOpen      },
-  pelatihan: { label: 'Pelatihan', color: '#22c55e', Icon: Cpu           },
+  pelatihan: { label: 'Training', color: '#22c55e', Icon: Cpu           },
 };
 
 /* ─── Placeholder image (SVG data URI) ──────────────────────── */

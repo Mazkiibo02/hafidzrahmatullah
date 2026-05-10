@@ -77,6 +77,13 @@ const TYPE_COLORS: Record<string, { bg: string; text: string; border: string }> 
   Organisasi:  { bg: 'bg-rose-500/10',    text: 'text-rose-400',    border: 'border-rose-500/30'    },
 };
 
+const TYPE_LABELS: Record<ExperienceData['type'], string> = {
+  Magang: 'Internship',
+  Freelance: 'Freelance',
+  'Full-time': 'Full-time',
+  Organisasi: 'Organization',
+};
+
 /* ─── Desktop Image Gallery ──────────────────────────────────── */
 const DesktopImageGallery = ({
   images,
@@ -241,7 +248,7 @@ const ExperienceCard = ({ experience: exp, index, total }: CardProps) => {
       <div className="lg:hidden relative z-10 p-5 sm:p-6 space-y-5">
         <div className="flex items-center justify-between">
           <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${tc.bg} ${tc.text} border ${tc.border}`}>
-            {exp.type}
+            {TYPE_LABELS[exp.type]}
           </span>
           <span className="text-gray-500 dark:text-gray-400 text-sm font-mono">
             {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
@@ -294,7 +301,7 @@ const ExperienceCard = ({ experience: exp, index, total }: CardProps) => {
         <div className="flex flex-col">
           <div className="flex items-center justify-between mb-5">
             <span className={`px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider ${tc.bg} ${tc.text} border ${tc.border}`}>
-              {exp.type}
+              {TYPE_LABELS[exp.type]}
             </span>
             <span className="text-gray-500 dark:text-gray-400 text-sm font-mono tabular-nums">
               {String(index + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}
@@ -370,7 +377,7 @@ const Experience: React.FC = () => {
             transition={{ delay: 0.5, duration: 0.6 }}
             className="text-gray-600 dark:text-gray-400 text-base sm:text-lg mt-4 max-w-xl leading-relaxed"
           >
-            Setiap pengalaman adalah bab baru dalam perjalanan karir yang terus berkembang.
+            Every experience is a new chapter in a career that keeps growing.
           </motion.p>
 
           <motion.div
@@ -381,10 +388,10 @@ const Experience: React.FC = () => {
           >
             <span className="flex items-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-              {N} pengalaman
+              {N} experiences
             </span>
             <span>·</span>
-            <span>{magang} magang</span>
+            <span>{magang} internships</span>
             <span>·</span>
             <span>{freelance} freelance</span>
           </motion.div>

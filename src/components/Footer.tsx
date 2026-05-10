@@ -58,7 +58,7 @@ const Footer = () => {
                 Hafidz Rahmatullah
               </h3>
               <p className="text-gray-400 text-sm leading-relaxed">
-                Mahasiswa Teknik Informatika yang tertarik pada Web, Mobile, dan Cybersecurity. Selalu bersemangat untuk belajar dan berkolaborasi.
+                Informatics Engineering student interested in web, mobile, and cybersecurity. Always eager to learn and collaborate.
               </p>
             </div>
 
@@ -120,15 +120,15 @@ const Footer = () => {
                 <div className="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0">
                   <MapPin size={14} />
                 </div>
-                Tegal City, Jawa Tengah, Indonesia
+                Tegal City, Central Java, Indonesia
               </div>
               <div className="flex items-start gap-3 text-gray-400 text-sm">
                 <div className="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0 mt-0.5">
                   <ExternalLink size={14} />
                 </div>
                 <div>
-                  <p className="text-gray-300 font-medium">Politeknik Harapan Bersama</p>
-                  <p className="text-gray-500 text-xs">D4 Teknik Informatika • 2021–Present</p>
+                  <p className="text-gray-300 font-medium">Universitas Harkat Negeri</p>
+                  <p className="text-gray-500 text-xs">D4 Informatics Engineering • 2021–Present</p>
                 </div>
               </div>
             </div>
