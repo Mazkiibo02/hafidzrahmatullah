@@ -4,13 +4,14 @@ import { Mail, Phone, MapPin, Send, Github, Linkedin, Instagram, Facebook, Youtu
 import { motion, useInView } from 'framer-motion';
 import DecorativeAnimations from '../components/DecorativeAnimations';
 import TrueFocus from '../components/animations/TrueFocus';
+import emailjs from '@emailjs/browser';
 import SpotlightCard from '../components/animations/SpotlightCard';
 
 const socialLinks = [
   { href: 'https://github.com/Mazkiibo02',                            Icon: Github,    label: 'GitHub' },
   { href: 'https://www.linkedin.com/in/hafidz-rahmatullah-a16700256', Icon: Linkedin,  label: 'LinkedIn' },
   { href: 'https://www.instagram.com/kiibo0202/',                    Icon: Instagram, label: 'Instagram' },
-  { href: 'https://facebook.com',                                    Icon: Facebook,  label: 'Facebook' },
+  { href: 'https://www.facebook.com/avidz.0202',                     Icon: Facebook,  label: 'Facebook' },
   { href: 'https://medium.com/@hafidzr.smkn3tgl',                   Icon: null,      label: 'Medium' },
   { href: 'https://www.youtube.com/channel/UChOAWmlq_FEY2w0RDkIi1HQ', Icon: Youtube, label: 'YouTube' },
   { href: 'https://x.com/hafidzpanca5',                              Icon: Twitter,   label: 'X / Twitter' },
@@ -35,10 +36,25 @@ const Contact = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSending(true);
-    await new Promise(r => setTimeout(r, 1000)); // simulate
-    setSending(false);
-    alert('Thank you for your message! I will get back to you soon.');
-    setFormData({ name: '', email: '', subject: '', message: '' });
+    try {
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        {
+          from_name: formData.name,
+          from_email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+        },
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
+      alert('Message sent! I will get back to you soon.');
+      setFormData({ name: '', email: '', subject: '', message: '' });
+    } catch (error) {
+      alert('Failed to send message. Please try again or contact me via email directly.');
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
