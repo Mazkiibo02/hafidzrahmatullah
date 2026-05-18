@@ -6,6 +6,8 @@ import DecorativeAnimations from '../components/DecorativeAnimations';
 import TrueFocus from '../components/animations/TrueFocus';
 import emailjs from '@emailjs/browser';
 import SpotlightCard from '../components/animations/SpotlightCard';
+import { ObfuscatedEmail } from '@/components/ObfuscatedEmail';
+import { Turnstile } from '@marsidev/react-turnstile';
 
 const socialLinks = [
   { href: 'https://github.com/Mazkiibo02',                            Icon: Github,    label: 'GitHub' },
@@ -18,7 +20,12 @@ const socialLinks = [
 ];
 
 const contactInfo = [
-  { Icon: Mail,   color: 'from-indigo-500 to-blue-600',   label: 'Email',    value: 'vdz.rach02@gmail.com',                href: 'mailto:vdz.rach02@gmail.com' },
+  { 
+    Icon: Mail,   
+    color: 'from-indigo-500 to-blue-600',   
+    label: 'Email',    
+    value: <ObfuscatedEmail className="text-sm text-gray-800 dark:text-gray-200 hover:text-indigo-500 transition-colors" /> 
+  },
   { Icon: Phone,  color: 'from-purple-500 to-violet-600', label: 'Phone',    value: 'Contact via DM or Email',             href: undefined },
   { Icon: MapPin, color: 'from-pink-500 to-rose-600',     label: 'Location', value: 'Tegal City, Central Java, Indonesia',  href: undefined },
 ];
@@ -29,12 +36,18 @@ const inputClass =
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', subject: '', message: '' });
   const [sending, setSending] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [turnstileKey, setTurnstileKey] = useState<number>(0); // used to reset widget
 
   const formRef    = useRef<HTMLDivElement>(null);
   const formInView = useInView(formRef, { once: true, margin: '-60px' });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!turnstileToken) {
+      console.error('Please complete the CAPTCHA verification.');
+      return;
+    }
     setSending(true);
     try {
       await emailjs.send(
@@ -54,6 +67,8 @@ const Contact = () => {
       alert('Failed to send message. Please try again or contact me via email directly.');
     } finally {
       setSending(false);
+      setTurnstileToken(null);
+      setTurnstileKey(prev => prev + 1); // forces Turnstile widget to re-render/reset
     }
   };
 
@@ -109,10 +124,14 @@ const Contact = () => {
                   </div>
                   <div>
                     <p className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">{label}</p>
-                    {href ? (
-                      <a href={href} className="text-sm text-gray-800 dark:text-gray-200 hover:text-indigo-500 transition-colors">{value}</a>
+                    {typeof value === 'string' ? (
+                      href ? (
+                        <a href={href} className="text-sm text-gray-800 dark:text-gray-200 hover:text-indigo-500 transition-colors">{value}</a>
+                      ) : (
+                        <p className="text-sm text-gray-800 dark:text-gray-200">{value}</p>
+                      )
                     ) : (
-                      <p className="text-sm text-gray-800 dark:text-gray-200">{value}</p>
+                      value
                     )}
                   </div>
                 </div>
@@ -194,12 +213,25 @@ const Contact = () => {
                   <textarea name="message" value={formData.message} onChange={handleChange} required rows={6} placeholder="Tell me about your project or just say hello!" className={`${inputClass} resize-none`} />
                 </div>
 
+                <Turnstile
+                  key={turnstileKey}
+                  siteKey={import.meta.env.VITE_TURNSTILE_SITE_KEY}
+                  onSuccess={(token) => setTurnstileToken(token)}
+                  onExpire={() => setTurnstileToken(null)}
+                  onError={() => setTurnstileToken(null)}
+                  options={{
+                    theme: 'auto',   // auto follows system dark/light mode
+                    language: 'en',
+                  }}
+                  className="my-4"
+                />
+
                 <motion.button
                   type="submit"
-                  disabled={sending}
+                  disabled={!turnstileToken || sending}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  className="w-full md:w-auto inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg shadow-indigo-500/25 disabled:opacity-70 disabled:cursor-not-allowed"
+                  className="w-full md:w-auto inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg shadow-indigo-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {sending ? (
                     <>

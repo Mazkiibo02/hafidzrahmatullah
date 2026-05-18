@@ -2,13 +2,15 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Github, Linkedin, Instagram, Mail, MapPin, ExternalLink } from 'lucide-react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView, Variants } from 'framer-motion';
+import { ObfuscatedEmail } from '@/components/ObfuscatedEmail';
+import { getEmail } from '@/utils/obfuscate';
 
 const socialLinks = [
   { href: 'https://github.com/Mazkiibo02',                            Icon: Github,    label: 'GitHub',    color: 'hover:text-white hover:bg-gray-700' },
   { href: 'https://www.linkedin.com/in/hafidz-rahmatullah-a16700256', Icon: Linkedin,  label: 'LinkedIn',  color: 'hover:text-white hover:bg-blue-600' },
   { href: 'https://www.instagram.com/kiibo0202/',                    Icon: Instagram, label: 'Instagram', color: 'hover:text-white hover:bg-pink-600' },
-  { href: 'mailto:vdz.rach02@gmail.com',                             Icon: Mail,      label: 'Email',     color: 'hover:text-white hover:bg-indigo-600' },
+  { href: `mailto:${getEmail()}`,                             Icon: Mail,      label: 'Email',     color: 'hover:text-white hover:bg-indigo-600' },
 ];
 
 const quickLinks = [
@@ -19,14 +21,14 @@ const quickLinks = [
   { path: '/contact',      label: 'Contact' },
 ];
 
-const containerVariants = {
+const containerVariants: Variants = {
   hidden: {},
   visible: { transition: { staggerChildren: 0.12 } },
 };
 
-const itemVariants = {
+const itemVariants: Variants = {
   hidden:  { opacity: 0, y: 30 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] as const } },
 };
 
 const Footer = () => {
@@ -107,15 +109,14 @@ const Footer = () => {
               Contact Info
             </h4>
             <div className="space-y-4">
-              <a
-                href="mailto:vdz.rach02@gmail.com"
+              <ObfuscatedEmail
                 className="flex items-center gap-3 text-gray-400 hover:text-indigo-400 transition-colors duration-200 text-sm group"
               >
                 <div className="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0 group-hover:bg-indigo-900/40 transition-colors">
                   <Mail size={14} />
                 </div>
-                vdz.rach02@gmail.com
-              </a>
+                {getEmail()}
+              </ObfuscatedEmail>
               <div className="flex items-center gap-3 text-gray-400 text-sm">
                 <div className="w-8 h-8 rounded-lg bg-gray-800 flex items-center justify-center flex-shrink-0">
                   <MapPin size={14} />
@@ -139,7 +140,7 @@ const Footer = () => {
         <motion.div
           initial={{ scaleX: 0 }}
           animate={inView ? { scaleX: 1 } : { scaleX: 0 }}
-          transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+          transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] as const }}
           className="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent mb-8 origin-left"
         />
 

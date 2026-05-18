@@ -106,7 +106,7 @@ const CVPreviewModal: React.FC<CVPreviewModalProps> = ({ isOpen, onClose }) => {
             initial={{ opacity: 0, scale: 0.94, y: 24 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.94, y: 24 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] as const }}
           >
             {/* ── Header ── */}
             <div className="flex items-center justify-between px-5 py-3.5 border-b border-white/10 bg-gray-900/80 backdrop-blur-sm flex-shrink-0">

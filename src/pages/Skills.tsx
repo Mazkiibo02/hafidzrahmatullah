@@ -35,7 +35,7 @@ const skillCategories = [
     textColor: 'text-violet-600 dark:text-violet-400',
     featured: true,
     skills: [
-      { name: 'Laravel', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-plain.svg',   level: 'Expert' },
+      { name: 'Laravel', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg',   level: 'Expert' },
       { name: 'PHP',     icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg',       level: 'Expert' },
       { name: 'Python',  icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg', level: 'Advanced' },
       { name: 'Node.js', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg', level: 'Intermediate' },
@@ -114,6 +114,37 @@ const levelConfig = {
   Beginner:     { width: 'w-2/5',     color: 'bg-gradient-to-r from-teal-400 to-cyan-500',     label: 'Beginner' },
 };
 
+const imageIntegrityMap: Record<string, string> = {
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg': 'sha384-aZdzB89DRlc+ITxMzQXMW/LzfwOB/gvB0JwiWjHOyci6yCH1QiKMWOn0RR5XCjue',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg': 'sha384-2LMEAvoRZsv75RsVpcM3uE1CP/Iej8bEpLBRBihMoAjseaVnuxVd1R8xUMUmxPUN',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg': 'sha384-wYV6PYKHqD+siW4YHhvpI1mUwQFoR39oKwjnPkyRJW6zp/9BFDKBSAecNONrmakc',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg': 'sha384-zd5VHkmH4lqi0G+6yJQ8EXpXFaMmjF48TS0XZaZztXIXs9OOSoYhvNRabdvOK4HH',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg': 'sha384-vVeai0W9l9qZ5WfbwwehARMIJYL4Df8PBD3PN0m6M0aQaZ+GpEieux+GhHV44ecb',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg': 'sha384-x0HFUEHnd9aakplsEhv1T7G/5GVFHgstAFNCvScq6GsHZ1gGW7i30B8nR6a0ucCi',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg': 'sha384-ZpUGZw2lssLFsXXKXzROZ82xPj6uLGr3DqBjjXHIAT4u7CDAphenhtjqd+zpTDXt',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/laravel/laravel-original.svg': 'sha384-XqzgOgacEHjhW8GO5saRoGsn+aeR9I3EG4RffBUPTO178ck0kq+JVVP4hIGq/J9E',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/php/php-original.svg': 'sha384-s8TO98CMMJfkmKnWsJQKUAcP8ecRfiwF1moBMnZE77b9pCMgbzUxYSCM3P6llitt',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg': 'sha384-UWluLsfxZR9DqxXQqf9RSOOwIAfvfb8oLd1nlomRwmD4/4tll1R57Do4oGxKCKgE',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg': 'sha384-Fury9K0cEK9pjLnu573LqQQ9+3BfXyOBrVU6jBbQOd7NI7eD8Abu00944nJwDbI0',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg': 'sha384-IDzO3BZ6CKe5pXuzZyHbtYDm/SPc4kB21A1TZcxSX0arKq14EQHK2nyaj96AGWa4',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg': 'sha384-fcPsX07bRvXCp9EQx1A9ZyYZvS2iuzI8dRr79ofReuQMgjCTsACAVptW8+AXW5rA',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/dart/dart-original.svg': 'sha384-Bctxx8ywbdxzjdKSyfxR7NGjlM7UGGielbjfqjVOhxKdrLmgQGQ6IYvEVAhEt4uG',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/android/android-original.svg': 'sha384-ACmgZEsKBpyjNzKfi9owTYDpEcLXeI49Ci0CJNH+kL3cmK368VDPi9wnfHZAOrh5',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg': 'sha384-B/xAHwYBZaiGwQE7Pd7UsChbLst7GAGUHXPVDOE+5Cb8IeAR2KK/Eb7E2UNkT1Uk',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg': 'sha384-eD6iq6OzbNl/fHyuwI+g1lXLgodrXivcjVAWHgrsqYogz3oTdtn86lefGwuHX5Hk',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg': 'sha384-tq5meRcIbWefTIQgjwwr84SpWBQPdmYhL3nLMUt6kmUCt8vgJSQbUPegzpx5tGR8',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg': 'sha384-wv3Wm8Mhp3ZRnwbR4kfio90l88ihhZKMiOs6QrSHKlJzn2vkcwTK28CEIEE0Wkzj',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg': 'sha384-568oLCrl+pzvBe2/jc8rw30mUyuzxe2rC5Z3id8MKa6dbHZVHogDZEva2yVkGDwd',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg': 'sha384-3IoTg/k254DC4uellcN9OpHqWFvhY96NSgS5R1+Kh7uzuxepqLRmQlKbZtpUyQaF',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg': 'sha384-drLb4bj3vMX3QM7x6tJU1KH+XOyoULp1KiM1UINr841PPV2o0oFWeCi2EDfyJFYm',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg': 'sha384-N+fMr1dcFqC6n/gpfc/CZZwiZQkelKfAustdf2EVNas5pf45dV4l/DCWym8rbatQ',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg': 'sha384-Kh7X6b5QIvXPR61rdUUsR/RK2z9mFh0P5y0hjooZ2LHtpZJMDUbWueWL0nOgd4c6',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/arduino/arduino-original.svg': 'sha384-wJPhLPYb6ghlXYAgw0JAeB4LxIQZydHx8hxO+cvHekpI6DHECdR5Eb3JVEJDrmHR',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/cplusplus/cplusplus-original.svg': 'sha384-gr6VFtYN6d77ululQ6b9FdyTM+tAPF4Y0EZ476/gpxO40+Gng5DR3R5a/CPBbQXB',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg': 'sha384-fkPPqcnQlP3RNvk1fNvfeGsk10n8+PXnpqkUbCzxFQ8/rSikHVjSLv6WzDHDp0jf',
+  'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/csharp/csharp-original.svg': 'sha384-ounvmPFse27aBJGbeDoPDBuIl+yFSS/Mwr6D7XDCrYH2mOiwF/3Msgig0ldvlJlZ',
+};
+
 /* Animated Counter */
 
 const useCounter = (target: number, inView: boolean) => {
@@ -172,6 +203,8 @@ const SkillIcon = ({ skill, size = 'md' }: { skill: { name: string; icon: string
           src={skill.icon}
           alt={skill.name}
           className={`${sizeClass} object-contain`}
+          crossOrigin={imageIntegrityMap[skill.icon] ? 'anonymous' : undefined}
+          integrity={imageIntegrityMap[skill.icon]}
           onError={() => setError(true)}
         />
       ) : (
