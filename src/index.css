@@ -342,7 +342,9 @@ img[src="/images/projects/placeholder.jpg"] {
 
 /* ============================================================
    DECORATIVE ANIMATIONS — Stars / Meteors / Clouds / Birds
+   (Desktop Only to prevent non-composited animations on mobile)
    ============================================================ */
+@media (prefers-reduced-motion: no-preference) and (min-width: 768px) {
 
 /* ── Star twinkle ─────────────────────────────────────────── */
 @keyframes starTwinkle {
@@ -552,3 +554,5 @@ img[src="/images/projects/placeholder.jpg"] {
   border-radius: 50%;
   background: rgba(55, 65, 81, 0.75);
 }
+
+} /* End @media (min-width: 768px) */

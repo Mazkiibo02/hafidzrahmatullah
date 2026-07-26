@@ -1,12 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Eye, Code, Smartphone, Shield, MapPin, GraduationCap } from 'lucide-react';
-import { loadGsap } from '@/lib/loadGsap';
-import { motion } from 'framer-motion';
+import { motion, animate } from 'framer-motion';
 import DecorativeAnimations from '../components/DecorativeAnimations';
 import CVPreviewModal from '../components/CVpreviewmodal';
 import TrueFocus from '../components/animations/TrueFocus';
-import EducationalGallery from '../components/EducationalGallery';
+const EducationalGallery = React.lazy(() => import('../components/EducationalGallery'));
 import { useDataCounts } from '../hooks/useDataCounts';
 
 /* Animated counter */
@@ -14,26 +13,12 @@ const useCounter = (target: number, inView: boolean) => {
   const [value, setValue] = useState(0);
   useEffect(() => {
     if (!inView) return;
-    let tween: any;
-    let canceled = false;
-
-    const obj = { val: 0 };
-    loadGsap().then(({ gsap }) => {
-      if (canceled) return;
-      tween = gsap.to(obj, {
-        val: target,
-        duration: 1.8,
-        ease: 'power2.out',
-        onUpdate: () => {
-          setValue(Math.round(obj.val));
-        },
-      });
+    const controls = animate(0, target, {
+      duration: 1.8,
+      ease: "easeOut",
+      onUpdate: (val) => setValue(Math.round(val))
     });
-
-    return () => {
-      canceled = true;
-      tween?.kill();
-    };
+    return () => controls.stop();
   }, [inView, target]);
   return value;
 };
@@ -135,7 +120,7 @@ const ProfileImage = () => {
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 1, duration: 0.5 }}
-          className="absolute -top-2 -right-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-card border border-green-400/30 text-green-400 text-xs font-semibold shadow-lg"
+          className="absolute z-20 -top-2 -right-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-card border border-green-400/30 text-green-400 text-xs font-semibold shadow-lg"
         >
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
@@ -149,7 +134,7 @@ const ProfileImage = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 1.2, duration: 0.5 }}
-          className="absolute -top-2 -left-8 flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-card border border-indigo-400/30 text-indigo-400 text-xs font-semibold shadow-lg"
+          className="absolute z-20 -bottom-2 -left-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-card border border-indigo-400/30 text-indigo-400 text-xs font-semibold shadow-lg"
         >
           <MapPin size={11} />
           Tegal, Indonesia
@@ -166,27 +151,6 @@ const Home = () => {
   const statsRef     = useRef<HTMLDivElement>(null);
   const [statsInView, setStatsInView] = useState(false);
   const [isCVOpen, setIsCVOpen] = useState(false);
-
-  useEffect(() => {
-    let ctx: any;
-    let canceled = false;
-
-    loadGsap().then(({ gsap }) => {
-      if (canceled) return;
-      ctx = gsap.context(() => {
-        gsap.fromTo(
-          heroLeftRef.current,
-          { x: -50, opacity: 0 },
-          { x: 0, opacity: 1, duration: 1, ease: 'power3.out', delay: 0.1 }
-        );
-      });
-    });
-
-    return () => {
-      canceled = true;
-      ctx?.revert();
-    };
-  }, []);
 
   useEffect(() => {
     if (!statsRef.current) return;
@@ -208,7 +172,12 @@ const Home = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
             {/* Left */}
-            <div ref={heroLeftRef} className="space-y-8" style={{ opacity: 0 }}>
+            <motion.div
+              initial={{ x: -50, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
+              className="space-y-8"
+            >
 
               {/* Meta info */}
               <motion.div
@@ -283,7 +252,7 @@ const Home = () => {
                 <StatCard target={certificatesCount} label="Certificates"  color="text-purple-500 dark:text-purple-400"  icon="🏆" inView={statsInView} />
                 <StatCard target={skillsCount}       label="Skills"        color="text-pink-500 dark:text-pink-400"       icon="⚡" inView={statsInView} />
               </div>
-            </div>
+            </motion.div>
 
             {/* Right Profile */}
             <motion.div
@@ -344,7 +313,9 @@ const Home = () => {
         </div>
       </section>
 
-      <EducationalGallery />
+      <React.Suspense fallback={null}>
+        <EducationalGallery />
+      </React.Suspense>
       <CVPreviewModal isOpen={isCVOpen} onClose={() => setIsCVOpen(false)} />
     </div>
   );
