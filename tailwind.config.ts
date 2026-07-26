@@ -20,7 +20,7 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ['Inter', 'system-ui', 'sans-serif'],
+				sans: ['Inter Variable', 'Inter Fallback', 'system-ui', 'sans-serif'],
 			},
 			perspective: {
 				'1000': '1000px',

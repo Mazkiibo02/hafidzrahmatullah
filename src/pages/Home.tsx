@@ -149,7 +149,7 @@ const ProfileImage = () => {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 1.2, duration: 0.5 }}
-          className="absolute -bottom-2 -left-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-card border border-indigo-400/30 text-indigo-400 text-xs font-semibold shadow-lg"
+          className="absolute -top-2 -left-8 flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-card border border-indigo-400/30 text-indigo-400 text-xs font-semibold shadow-lg"
         >
           <MapPin size={11} />
           Tegal, Indonesia

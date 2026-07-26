@@ -1,7 +1,26 @@
+/* Self-hosted Inter Variable Font — eliminates Google Fonts dependency, no CLS */
+@import '@fontsource-variable/inter';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* 
+ * Inter Fallback — matches Inter Variable metrics via size-adjust.
+ * Prevents FOUT layout shift when font swaps in.
+ * Technique: https://web.dev/font-best-practices/#use-font-display-optional
+ */
+@font-face {
+  font-family: 'Inter Fallback';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: local('Arial');
+  size-adjust: 107.4%;
+  ascent-override: 90.2%;
+  descent-override: 22.48%;
+  line-gap-override: 0%;
+}
 
 @layer base {
   :root {
@@ -192,29 +211,12 @@
   }
 }
 
-/* Gradient text — composited: uses opacity overlay instead of background-position shift */
+/* Gradient text — static gradient (no animation = no paint, no CLS) */
 .gradient-text {
   background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  position: relative;
-}
-.gradient-text::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #ec4899, #a855f7, #6366f1);
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: gradientFade 4s ease-in-out infinite;
-  pointer-events: none;
-}
-
-@keyframes gradientFade {
-  0%, 100% { opacity: 0; }
-  50%       { opacity: 1; }
 }
 
 /* Floating animation */
@@ -255,6 +257,15 @@
 /* Page transition wrapper */
 .page-transition {
   will-change: opacity, transform;
+}
+
+/* CSS page fade-in — replaces framer-motion AnimatePresence in app shell */
+@keyframes pageFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-fade-in {
+  animation: pageFadeIn 0.35s ease forwards;
 }
 
 /* Mesh gradient background */

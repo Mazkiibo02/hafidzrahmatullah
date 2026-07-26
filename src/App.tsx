@@ -4,19 +4,18 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
-import { AnimatePresence, motion } from "framer-motion";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { useLenis } from "./hooks/useLenis";
 
-const Home = lazy(() => import("./pages/Home"));
-const About = lazy(() => import("./pages/About"));
-const Projects = lazy(() => import("./pages/Projects"));
-const Skills = lazy(() => import("./pages/Skills"));
+const Home         = lazy(() => import("./pages/Home"));
+const About        = lazy(() => import("./pages/About"));
+const Projects     = lazy(() => import("./pages/Projects"));
+const Skills       = lazy(() => import("./pages/Skills"));
 const Certificates = lazy(() => import("./pages/Certificates"));
-const Contact = lazy(() => import("./pages/Contact"));
-const Experience = lazy(() => import("./pages/Experience"));
-const NotFound = lazy(() => import("./pages/NotFound"));
+const Contact      = lazy(() => import("./pages/Contact"));
+const Experience   = lazy(() => import("./pages/Experience"));
+const NotFound     = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
 
@@ -31,14 +30,12 @@ const CustomCursor = () => {
   const ringRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Do not mount cursor logic on touch devices
     if (isTouchDevice()) return;
 
     const dot  = dotRef.current;
     const ring = ringRef.current;
     if (!dot || !ring) return;
 
-    // Make elements visible only on non-touch
     dot.style.display  = 'block';
     ring.style.display = 'block';
 
@@ -50,30 +47,19 @@ const CustomCursor = () => {
       const moveRingY = gsap.quickTo(ring, "top",  { duration: 0.18, ease: "power2.out" });
 
       const onMove = (e: MouseEvent) => {
-        moveDot(e.clientX);
-        moveDotY(e.clientY);
-        moveRing(e.clientX);
-        moveRingY(e.clientY);
+        moveDot(e.clientX); moveDotY(e.clientY);
+        moveRing(e.clientX); moveRingY(e.clientY);
       };
-
-      const onEnter = () => {
-        dot.classList.add("hovering");
-        ring.classList.add("hovering");
-      };
-      const onLeave = () => {
-        dot.classList.remove("hovering");
-        ring.classList.remove("hovering");
-      };
+      const onEnter = () => { dot.classList.add("hovering"); ring.classList.add("hovering"); };
+      const onLeave = () => { dot.classList.remove("hovering"); ring.classList.remove("hovering"); };
 
       window.addEventListener("mousemove", onMove);
-
       const hoverEls = document.querySelectorAll("a, button, [role='button'], input, textarea, select, label");
       hoverEls.forEach((el) => {
         el.addEventListener("mouseenter", onEnter);
         el.addEventListener("mouseleave", onLeave);
       });
 
-      // store cleanup in ref so return() can use it
       (dot as any).__cleanup = () => {
         window.removeEventListener("mousemove", onMove);
         hoverEls.forEach((el) => {
@@ -84,7 +70,6 @@ const CustomCursor = () => {
     });
   }, []);
 
-  // On touch devices render nothing
   if (isTouchDevice()) return null;
 
   return (
@@ -95,40 +80,25 @@ const CustomCursor = () => {
   );
 };
 
-/* ─── Page transition variants ──────────────────────────────── */
-const pageVariants = {
-  initial: { opacity: 0, y: 18 },
-  animate: { opacity: 1, y: 0, transition: { duration: 0.45, ease: [0.22, 1, 0.36, 1] as const } },
-  exit:    { opacity: 0, y: -12, transition: { duration: 0.3, ease: [0.4, 0, 0.2, 1] as const } },
-};
-
-/* ─── Animated Routes ───────────────────────────────────────── */
+/* ─── Routes with CSS fade transition ───────────────────────── */
 const AnimatedRoutes = () => {
   const location = useLocation();
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={location.pathname}
-        className="page-transition"
-        variants={pageVariants}
-        initial="initial"
-        animate="animate"
-        exit="exit"
-      >
-        <Suspense fallback={null}>
-          <Routes location={location}>
-            <Route path="/"             element={<Home />}        />
-            <Route path="/about"        element={<About />}       />
-            <Route path="/projects"     element={<Projects />}    />
-            <Route path="/skills"       element={<Skills />}      />
-            <Route path="/experience"   element={<Experience />}  />
-            <Route path="/certificates" element={<Certificates />}/>
-            <Route path="/contact"      element={<Contact />}     />
-            <Route path="*"             element={<NotFound />}    />
-          </Routes>
-        </Suspense>
-      </motion.div>
-    </AnimatePresence>
+    // key triggers remount + CSS animation on route change
+    <div key={location.pathname} className="page-fade-in page-transition">
+      <Suspense fallback={null}>
+        <Routes location={location}>
+          <Route path="/"             element={<Home />}         />
+          <Route path="/about"        element={<About />}        />
+          <Route path="/projects"     element={<Projects />}     />
+          <Route path="/skills"       element={<Skills />}       />
+          <Route path="/experience"   element={<Experience />}   />
+          <Route path="/certificates" element={<Certificates />} />
+          <Route path="/contact"      element={<Contact />}      />
+          <Route path="*"             element={<NotFound />}     />
+        </Routes>
+      </Suspense>
+    </div>
   );
 };
 

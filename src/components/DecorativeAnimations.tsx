@@ -10,7 +10,12 @@ const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({
   className = '',
 }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
+
+  // Computed synchronously on first render — no useEffect delay, no flash on mobile
+  const [isMobile, setIsMobile] = useState<boolean>(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(max-width: 768px), (hover: none) and (pointer: coarse)').matches;
+  });
 
   useEffect(() => {
     // Detect mobile — skip all heavy decorations on touch/small screens
