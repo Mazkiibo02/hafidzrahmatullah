@@ -10,8 +10,15 @@ const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({
   className = '',
 }) => {
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
+    // Detect mobile — skip all heavy decorations on touch/small screens
+    const mq = window.matchMedia('(max-width: 768px), (hover: none) and (pointer: coarse)');
+    setIsMobile(mq.matches);
+    const handleMQ = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handleMQ);
+
     const checkTheme = () => {
       const hasDarkClass = document.documentElement.classList.contains('dark');
       if (!hasDarkClass) {
@@ -45,11 +52,15 @@ const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({
     mediaQuery.addEventListener('change', handleMediaChange);
 
     return () => {
+      mq.removeEventListener('change', handleMQ);
       observer.disconnect();
       window.removeEventListener('storage', handleStorageChange);
       mediaQuery.removeEventListener('change', handleMediaChange);
     };
   }, []);
+
+  // On mobile: render nothing — eliminates all non-composited animations
+  if (isMobile) return null;
 
   const stars = Array.from({ length: fullBackground ? 50 : 30 }, (_, i) => ({
     id: i,
@@ -129,4 +140,4 @@ const DecorativeAnimations: React.FC<DecorativeAnimationsProps> = ({
   );
 };
 
-export default DecorativeAnimations;
+export default DecorativeAnimations;

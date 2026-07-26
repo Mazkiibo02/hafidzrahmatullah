@@ -41,9 +41,9 @@ export const experiences: Experience[] = [
       'Network Testing',
     ],
     images: [
-      '/images/experience/duta-pratama-1.png',
-      '/images/experience/duta-pratama-2.jpg',
-      '/images/experience/duta-pratama-3.png',
+      '/images/experience/duta-pratama-1.webp',
+      '/images/experience/duta-pratama-2.webp',
+      '/images/experience/duta-pratama-3.webp',
     ],
     color: {
       primary: '#06b6d4',
@@ -76,9 +76,9 @@ export const experiences: Experience[] = [
       'Eloquent ORM',
     ],
     images: [
-      '/images/experience/morbis-1.jpg',
-      '/images/experience/morbis-2.jpg',
-      '/images/experience/morbis-3.jpg',
+      '/images/experience/morbis-1.webp',
+      '/images/experience/morbis-2.webp',
+      '/images/experience/morbis-3.webp',
     ],
     color: {
       primary: '#8b5cf6',
@@ -111,9 +111,9 @@ export const experiences: Experience[] = [
       'Zod',
     ],
     images: [
-      '/images/experience/innolegalist-1.png',
-      '/images/experience/innolegalist-2.png',
-      '/images/experience/innolegalist-3.png',
+      '/images/experience/innolegalist-1.webp',
+      '/images/experience/innolegalist-2.webp',
+      '/images/experience/innolegalist-3.webp',
     ],
     color: {
       primary: '#6366f1',

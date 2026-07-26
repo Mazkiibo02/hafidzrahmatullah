@@ -114,14 +114,19 @@ const ProfileImage = () => {
             <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-700">
               <span className="text-white text-4xl font-bold">HR</span>
             </div>
-            <img
-              src="/images/me.jpeg"
-              alt="Hafidz Rahmatullah"
-              className={`relative z-10 w-full h-full object-cover object-top transition-opacity duration-500 ${
-                loaded ? 'opacity-100' : 'opacity-0'
-              }`}
-              onLoad={() => setLoaded(true)}
-            />
+            <picture>
+              <source srcSet="/images/me.webp" type="image/webp" />
+              <img
+                src="/images/me.jpeg"
+                alt="Hafidz Rahmatullah"
+                fetchPriority="high"
+                decoding="async"
+                className={`relative z-10 w-full h-full object-cover object-top transition-opacity duration-500 ${
+                  loaded ? 'opacity-100' : 'opacity-0'
+                }`}
+                onLoad={() => setLoaded(true)}
+              />
+            </picture>
           </div>
         </div>
 

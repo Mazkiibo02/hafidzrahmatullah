@@ -108,6 +108,8 @@ const PhotoStrip = ({
               src={src}
               alt={`${activity.title} ${i + 1}`}
               className="w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
               onError={(e) => {
                 (e.currentTarget as HTMLImageElement).src = makePlaceholder(color, i);
               }}

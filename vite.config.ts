@@ -10,9 +10,6 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
-  optimizeDeps: {
-    include: ['react-pdf'],
-  },
   plugins: [
     react(),
     viteImageMetaPlugin(),
@@ -25,24 +22,55 @@ export default defineConfig(({ mode }) => ({
     },
   },
   build: {
+    target: 'es2020',
+    minify: 'esbuild',
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (!id.includes('node_modules')) return;
-          if (id.includes('react-dom') || id.includes('/react/') || id.includes('react/jsx-runtime')) {
+
+          // React core — must be isolated, no catch-all fallback
+          if (
+            id.includes('/react-dom/') ||
+            id.includes('/react/') ||
+            id.includes('react/jsx-runtime') ||
+            id.includes('react/jsx-dev-runtime') ||
+            id.includes('scheduler')
+          ) {
             return 'react-core';
           }
-          if (id.includes('framer-motion') || id.includes('/gsap')) {
-            return 'animation';
+          // Router
+          if (id.includes('react-router')) {
+            return 'router';
           }
+          // Animation libs
+          if (id.includes('framer-motion')) {
+            return 'framer-motion';
+          }
+          if (id.includes('/gsap') || id.includes('@gsap')) {
+            return 'gsap';
+          }
+          if (id.includes('lenis')) {
+            return 'lenis';
+          }
+          // UI primitives
           if (id.includes('@radix-ui')) {
             return 'ui';
           }
+          // Heavy optional libs
           if (id.includes('recharts')) {
             return 'charts';
           }
+          if (id.includes('react-pdf') || id.includes('pdfjs-dist')) {
+            return 'pdf';
+          }
+          if (id.includes('@emailjs')) {
+            return 'emailjs';
+          }
+          // Let Rollup handle remaining node_modules automatically (no explicit vendor chunk)
         },
       },
     },
   },
 }));
+

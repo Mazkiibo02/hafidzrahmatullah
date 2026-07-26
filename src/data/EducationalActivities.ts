@@ -15,9 +15,8 @@ export const educationalActivities: EducationalActivity[] = [
     description:
       'Hafidz Rahmatullah attended the Invofest seminar, which was mandatory for all Informatics Engineering students in semester 4 at Universitas Harkat Negeri.',
     images: [
-      '/images/educational/invofest-1.PNG',
-      '/images/educational/invofest-2.jpg',
-      '/images/educational/invofest-3.jpg',
+      '/images/educational/invofest-1.webp',
+      '/images/educational/invofest-2.webp',
     ],
     category: 'seminar',
   },
@@ -28,9 +27,9 @@ export const educationalActivities: EducationalActivity[] = [
     description:
       'Intensive cybersecurity training from the collaboration between SMT Program Indonesia and NSHC Korea, covering ethical hacking, penetration testing, and network security.',
     images: [
-      '/images/educational/nshc-1.jpg',
-      '/images/educational/nshc-2.jpg',
-      '/images/educational/nshc-3.jpg',
+      '/images/educational/nshc-1.webp',
+      '/images/educational/nshc-2.webp',
+      '/images/educational/nshc-3.webp',
     ],
     category: 'pelatihan',
   },

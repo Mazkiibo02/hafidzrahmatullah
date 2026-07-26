@@ -5,7 +5,6 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
-import { gsap } from "gsap";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { useLenis } from "./hooks/useLenis";
@@ -43,42 +42,46 @@ const CustomCursor = () => {
     dot.style.display  = 'block';
     ring.style.display = 'block';
 
-    const moveDot   = gsap.quickTo(dot,  "left", { duration: 0.05, ease: "none" });
-    const moveDotY  = gsap.quickTo(dot,  "top",  { duration: 0.05, ease: "none" });
-    const moveRing  = gsap.quickTo(ring, "left", { duration: 0.18, ease: "power2.out" });
-    const moveRingY = gsap.quickTo(ring, "top",  { duration: 0.18, ease: "power2.out" });
+    // Dynamic import GSAP — doesn't block initial render
+    import('gsap').then(({ gsap }) => {
+      const moveDot   = gsap.quickTo(dot,  "left", { duration: 0.05, ease: "none" });
+      const moveDotY  = gsap.quickTo(dot,  "top",  { duration: 0.05, ease: "none" });
+      const moveRing  = gsap.quickTo(ring, "left", { duration: 0.18, ease: "power2.out" });
+      const moveRingY = gsap.quickTo(ring, "top",  { duration: 0.18, ease: "power2.out" });
 
-    const onMove = (e: MouseEvent) => {
-      moveDot(e.clientX);
-      moveDotY(e.clientY);
-      moveRing(e.clientX);
-      moveRingY(e.clientY);
-    };
+      const onMove = (e: MouseEvent) => {
+        moveDot(e.clientX);
+        moveDotY(e.clientY);
+        moveRing(e.clientX);
+        moveRingY(e.clientY);
+      };
 
-    const onEnter = () => {
-      dot.classList.add("hovering");
-      ring.classList.add("hovering");
-    };
-    const onLeave = () => {
-      dot.classList.remove("hovering");
-      ring.classList.remove("hovering");
-    };
+      const onEnter = () => {
+        dot.classList.add("hovering");
+        ring.classList.add("hovering");
+      };
+      const onLeave = () => {
+        dot.classList.remove("hovering");
+        ring.classList.remove("hovering");
+      };
 
-    window.addEventListener("mousemove", onMove);
+      window.addEventListener("mousemove", onMove);
 
-    const hoverEls = document.querySelectorAll("a, button, [role='button'], input, textarea, select, label");
-    hoverEls.forEach((el) => {
-      el.addEventListener("mouseenter", onEnter);
-      el.addEventListener("mouseleave", onLeave);
-    });
-
-    return () => {
-      window.removeEventListener("mousemove", onMove);
+      const hoverEls = document.querySelectorAll("a, button, [role='button'], input, textarea, select, label");
       hoverEls.forEach((el) => {
-        el.removeEventListener("mouseenter", onEnter);
-        el.removeEventListener("mouseleave", onLeave);
+        el.addEventListener("mouseenter", onEnter);
+        el.addEventListener("mouseleave", onLeave);
       });
-    };
+
+      // store cleanup in ref so return() can use it
+      (dot as any).__cleanup = () => {
+        window.removeEventListener("mousemove", onMove);
+        hoverEls.forEach((el) => {
+          el.removeEventListener("mouseenter", onEnter);
+          el.removeEventListener("mouseleave", onLeave);
+        });
+      };
+    });
   }, []);
 
   // On touch devices render nothing

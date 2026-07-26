@@ -77,18 +77,22 @@
 }
 
 @layer base {
-  *,
-*::before,
-*::after {
-  transition:
-    background-color 0.4s ease,
-    border-color 0.4s ease,
-    color 0.3s ease,
-    fill 0.3s ease,
-    stroke 0.3s ease,
-    box-shadow 0.3s ease !important;
-}
- 
+  /* Scope transitions only to interactive elements — prevents global paint on every element */
+  a,
+  button,
+  [role='button'],
+  input,
+  textarea,
+  select,
+  label,
+  .transition-colors-safe {
+    transition:
+      background-color 0.4s ease,
+      border-color 0.4s ease,
+      color 0.3s ease,
+      box-shadow 0.3s ease;
+  }
+
 /* Kecualikan elemen yang tidak boleh ter-transition (animasi GSAP, cursor, dll) */
 .cursor-dot,
 .cursor-ring,
@@ -188,20 +192,29 @@
   }
 }
 
-/* Gradient text */
+/* Gradient text — composited: uses opacity overlay instead of background-position shift */
 .gradient-text {
   background: linear-gradient(135deg, #6366f1, #a855f7, #ec4899);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  background-size: 200% 200%;
-  animation: gradientShift 4s ease infinite;
+  position: relative;
+}
+.gradient-text::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #ec4899, #a855f7, #6366f1);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientFade 4s ease-in-out infinite;
+  pointer-events: none;
 }
 
-@keyframes gradientShift {
-  0%   { background-position: 0% 50%; }
-  50%  { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+@keyframes gradientFade {
+  0%, 100% { opacity: 0; }
+  50%       { opacity: 1; }
 }
 
 /* Floating animation */
