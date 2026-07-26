@@ -170,8 +170,6 @@
   border-radius: 50%;
   pointer-events: none;
   z-index: 99999;
-  transform: translate(-50%, -50%);
-  transition: width 0.2s, height 0.2s, background 0.2s;
   mix-blend-mode: difference;
 }
 
@@ -183,12 +181,7 @@
   border-radius: 50%;
   pointer-events: none;
   z-index: 99998;
-  transform: translate(-50%, -50%);
-  transition: width 0.3s, height 0.3s, border-color 0.3s, opacity 0.3s;
 }
-
-.cursor-dot.hovering  { width: 12px; height: 12px; background: #a855f7; }
-.cursor-ring.hovering { width: 56px; height: 56px; border-color: rgba(168, 85, 247, 0.5); }
 
 /* Cursor: hide on touch/mobile devices */
 /* Tambahkan ini di src/index.css, di dalam blok cursor yang sudah ada */

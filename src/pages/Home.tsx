@@ -136,6 +136,8 @@ const ProfileImage = () => {
               <img
                 src="/images/me.jpeg"
                 alt="Hafidz Rahmatullah"
+                width="256"
+                height="256"
                 fetchPriority="high"
                 decoding="async"
                 className={`relative z-10 w-full h-full object-cover object-top transition-opacity duration-500 ${

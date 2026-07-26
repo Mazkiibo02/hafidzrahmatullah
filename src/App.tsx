@@ -41,17 +41,26 @@ const CustomCursor = () => {
 
     // Dynamic import GSAP — doesn't block initial render
     import('gsap').then(({ gsap }) => {
-      const moveDot   = gsap.quickTo(dot,  "left", { duration: 0.05, ease: "none" });
-      const moveDotY  = gsap.quickTo(dot,  "top",  { duration: 0.05, ease: "none" });
-      const moveRing  = gsap.quickTo(ring, "left", { duration: 0.18, ease: "power2.out" });
-      const moveRingY = gsap.quickTo(ring, "top",  { duration: 0.18, ease: "power2.out" });
+      gsap.set(dot, { xPercent: -50, yPercent: -50 });
+      gsap.set(ring, { xPercent: -50, yPercent: -50 });
+
+      const moveDot   = gsap.quickTo(dot,  "x", { duration: 0.05, ease: "none" });
+      const moveDotY  = gsap.quickTo(dot,  "y", { duration: 0.05, ease: "none" });
+      const moveRing  = gsap.quickTo(ring, "x", { duration: 0.18, ease: "power2.out" });
+      const moveRingY = gsap.quickTo(ring, "y", { duration: 0.18, ease: "power2.out" });
 
       const onMove = (e: MouseEvent) => {
         moveDot(e.clientX); moveDotY(e.clientY);
         moveRing(e.clientX); moveRingY(e.clientY);
       };
-      const onEnter = () => { dot.classList.add("hovering"); ring.classList.add("hovering"); };
-      const onLeave = () => { dot.classList.remove("hovering"); ring.classList.remove("hovering"); };
+      const onEnter = () => {
+        gsap.to(dot, { scale: 1.5, backgroundColor: "#a855f7", duration: 0.2 });
+        gsap.to(ring, { scale: 1.55, borderColor: "rgba(168, 85, 247, 0.5)", duration: 0.3 });
+      };
+      const onLeave = () => {
+        gsap.to(dot, { scale: 1, backgroundColor: "#6366f1", duration: 0.2 });
+        gsap.to(ring, { scale: 1, borderColor: "rgba(99, 102, 241, 0.6)", duration: 0.3 });
+      };
 
       window.addEventListener("mousemove", onMove);
       const hoverEls = document.querySelectorAll("a, button, [role='button'], input, textarea, select, label");
