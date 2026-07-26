@@ -23,6 +23,38 @@ const useCounter = (target: number, inView: boolean) => {
   return value;
 };
 
+/* Lazy Load Gallery with Intersection Observer to prevent CLS and JS download */
+const LazyEducationalGallery = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setInView(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1, rootMargin: '400px' }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={containerRef} className="min-h-[600px] w-full relative">
+      {inView ? (
+        <React.Suspense fallback={<div className="absolute inset-0 bg-gray-100/5 dark:bg-gray-800/10 rounded-3xl animate-pulse" />}>
+          <EducationalGallery />
+        </React.Suspense>
+      ) : null}
+    </div>
+  );
+};
+
 /* Stat Card */
 const StatCard = ({
   target, label, color, icon, inView,
@@ -80,18 +112,18 @@ const ProfileImage = () => {
   return (
     <div className="relative flex items-center justify-center">
       {/* Outer rotating ring */}
-      <div className="absolute w-80 h-80 rounded-full border border-indigo-400/20 animate-[spin_20s_linear_infinite]" />
-      <div className="absolute w-96 h-96 rounded-full border border-purple-400/10 animate-[spin_30s_linear_infinite_reverse]" />
+      <div className="absolute w-80 h-80 rounded-full border border-indigo-400/20 md:animate-[spin_20s_linear_infinite]" />
+      <div className="absolute w-96 h-96 rounded-full border border-purple-400/10 md:animate-[spin_30s_linear_infinite_reverse]" />
 
       {/* Glow blob */}
-      <div className="absolute w-72 h-72 rounded-full bg-gradient-to-br from-indigo-600/20 to-purple-600/20 blur-3xl animate-pulse" />
+      <div className="absolute w-72 h-72 rounded-full bg-gradient-to-br from-indigo-600/20 to-purple-600/20 blur-3xl md:animate-pulse" />
 
       {/* Photo frame */}
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] as const }}
-        className="relative z-10 animate-float"
+        className="relative z-10 md:animate-float"
       >
         {/* Gradient border */}
         <div className="w-64 h-64 rounded-full p-[3px] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-2xl shadow-indigo-500/30">
@@ -123,7 +155,7 @@ const ProfileImage = () => {
           className="absolute z-20 -top-2 -right-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-card border border-green-400/30 text-green-400 text-xs font-semibold shadow-lg"
         >
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
+            <span className="md:animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
             <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
           </span>
           Available
@@ -313,9 +345,7 @@ const Home = () => {
         </div>
       </section>
 
-      <React.Suspense fallback={null}>
-        <EducationalGallery />
-      </React.Suspense>
+      <LazyEducationalGallery />
       <CVPreviewModal isOpen={isCVOpen} onClose={() => setIsCVOpen(false)} />
     </div>
   );
