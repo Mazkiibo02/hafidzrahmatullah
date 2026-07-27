@@ -10,7 +10,7 @@ import { useLenis } from "./hooks/useLenis";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Analytics } from "@vercel/analytics/react";
 
-const Home         = lazy(() => import("./pages/Home"));
+import Home from "./pages/Home";
 const About        = lazy(() => import("./pages/About"));
 const Projects     = lazy(() => import("./pages/Projects"));
 const Skills       = lazy(() => import("./pages/Skills"));

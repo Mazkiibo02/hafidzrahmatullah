@@ -12,6 +12,16 @@ const TrueFocus: React.FC<TrueFocusProps> = ({
   className = '',
   enableHover = false,
 }) => {
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px), (hover: none) and (pointer: coarse)');
+    setIsMobile(mq.matches);
+    const handleMQ = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener('change', handleMQ);
+    return () => mq.removeEventListener('change', handleMQ);
+  }, []);
+
   const words = text.split(' ');
 
   const containerVariants = {
@@ -49,6 +59,14 @@ const TrueFocus: React.FC<TrueFocusProps> = ({
       },
     },
   };
+
+  if (isMobile) {
+    return (
+      <div className={`relative ${className}`}>
+        {text}
+      </div>
+    );
+  }
 
   return (
     <motion.div
