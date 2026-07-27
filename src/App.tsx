@@ -8,6 +8,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { useLenis } from "./hooks/useLenis";
 import { SpeedInsights } from "@vercel/speed-insights/react";
+import { Analytics } from "@vercel/analytics/react";
 
 const Home         = lazy(() => import("./pages/Home"));
 const About        = lazy(() => import("./pages/About"));
@@ -135,6 +136,7 @@ const App = () => (
       <BrowserRouter>
         <AppContent />
         <SpeedInsights />
+        <Analytics />
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

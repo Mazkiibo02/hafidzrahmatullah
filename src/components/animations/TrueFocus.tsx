@@ -36,17 +36,15 @@ const TrueFocus: React.FC<TrueFocusProps> = ({
   const charVariants = {
     hidden: {
       opacity: 0,
-      y: 40,
-      rotateX: -90,
-      filter: 'blur(8px)',
+      scale: 0.95,
+      filter: 'blur(4px)',
     },
     visible: {
       opacity: 1,
-      y: 0,
-      rotateX: 0,
+      scale: 1,
       filter: 'blur(0px)',
       transition: {
-        duration: 0.6,
+        duration: 0.4,
         ease: [0.16, 1, 0.3, 1] as [number, number, number, number],
       },
     },

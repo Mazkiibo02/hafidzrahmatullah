@@ -140,10 +140,7 @@ const ProfileImage = () => {
                 height="256"
                 fetchPriority="high"
                 decoding="async"
-                className={`relative z-10 w-full h-full object-cover object-top transition-opacity duration-500 ${
-                  loaded ? 'opacity-100' : 'opacity-0'
-                }`}
-                onLoad={() => setLoaded(true)}
+                className="relative z-10 w-full h-full object-cover object-top"
               />
             </picture>
           </div>
@@ -207,9 +204,9 @@ const Home = () => {
 
             {/* Left */}
             <motion.div
-              initial={{ x: -50, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ duration: 1, ease: "easeOut", delay: 0.1 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, ease: "easeOut" }}
               className="space-y-8"
             >
 
@@ -290,9 +287,9 @@ const Home = () => {
 
             {/* Right Profile */}
             <motion.div
-              initial={{ opacity: 0, x: 60 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] as const }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
               className="flex justify-center lg:justify-end"
             >
               <ProfileImage />

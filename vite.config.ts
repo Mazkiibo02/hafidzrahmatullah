@@ -57,6 +57,13 @@ export default defineConfig(({ mode }) => ({
           if (id.includes('@radix-ui')) {
             return 'ui';
           }
+          // Icons & Vercel
+          if (id.includes('lucide-react')) {
+            return 'icons';
+          }
+          if (id.includes('@vercel')) {
+            return 'vercel';
+          }
           // Heavy optional libs
           if (id.includes('recharts')) {
             return 'charts';
