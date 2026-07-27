@@ -1,6 +1,5 @@
 
 import React, { useRef } from 'react';
-import { GraduationCap, Users, Award, Calendar, Zap } from 'lucide-react';
 import { motion, useInView } from 'framer-motion';
 import DecorativeAnimations from '../components/DecorativeAnimations';
 import TrueFocus from '../components/animations/TrueFocus';
@@ -8,9 +7,9 @@ import ScrambledText from '../components/animations/ScrambledText';
 
 /* ─── Sidebar card ──────────────────────────────────────────── */
 const SideCard = ({
-  icon: Icon, iconColor, title, children, delay = 0,
+  icon, iconColor, title, children, delay = 0,
 }: {
-  icon: React.ElementType; iconColor: string; title: string;
+  icon: string; iconColor: string; title: string;
   children: React.ReactNode; delay?: number;
 }) => {
   const ref    = useRef<HTMLDivElement>(null);
@@ -26,7 +25,7 @@ const SideCard = ({
     >
       <div className="flex items-center mb-4 gap-3">
         <div className={`w-10 h-10 rounded-xl ${iconColor} flex items-center justify-center`}>
-          <Icon size={20} className="text-white" />
+          <span className="text-xl leading-none">{icon}</span>
         </div>
         <h3 className="text-lg font-bold text-gray-900 dark:text-white">{title}</h3>
       </div>
@@ -124,8 +123,8 @@ const About = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div>
                   <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center">
-                      <Zap size={12} className="text-white" />
+                    <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-xs">
+                      ⚡
                     </span>
                     Development
                   </h3>
@@ -137,8 +136,8 @@ const About = () => {
                 </div>
                 <div>
                   <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
-                      <Zap size={12} className="text-white" />
+                    <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-xs">
+                      ⚡
                     </span>
                     Emerging Tech
                   </h3>
@@ -154,7 +153,7 @@ const About = () => {
 
           {/* ── Sidebar ── */}
           <div className="space-y-6">
-            <SideCard icon={GraduationCap} iconColor="bg-gradient-to-br from-blue-500 to-indigo-600" title="Education" delay={0}>
+            <SideCard icon="🎓" iconColor="bg-gradient-to-br from-blue-500 to-indigo-600" title="Education" delay={0}>
               <div>
                 <h4 className="font-semibold text-gray-900 dark:text-white text-sm">D4 Informatics Engineering</h4>
                 <p className="text-gray-600 dark:text-gray-300 text-sm mt-0.5">Universitas Harkat Negeri</p>
@@ -164,7 +163,7 @@ const About = () => {
               </div>
             </SideCard>
 
-            <SideCard icon={Users} iconColor="bg-gradient-to-br from-purple-500 to-violet-600" title="Organizations" delay={0.1}>
+            <SideCard icon="👥" iconColor="bg-gradient-to-br from-purple-500 to-violet-600" title="Organizations" delay={0.1}>
               <div className="space-y-4">
                 {[
                   { title: 'Tech Community Member', desc: 'Active participant in various tech communities' },
@@ -178,7 +177,7 @@ const About = () => {
               </div>
             </SideCard>
 
-            <SideCard icon={Award} iconColor="bg-gradient-to-br from-green-500 to-emerald-600" title="Achievements" delay={0.2}>
+            <SideCard icon="🏆" iconColor="bg-gradient-to-br from-green-500 to-emerald-600" title="Achievements" delay={0.2}>
               <div className="space-y-3">
                 {[
                   { text: 'Multiple Technical Certifications', color: 'bg-blue-500' },
@@ -193,7 +192,7 @@ const About = () => {
               </div>
             </SideCard>
 
-            <SideCard icon={Calendar} iconColor="bg-gradient-to-br from-pink-500 to-rose-600" title="Current Focus" delay={0.3}>
+            <SideCard icon="📅" iconColor="bg-gradient-to-br from-pink-500 to-rose-600" title="Current Focus" delay={0.3}>
               <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
                 Currently focusing on advanced web development techniques, cybersecurity practices, and exploring AI/ML applications in software development.
               </p>

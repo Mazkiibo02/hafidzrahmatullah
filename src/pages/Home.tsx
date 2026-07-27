@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Eye, Code, Smartphone, Shield, MapPin, GraduationCap } from 'lucide-react';
+import { ArrowRight, Eye } from 'lucide-react';
 import { motion, animate } from 'framer-motion';
 import DecorativeAnimations from '../components/DecorativeAnimations';
 import CVPreviewModal from '../components/CVpreviewmodal';
@@ -80,9 +80,9 @@ const StatCard = ({
 
 /* Interest Card */
 const InterestCard = ({
-  icon: Icon, title, description, gradient, delay,
+  icon, title, description, gradient, delay,
 }: {
-  icon: React.ElementType;
+  icon: string;
   title: string;
   description: string;
   gradient: string;
@@ -98,7 +98,7 @@ const InterestCard = ({
   >
     <div className={`absolute -top-12 -right-12 w-40 h-40 rounded-full ${gradient} opacity-0 group-hover:opacity-15 blur-2xl transition-all duration-700`} />
     <div className={`w-14 h-14 rounded-2xl ${gradient} flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-      <Icon className="text-white" size={26} />
+      <span className="text-3xl leading-none">{icon}</span>
     </div>
     <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{title}</h3>
     <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">{description}</p>
@@ -170,7 +170,7 @@ const ProfileImage = () => {
           transition={{ delay: 1.2, duration: 0.5 }}
           className="absolute z-20 -bottom-2 -left-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-card border border-indigo-400/30 text-indigo-400 text-xs font-semibold shadow-lg"
         >
-          <MapPin size={11} />
+          <span>📍</span>
           Tegal, Indonesia
         </motion.div>
       </motion.div>
@@ -221,11 +221,11 @@ const Home = () => {
                 className="flex flex-wrap items-center gap-3"
               >
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 text-xs font-medium border border-indigo-200 dark:border-indigo-800">
-                  <GraduationCap size={12} />
+                  <span>🎓</span>
                   D4 Informatics Engineering
                 </span>
                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-xs font-medium border border-purple-200 dark:border-purple-800">
-                  <MapPin size={12} />
+                  <span>📍</span>
                   Tegal, Indonesia
                 </span>
               </motion.div>
@@ -323,21 +323,21 @@ const Home = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <InterestCard
-              icon={Code}
+              icon="💻"
               title="Web & Mobile Development"
               description="Creating responsive web applications and mobile apps using modern frameworks like Flutter, Laravel, and React."
               gradient="bg-gradient-to-br from-indigo-500 to-blue-600"
               delay={0}
             />
             <InterestCard
-              icon={Shield}
+              icon="🛡️"
               title="Cybersecurity"
               description="Passionate about securing digital systems and understanding the latest security threats and countermeasures."
               gradient="bg-gradient-to-br from-purple-500 to-violet-600"
               delay={0.12}
             />
             <InterestCard
-              icon={Smartphone}
+              icon="📊"
               title="AI & Data Analysis"
               description="Exploring artificial intelligence, machine learning, and data analysis to extract meaningful insights from data."
               gradient="bg-gradient-to-br from-pink-500 to-rose-600"

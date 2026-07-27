@@ -1,6 +1,4 @@
-/* Self-hosted Inter Variable Font — eliminates Google Fonts dependency, no CLS */
-@import '@fontsource-variable/inter';
-
+/* Font is now imported in main.tsx for faster loading (prevents CSS render-blocking) */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
