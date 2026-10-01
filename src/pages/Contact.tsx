@@ -80,25 +80,39 @@ const Contact = () => {
     <div className="min-h-screen mesh-bg pt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
 
-        {/* Header */}
-        <div className="text-center mb-16 relative h-36 overflow-hidden">
-          <DecorativeAnimations />
-          <div className="relative z-10 pt-4">
-            <TrueFocus
-              text="Get In Touch"
-              className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4"
-              enableHover={true}
-            />
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8 }}
-              className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
-            >
-              I'm always open to discussing new opportunities, collaborations, or just having a chat about technology
+        <DecorativeAnimations fullBackground={true} />
+        {/* ─── Hero Section (Awwwards Style) ─── */}
+        <section className="relative flex flex-col justify-center px-2 lg:px-12 pt-16 pb-16">
+          <div className="absolute top-10 left-12 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -z-10" />
+          
+          <div className="max-w-7xl">
+            <div className="overflow-hidden">
+              <motion.h1 
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                className="text-[12vw] lg:text-[8vw] font-bold tracking-tighter leading-[0.85] uppercase"
+              >
+                Let's
+              </motion.h1>
+            </div>
+            <div className="overflow-hidden">
+              <motion.h1 
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="text-[12vw] lg:text-[8vw] font-bold tracking-tighter leading-[0.85] uppercase italic text-indigo-600 dark:text-indigo-400"
+              >
+                Connect
+              </motion.h1>
+            </div>
+
+            <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.6 }}
+               className="text-gray-500 dark:text-gray-400 text-lg md:text-xl mt-8 max-w-xl leading-relaxed font-medium">
+               I'm always open to discussing new opportunities, collaborations, or just having a chat about technology.
             </motion.p>
           </div>
-        </div>
+        </section>
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
 

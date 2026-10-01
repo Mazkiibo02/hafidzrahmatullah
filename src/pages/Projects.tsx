@@ -483,32 +483,48 @@ const Projects: React.FC = () => {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 relative overflow-x-hidden">
       <DecorativeAnimations fullBackground={true} />
-      {/* Hero */}
-      <section className="pt-32 pb-20 px-8 lg:px-16 relative overflow-hidden">
-        <div className="absolute top-20 left-1/4 w-96 h-96 bg-indigo-600/8 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-20 right-1/4 w-64 h-64 bg-purple-600/8 rounded-full blur-3xl pointer-events-none" />
-        <div className="max-w-7xl mx-auto">
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}
-            className="flex items-center gap-3 mb-6">
-            <div className="w-8 h-0.5 bg-indigo-500" />
-            <span className="text-indigo-400 text-xs font-mono uppercase tracking-widest">Portfolio · GitHub</span>
-          </motion.div>
-          <ScrambleTitle text="My Projects" />
+      {/* ─── Hero Section (Awwwards Style) ─── */}
+      <section className="relative min-h-[70vh] flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-32 pb-16">
+        <div className="absolute top-32 right-12 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -z-10" />
+        
+        <div className="max-w-7xl">
+          <div className="overflow-hidden">
+            <motion.h1 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              className="text-[12vw] lg:text-[8vw] font-bold tracking-tighter leading-[0.85] uppercase"
+            >
+              Selected
+            </motion.h1>
+          </div>
+          <div className="overflow-hidden">
+            <motion.h1 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="text-[12vw] lg:text-[8vw] font-bold tracking-tighter leading-[0.85] uppercase italic text-indigo-600 dark:text-indigo-400"
+            >
+              Works
+            </motion.h1>
+          </div>
+
           <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.6 }}
-            className="text-gray-500 dark:text-gray-500 text-lg mt-4 max-w-xl leading-relaxed">
-            Public repositories from GitHub — each one a chapter of the journey.
+            className="text-gray-500 dark:text-gray-400 text-lg md:text-xl mt-8 max-w-xl leading-relaxed font-medium">
+            A collection of engineering endeavors, ranging from frontend experiments to full-stack architectures.
           </motion.p>
+
           {!isLoading && !isError && (
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
-              className="flex items-center gap-4 mt-8 text-sm text-gray-600 dark:text-gray-700 font-mono">
-              <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-                {(repos ?? []).length} repos
+              className="flex items-center gap-6 mt-12 text-sm text-gray-900 dark:text-gray-300 font-mono uppercase tracking-widest border-t-2 border-zinc-900 dark:border-white pt-6 w-fit">
+              <span className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-indigo-500" />
+                {(repos ?? []).length} Repos
               </span>
               <span>·</span>
-              <span>{featured.length} featured</span>
+              <span>{featured.length} Featured</span>
               <span>·</span>
-              <span>{languages.length - 1} languages</span>
+              <span>{languages.length - 1} Languages</span>
             </motion.div>
           )}
         </div>

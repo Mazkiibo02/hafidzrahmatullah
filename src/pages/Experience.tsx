@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, useInView, AnimatePresence } from 'framer-motion';
-import { Calendar, ChevronRight, MapPin } from 'lucide-react';
+import { Calendar, ChevronRight, MapPin, ExternalLink } from 'lucide-react';
 import { experiences, type Experience as ExperienceData } from '@/data/experiences';
 import DecorativeAnimations from '../components/DecorativeAnimations';
 
@@ -96,24 +96,25 @@ const DesktopImageGallery = ({
   return (
     <div className="flex flex-col gap-3 h-full min-h-0">
       <div
-        className="relative rounded-2xl overflow-hidden flex-1 min-h-0"
+        className="relative rounded-2xl overflow-hidden flex-1 min-h-0 bg-zinc-100 dark:bg-zinc-900/50"
         style={{ boxShadow: `inset 0 0 0 1px ${color.primary}30` }}
       >
         <AnimatePresence mode="wait">
-          <motion.img
+          <motion.div
             key={active}
-            src={images[active]}
-            alt=""
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0"
             initial={{ opacity: 0, scale: 1.04 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.97 }}
             transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-          />
+          >
+            <img src={images[active]} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110" />
+            <img src={images[active]} alt="" className="absolute inset-0 w-full h-full object-contain" />
+          </motion.div>
         </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-t from-gray-950/60 via-transparent to-transparent pointer-events-none" />
         <div
-          className="absolute bottom-3 left-3 px-2 py-0.5 rounded-md text-[10px] font-mono backdrop-blur-sm"
+          className="absolute bottom-3 left-3 px-2 py-0.5 rounded-md text-[10px] font-mono backdrop-blur-sm z-10"
           style={{ background: 'rgba(0,0,0,0.55)', color: color.primary, border: `1px solid ${color.primary}30` }}
         >
           {active + 1} / {images.length}
@@ -125,14 +126,15 @@ const DesktopImageGallery = ({
             <button
               key={i}
               onClick={() => setActive(i)}
-              className="flex-1 rounded-xl overflow-hidden h-16 sm:h-20 transition-all duration-300"
+              className="relative flex-1 rounded-xl overflow-hidden h-16 sm:h-20 transition-all duration-300 bg-zinc-100 dark:bg-zinc-900/50"
               style={{
                 opacity: active === i ? 1 : 0.38,
                 outline: active === i ? `2px solid ${color.primary}` : '2px solid transparent',
                 outlineOffset: '2px',
               }}
             >
-              <img src={img} alt="" className="w-full h-full object-cover" />
+              <img src={img} alt="" className="absolute inset-0 w-full h-full object-cover blur-md opacity-40 scale-110" />
+              <img src={img} alt="" className="absolute inset-0 w-full h-full object-contain" />
             </button>
           ))}
         </div>
@@ -161,24 +163,25 @@ const MobileImageGallery = ({
 
   return (
     <div
-      className="relative w-full rounded-2xl overflow-hidden"
+      className="relative w-full rounded-2xl overflow-hidden bg-zinc-100 dark:bg-zinc-900/50"
       style={{ aspectRatio: '16/9', boxShadow: `0 0 0 1px ${color.primary}30` }}
     >
       <AnimatePresence mode="wait">
-        <motion.img
+        <motion.div
           key={active}
-          src={images[active]}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0"
           initial={{ opacity: 0, scale: 1.04 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-        />
+        >
+          <img src={images[active]} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-40 scale-110" />
+          <img src={images[active]} alt="" className="absolute inset-0 w-full h-full object-contain" />
+        </motion.div>
       </AnimatePresence>
       <div className="absolute inset-0 bg-gradient-to-t from-gray-950/50 to-transparent pointer-events-none" />
       <div
-        className="absolute bottom-3 left-3 px-2 py-0.5 rounded-md text-[10px] font-mono backdrop-blur-sm"
+        className="absolute bottom-3 left-3 px-2 py-0.5 rounded-md text-[10px] font-mono backdrop-blur-sm z-10"
         style={{ background: 'rgba(0,0,0,0.55)', color: color.primary, border: `1px solid ${color.primary}30` }}
       >
         {active + 1} / {images.length}
@@ -262,9 +265,17 @@ const ExperienceCard = ({ experience: exp, index, total }: CardProps) => {
             <ScrambleText text={exp.company} trigger={isInView} />
           </h2>
           <p className={`text-base font-medium mb-2 ${color.text}`}>{exp.role}</p>
-          <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-sm">
-            <Calendar size={13} style={{ color: color.primary }} />
-            <span>{exp.period}</span>
+          <div className="flex flex-wrap items-center gap-4 text-gray-500 dark:text-gray-400 text-sm">
+            <div className="flex items-center gap-2">
+              <Calendar size={13} style={{ color: color.primary }} />
+              <span>{exp.period}</span>
+            </div>
+            {exp.liveUrl && (
+              <a href={exp.liveUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-indigo-500 transition-colors">
+                <ExternalLink size={13} style={{ color: color.primary }} />
+                <span>Visit Live Site</span>
+              </a>
+            )}
           </div>
         </div>
 
@@ -312,9 +323,17 @@ const ExperienceCard = ({ experience: exp, index, total }: CardProps) => {
             <ScrambleText text={exp.company} trigger={isInView} />
           </h2>
           <p className={`text-lg font-medium mb-2 ${color.text}`}>{exp.role}</p>
-          <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400 text-sm mb-5">
-            <Calendar size={13} style={{ color: color.primary }} />
-            <span>{exp.period}</span>
+          <div className="flex flex-wrap items-center gap-4 text-gray-500 dark:text-gray-400 text-sm mb-5">
+            <div className="flex items-center gap-2">
+              <Calendar size={13} style={{ color: color.primary }} />
+              <span>{exp.period}</span>
+            </div>
+            {exp.liveUrl && (
+              <a href={exp.liveUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-1.5 hover:text-indigo-500 transition-colors">
+                <ExternalLink size={13} style={{ color: color.primary }} />
+                <span>Visit Live Site</span>
+              </a>
+            )}
           </div>
 
           <div className="h-px mb-5" style={{ background: `linear-gradient(90deg, ${color.primary}45, rgba(255,255,255,0.03))` }} />
@@ -354,46 +373,47 @@ const Experience: React.FC = () => {
     <div className="min-h-screen bg-white dark:bg-gray-950 relative overflow-x-hidden">
       <DecorativeAnimations fullBackground={true} />
 
-      {/* ── Hero ── */}
-      <section className="pt-24 sm:pt-32 pb-12 sm:pb-16 px-5 sm:px-8 lg:px-16 relative overflow-hidden">
-        <div className="absolute top-20 left-1/4 w-96 h-96 bg-indigo-600/8 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute top-20 right-1/4 w-64 h-64 bg-purple-600/8 rounded-full blur-3xl pointer-events-none" />
-        <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-            className="flex items-center gap-3 mb-6"
-          >
-            <div className="w-8 h-0.5 bg-indigo-500" />
-            <span className="text-indigo-400 text-xs font-mono uppercase tracking-widest">Career · Experience</span>
-          </motion.div>
+      {/* ─── Hero Section (Awwwards Style) ─── */}
+      <section className="relative min-h-[70vh] flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-32 pb-16">
+        <div className="absolute top-32 left-12 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl -z-10" />
+        
+        <div className="max-w-7xl">
+          <div className="overflow-hidden">
+            <motion.h1 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              className="text-[12vw] lg:text-[8vw] font-bold tracking-tighter leading-[0.85] uppercase"
+            >
+              Career
+            </motion.h1>
+          </div>
+          <div className="overflow-hidden">
+            <motion.h1 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="text-[12vw] lg:text-[8vw] font-bold tracking-tighter leading-[0.85] uppercase italic text-indigo-600 dark:text-indigo-400"
+            >
+              Experience
+            </motion.h1>
+          </div>
 
-          <ScrambleHeroTitle text="Work Experience" />
-
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            className="text-gray-600 dark:text-gray-400 text-base sm:text-lg mt-4 max-w-xl leading-relaxed"
-          >
-            Every experience is a new chapter in a career that keeps growing.
+          <motion.p initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5, duration: 0.6 }}
+             className="text-gray-500 dark:text-gray-400 text-lg md:text-xl mt-8 max-w-xl leading-relaxed font-medium">
+             Every experience is a new chapter in a career that keeps growing. Building, learning, and leading in professional environments.
           </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.8 }}
-            className="flex items-center gap-4 mt-6 text-sm text-gray-600 dark:text-gray-400 font-mono flex-wrap"
-          >
-            <span className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-indigo-500" />
-              {N} experiences
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}
+             className="flex items-center gap-6 mt-12 text-sm text-gray-900 dark:text-gray-300 font-mono uppercase tracking-widest border-t-2 border-zinc-900 dark:border-white pt-6 w-fit">
+            <span className="flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-indigo-500" />
+              {N} Roles
             </span>
             <span>·</span>
-            <span>{magang} internships</span>
+            <span>{magang} Internships</span>
             <span>·</span>
-            <span>{freelance} freelance</span>
+            <span>{freelance} Freelance</span>
           </motion.div>
         </div>
       </section>

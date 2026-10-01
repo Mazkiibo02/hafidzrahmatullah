@@ -10,6 +10,7 @@ export interface Experience {
   description: string[];
   techStack: string[];
   images: [string, string, string];
+  liveUrl?: string;
   color: {
     primary: string;
     bg: string;
@@ -115,12 +116,50 @@ export const experiences: Experience[] = [
       '/images/experience/innolegalist-2.webp',
       '/images/experience/innolegalist-3.webp',
     ],
+    liveUrl: 'https://www.innolegalist.co.id/',
     color: {
       primary: '#6366f1',
       bg: 'bg-indigo-500/10',
       text: 'text-indigo-400',
       border: 'border-indigo-500/30',
       glow: 'rgba(99, 102, 241, 0.12)',
+    },
+  },
+  {
+    id: 4,
+    company: 'Usahaku POS (Self-Owned SaaS)',
+    role: 'Founder & Fullstack Developer',
+    period: 'Early 2026 – Present',
+    type: 'Full-time',
+    description: [
+      'Architected and launched a cloud-based Point of Sales (POS) SaaS helping MSMEs manage multi-branch operations and structured cashier shifts.',
+      'Integrated Google Gemini AI for automatic sales data analytics, delivering intelligent business insights directly to merchants.',
+      'Engineered offline-first Progressive Web App (PWA) capabilities and direct Bluetooth thermal printer integration via ESC/POS protocol.',
+      'Developed a scalable subscription and billing module seamlessly integrated with Midtrans Payment Gateway and Firebase.',
+    ],
+    techStack: [
+      'Next.js',
+      'React 19',
+      'TypeScript',
+      'Firebase',
+      'Zustand',
+      'Tailwind CSS',
+      'Google Gen AI',
+      'Midtrans',
+      'PWA',
+    ],
+    images: [
+      'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800',
+      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
+    ],
+    liveUrl: 'https://www.usahakupos.my.id/',
+    color: {
+      primary: '#f97316',
+      bg: 'bg-orange-500/10',
+      text: 'text-orange-400',
+      border: 'border-orange-500/30',
+      glow: 'rgba(249, 115, 22, 0.12)',
     },
   },
 ];

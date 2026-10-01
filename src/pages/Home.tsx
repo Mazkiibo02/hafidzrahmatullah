@@ -1,350 +1,283 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, Eye } from 'lucide-react';
-import { motion, animate } from 'framer-motion';
-import DecorativeAnimations from '../components/DecorativeAnimations';
+import { motion, useScroll, useTransform } from 'framer-motion';
+import { ArrowRight, Code, Shield, BrainCircuit } from 'lucide-react';
 import CVPreviewModal from '../components/CVpreviewmodal';
-import TrueFocus from '../components/animations/TrueFocus';
+import DecorativeAnimations from '../components/DecorativeAnimations';
 const EducationalGallery = React.lazy(() => import('../components/EducationalGallery'));
 import { useDataCounts } from '../hooks/useDataCounts';
 
-/* Animated counter */
-const useCounter = (target: number, inView: boolean) => {
-  const [value, setValue] = useState(0);
-  useEffect(() => {
-    if (!inView) return;
-    const controls = animate(0, target, {
-      duration: 1.8,
-      ease: "easeOut",
-      onUpdate: (val) => setValue(Math.round(val))
-    });
-    return () => controls.stop();
-  }, [inView, target]);
-  return value;
-};
+/* ─── Magnetic Button ────────────────────────────────────── */
+const MagneticButton = ({ children, className, onClick, isLink, to }: any) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
 
-/* Lazy Load Gallery with Intersection Observer to prevent CLS and JS download */
-const LazyEducationalGallery = () => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [inView, setInView] = useState(false);
+  const handleMouse = (e: React.MouseEvent) => {
+    const { clientX, clientY } = e;
+    const { height, width, left, top } = ref.current!.getBoundingClientRect();
+    const middleX = clientX - (left + width / 2);
+    const middleY = clientY - (top + height / 2);
+    setPosition({ x: middleX * 0.2, y: middleY * 0.2 });
+  };
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true);
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.1, rootMargin: '400px' }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+  const reset = () => setPosition({ x: 0, y: 0 });
 
-  return (
-    <div ref={containerRef} className="min-h-[600px] w-full relative">
-      {inView ? (
-        <React.Suspense fallback={<div className="absolute inset-0 bg-gray-100/5 dark:bg-gray-800/10 rounded-3xl animate-pulse" />}>
-          <EducationalGallery />
-        </React.Suspense>
-      ) : null}
-    </div>
-  );
-};
-
-/* Stat Card */
-const StatCard = ({
-  target, label, color, icon, inView,
-}: {
-  target: number;
-  label: string;
-  color: string;
-  icon: string;
-  inView: boolean;
-}) => {
-  const count = useCounter(target, inView);
-  return (
+  const inner = (
     <motion.div
-      whileHover={{ y: -4, transition: { duration: 0.2 } }}
-      className="glass-card glow-border rounded-2xl p-5 text-center"
+      animate={{ x: position.x, y: position.y }}
+      transition={{ type: 'spring', stiffness: 150, damping: 15, mass: 0.1 }}
+      className="w-full h-full flex items-center justify-center"
     >
-      <div className="text-2xl mb-1">{icon}</div>
-      <div className={`text-3xl font-bold counter-value ${color}`}>{count}+</div>
-      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 font-medium">{label}</div>
+      {children}
     </motion.div>
   );
+
+  return (
+    <div
+      ref={ref}
+      onMouseMove={handleMouse}
+      onMouseLeave={reset}
+      className={`relative cursor-pointer ${className}`}
+    >
+      {isLink ? (
+        <Link to={to} className="w-full h-full block" onClick={onClick}>{inner}</Link>
+      ) : (
+        <button className="w-full h-full block" onClick={onClick}>{inner}</button>
+      )}
+    </div>
+  );
 };
 
-/* Interest Card */
-const InterestCard = ({
-  icon, title, description, gradient, delay,
-}: {
-  icon: string;
-  title: string;
-  description: string;
-  gradient: string;
-  delay: number;
-}) => (
-  <motion.div
-    className="glass-card glow-border rounded-2xl p-8 group relative overflow-hidden cursor-default"
-    initial={{ opacity: 0, y: 50 }}
+/* ─── Kinetic Marquee ────────────────────────────────────── */
+const Marquee = ({ text }: { text: string }) => (
+  <div className="relative w-full overflow-hidden whitespace-nowrap bg-indigo-600 dark:bg-indigo-500 py-4 flex items-center -rotate-2 scale-105 my-24">
+    <motion.div
+      className="flex whitespace-nowrap text-white font-mono text-xl uppercase tracking-[0.1em]"
+      animate={{ x: [0, -1035] }}
+      transition={{ ease: "linear", duration: 10, repeat: Infinity }}
+    >
+      {[...Array(6)].map((_, i) => (
+        <React.Fragment key={i}>
+          <span className="mx-4">{text}</span>
+          <span className="mx-4">•</span>
+        </React.Fragment>
+      ))}
+    </motion.div>
+  </div>
+);
+
+/* ─── Asymmetric Stat Card ───────────────────────────────── */
+const StatCard = ({ label, value, delay }: { label: string; value: number, delay: number }) => (
+  <motion.div 
+    initial={{ opacity: 0, y: 30 }}
     whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true, margin: '-60px' }}
-    transition={{ duration: 0.6, delay, ease: 'easeOut' }}
-    whileHover={{ y: -6, transition: { duration: 0.3 } }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+    className="flex flex-col border-t-2 border-zinc-900 dark:border-white pt-4"
   >
-    <div className={`absolute -top-12 -right-12 w-40 h-40 rounded-full ${gradient} opacity-0 group-hover:opacity-15 blur-2xl transition-all duration-700`} />
-    <div className={`w-14 h-14 rounded-2xl ${gradient} flex items-center justify-center mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-      <span className="text-3xl leading-none">{icon}</span>
-    </div>
-    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{title}</h3>
-    <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm">{description}</p>
+    <span className="text-6xl md:text-8xl font-bold tracking-tighter text-zinc-900 dark:text-white">
+      {value}
+    </span>
+    <span className="text-sm font-mono uppercase tracking-widest text-zinc-500 mt-2">
+      {label}
+    </span>
   </motion.div>
 );
 
-/* Profile Image */
-const ProfileImage = () => {
-  const [loaded, setLoaded] = useState(false);
-
-  return (
-    <div className="relative flex items-center justify-center">
-      {/* Outer rotating ring */}
-      <div className="absolute w-80 h-80 rounded-full border border-indigo-400/20 md:animate-[spin_20s_linear_infinite]" />
-      <div className="absolute w-96 h-96 rounded-full border border-purple-400/10 md:animate-[spin_30s_linear_infinite_reverse]" />
-
-      {/* Glow blob */}
-      <div className="absolute w-72 h-72 rounded-full bg-gradient-to-br from-indigo-600/20 to-purple-600/20 blur-3xl md:animate-pulse" />
-
-      {/* Photo frame */}
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, delay: 0.5, ease: [0.16, 1, 0.3, 1] as const }}
-        className="relative z-10 md:animate-float"
-      >
-        {/* Gradient border */}
-        <div className="w-64 h-64 rounded-full p-[3px] bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 shadow-2xl shadow-indigo-500/30">
-          <div className="w-full h-full rounded-full overflow-hidden bg-gray-900 relative">
-            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-indigo-600 to-purple-700">
-              <span className="text-white text-4xl font-bold">HR</span>
-            </div>
-            <picture>
-              <source srcSet="/images/me.webp" type="image/webp" />
-              <img
-                src="/images/me.jpeg"
-                alt="Hafidz Rahmatullah"
-                width="256"
-                height="256"
-                fetchPriority="high"
-                decoding="async"
-                className="relative z-10 w-full h-full object-cover object-top"
-              />
-            </picture>
-          </div>
-        </div>
-
-        {/* Floating badge — Available */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1, duration: 0.5 }}
-          className="absolute z-20 -top-2 -right-4 flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-card border border-green-400/30 text-green-400 text-xs font-semibold shadow-lg"
-        >
-          <span className="relative flex h-2 w-2">
-            <span className="md:animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
-          </span>
-          Available
-        </motion.div>
-
-        {/* Floating badge — Location */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 1.2, duration: 0.5 }}
-          className="absolute z-20 -bottom-2 -left-6 flex items-center gap-1.5 px-3 py-1.5 rounded-full glass-card border border-indigo-400/30 text-indigo-400 text-xs font-semibold shadow-lg"
-        >
-          <span>📍</span>
-          Tegal, Indonesia
-        </motion.div>
-      </motion.div>
-    </div>
-  );
-};
-
-/* Home Page */
 const Home = () => {
   const { projectsCount, certificatesCount, skillsCount } = useDataCounts();
-  const heroLeftRef  = useRef<HTMLDivElement>(null);
-  const statsRef     = useRef<HTMLDivElement>(null);
-  const [statsInView, setStatsInView] = useState(false);
   const [isCVOpen, setIsCVOpen] = useState(false);
-
-  useEffect(() => {
-    if (!statsRef.current) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setStatsInView(true); },
-      { threshold: 0.3 }
-    );
-    observer.observe(statsRef.current);
-    return () => observer.disconnect();
-  }, []);
+  const { scrollYProgress } = useScroll();
+  const yParallax = useTransform(scrollYProgress, [0, 1], [0, -300]);
+  const yParallaxSlow = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   return (
-    <div className="min-h-screen mesh-bg relative overflow-x-hidden">
+    <div className="min-h-[100dvh] bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 selection:bg-indigo-500 selection:text-white overflow-hidden">
+      
       <DecorativeAnimations fullBackground={true} />
-
-      {/* Hero */}
-      <section className="pt-28 pb-20 px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-
-            {/* Left */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
-              className="space-y-8"
-            >
-
-              {/* Meta info */}
-              <motion.div
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                className="flex flex-wrap items-center gap-3"
-              >
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 text-xs font-medium border border-indigo-200 dark:border-indigo-800">
-                  <span>🎓</span>
-                  D4 Informatics Engineering
-                </span>
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-xs font-medium border border-purple-200 dark:border-purple-800">
-                  <span>📍</span>
-                  Tegal, Indonesia
-                </span>
-              </motion.div>
-
-              {/* Name */}
-              <div>
-                <TrueFocus
-                  text="Hafidz Rahmatullah"
-                  className="text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 dark:text-white leading-tight"
-                  enableHover={true}
-                />
-              </div>
-
-              {/* Subtitle */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7, duration: 0.6 }}
-                className="space-y-2"
-              >
-                <p className="text-xl lg:text-2xl text-gray-600 dark:text-gray-300 leading-relaxed">
-                  Fullstack Developer passionate about{' '}
-                  <span className="gradient-text font-semibold">Web</span>,{' '}
-                  <span className="gradient-text font-semibold">Mobile</span>, and{' '}
-                  <span className="gradient-text font-semibold">Cybersecurity</span>
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-500">
-                  Universitas Harkat Negeri · Currently open to work
-                </p>
-              </motion.div>
-
-              {/* CTA */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9, duration: 0.5 }}
-                className="flex flex-col sm:flex-row gap-4"
-              >
-                <Link
-                  to="/projects"
-                  className="group inline-flex items-center justify-center px-8 py-4 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all duration-300 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:scale-105"
-                >
-                  View Portfolio
-                  <ArrowRight className="ml-2 group-hover:translate-x-1 transition-transform" size={20} />
-                </Link>
-                <button
-                  onClick={() => setIsCVOpen(true)}
-                  className="inline-flex items-center justify-center px-8 py-4 glass-card text-gray-900 dark:text-white font-semibold rounded-xl border border-gray-200 dark:border-gray-700 hover:border-indigo-400 dark:hover:border-indigo-500 transition-all duration-300 hover:scale-105"
-                >
-                  <Eye className="mr-2" size={20} />
-                  View CV
-                </button>
-              </motion.div>
-
-              {/* Stats */}
-              <div ref={statsRef} className="grid grid-cols-3 gap-4 pt-2">
-                <StatCard target={projectsCount}     label="Projects"      color="text-indigo-500 dark:text-indigo-400"  icon="🚀" inView={statsInView} />
-                <StatCard target={certificatesCount} label="Certificates"  color="text-purple-500 dark:text-purple-400"  icon="🏆" inView={statsInView} />
-                <StatCard target={skillsCount}       label="Skills"        color="text-pink-500 dark:text-pink-400"       icon="⚡" inView={statsInView} />
-              </div>
-            </motion.div>
-
-            {/* Right Profile */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-              className="flex justify-center lg:justify-end"
-            >
-              <ProfileImage />
-            </motion.div>
+      
+      {/* ─── Hero Section (Awwwards Style) ─── */}
+      <section className="relative min-h-[100dvh] flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-32 pb-16">
+        
+        {/* Floating Badge */}
+        <motion.div 
+          className="absolute top-32 left-6 md:left-12 lg:left-24 z-20 flex gap-4"
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+        >
+          <div className="px-4 py-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md text-xs font-mono uppercase tracking-wider flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            Open to work
           </div>
-        </div>
-      </section>
+        </motion.div>
 
-      {/* Interest Areas */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <TrueFocus
-              text="Area of Interest"
-              className="text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-4"
-              enableHover={false}
-            />
-            <motion.p
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end relative z-10">
+          
+          {/* Left: Giant Typography */}
+          <div className="lg:col-span-8 flex flex-col gap-2 relative z-20">
+            <div className="overflow-hidden">
+              <motion.h1 
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+                className="text-[14vw] lg:text-[9vw] font-bold tracking-tighter leading-[0.85] uppercase"
+              >
+                HAFIDZ
+              </motion.h1>
+            </div>
+            <div className="overflow-hidden flex items-center gap-6">
+              <motion.h1 
+                initial={{ y: "100%" }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+                className="text-[14vw] lg:text-[7vw] font-bold tracking-tighter leading-[0.85] uppercase italic text-indigo-600 dark:text-indigo-400"
+              >
+                RAHMATULLAH
+              </motion.h1>
+            </div>
+            
+            <motion.p 
               initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.3 }}
-              className="text-lg text-gray-600 dark:text-gray-300 mt-3"
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              className="mt-12 text-xl md:text-2xl font-medium max-w-xl leading-relaxed text-zinc-600 dark:text-zinc-400"
             >
-              Exploring the frontiers of technology
+              Fullstack Developer engineering high-performance web, mobile, and secure digital experiences.
             </motion.p>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              className="flex gap-6 mt-12"
+            >
+              <MagneticButton 
+                isLink to="/projects"
+                className="h-16 px-8 rounded-full bg-zinc-900 dark:bg-zinc-100 text-white dark:text-zinc-900 font-semibold text-lg overflow-hidden group"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  View Work <ArrowRight className="group-hover:translate-x-2 transition-transform" />
+                </span>
+                <div className="absolute inset-0 bg-indigo-600 translate-y-[101%] group-hover:translate-y-0 transition-transform duration-500 ease-[0.16,1,0.3,1]" />
+              </MagneticButton>
+
+              <MagneticButton 
+                onClick={() => setIsCVOpen(true)}
+                className="h-16 px-8 rounded-full border-2 border-zinc-200 dark:border-zinc-800 font-semibold text-lg hover:border-zinc-900 dark:hover:border-zinc-100 transition-colors"
+              >
+                Review CV
+              </MagneticButton>
+            </motion.div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <InterestCard
-              icon="💻"
-              title="Web & Mobile Development"
-              description="Creating responsive web applications and mobile apps using modern frameworks like Flutter, Laravel, and React."
-              gradient="bg-gradient-to-br from-indigo-500 to-blue-600"
-              delay={0}
-            />
-            <InterestCard
-              icon="🛡️"
-              title="Cybersecurity"
-              description="Passionate about securing digital systems and understanding the latest security threats and countermeasures."
-              gradient="bg-gradient-to-br from-purple-500 to-violet-600"
-              delay={0.12}
-            />
-            <InterestCard
-              icon="📊"
-              title="AI & Data Analysis"
-              description="Exploring artificial intelligence, machine learning, and data analysis to extract meaningful insights from data."
-              gradient="bg-gradient-to-br from-pink-500 to-rose-600"
-              delay={0.24}
-            />
+          {/* Right: Parallax Image */}
+          <div className="lg:col-span-4 relative h-[60vh] lg:h-[80vh] w-full hidden md:block">
+            <motion.div 
+              style={{ y: yParallax }}
+              className="absolute top-0 right-0 w-full h-full rounded-[2.5rem] overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 cursor-crosshair origin-bottom border border-zinc-200 dark:border-zinc-800"
+            >
+              <img 
+                src="/images/me.jpeg" 
+                alt="Hafidz"
+                className="w-full h-full object-cover scale-110 hover:scale-100 transition-transform duration-1000"
+              />
+            </motion.div>
           </div>
         </div>
       </section>
 
-      <LazyEducationalGallery />
+      {/* ─── Marquee Break ─── */}
+      <Marquee text="Web Development • Cybersecurity • Mobile Apps • UI/UX Design • Fullstack Engineering" />
+
+      {/* ─── Stats Section (Brutalist) ─── */}
+      <section className="py-24 px-6 md:px-12 lg:px-24">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-16 md:gap-8">
+          <StatCard label="Completed Projects" value={projectsCount} delay={0} />
+          <StatCard label="Certifications" value={certificatesCount} delay={0.1} />
+          <StatCard label="Technical Skills" value={skillsCount} delay={0.2} />
+        </div>
+      </section>
+
+      {/* ─── Area of Interest (Bento Layout) ─── */}
+      <section className="py-24 px-6 md:px-12 lg:px-24 bg-zinc-100 dark:bg-zinc-900 rounded-[3rem] mx-4 md:mx-8 mb-24">
+        <div className="max-w-7xl mx-auto">
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="mb-16 md:mb-24"
+          >
+            <h2 className="text-4xl md:text-7xl font-bold tracking-tighter uppercase">Disciplines</h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[300px]">
+            {/* Bento 1 */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="md:col-span-8 bg-zinc-50 dark:bg-zinc-950 rounded-3xl p-10 flex flex-col justify-between group overflow-hidden relative"
+            >
+              <div className="relative z-10">
+                <Code size={40} className="text-indigo-500 mb-6" />
+                <h3 className="text-3xl font-bold tracking-tight mb-3">Web & Mobile</h3>
+                <p className="text-zinc-600 dark:text-zinc-400 max-w-md text-lg">
+                  Engineering fluid, responsive applications with React, Tailwind, and scalable backends.
+                </p>
+              </div>
+              <div className="absolute -bottom-24 -right-24 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl group-hover:bg-indigo-500/20 transition-all duration-700" />
+            </motion.div>
+
+            {/* Bento 2 */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="md:col-span-4 bg-zinc-50 dark:bg-zinc-950 rounded-3xl p-10 flex flex-col justify-between group"
+            >
+              <Shield size={40} className="text-emerald-500 mb-6" />
+              <div>
+                <h3 className="text-2xl font-bold tracking-tight mb-2">Cybersecurity</h3>
+                <p className="text-zinc-600 dark:text-zinc-400">
+                  Implementing robust security architectures and threat mitigation.
+                </p>
+              </div>
+            </motion.div>
+
+            {/* Bento 3 (Wide Parallax) */}
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="md:col-span-12 bg-indigo-600 rounded-3xl p-10 flex flex-col md:flex-row justify-between items-start md:items-end text-white overflow-hidden relative group"
+            >
+              <div className="relative z-10 max-w-xl">
+                <BrainCircuit size={40} className="text-indigo-200 mb-6" />
+                <h3 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">AI & Data</h3>
+                <p className="text-indigo-100 text-lg leading-relaxed">
+                  Leveraging machine learning models and data pipelines to extract actionable insights and automate workflows.
+                </p>
+              </div>
+              <motion.div 
+                style={{ y: yParallaxSlow }}
+                className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-white/10 to-transparent rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"
+              />
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Gallery Section */}
+      <section className="py-24 px-6 md:px-12 lg:px-24">
+        <React.Suspense fallback={<div className="h-[60vh] bg-zinc-100 dark:bg-zinc-900 animate-pulse rounded-3xl" />}>
+          <EducationalGallery />
+        </React.Suspense>
+      </section>
+
       <CVPreviewModal isOpen={isCVOpen} onClose={() => setIsCVOpen(false)} />
     </div>
   );

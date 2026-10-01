@@ -1,202 +1,133 @@
-
 import React, { useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
+import { motion, useScroll, useTransform, useInView } from 'framer-motion';
 import DecorativeAnimations from '../components/DecorativeAnimations';
-import TrueFocus from '../components/animations/TrueFocus';
-import ScrambledText from '../components/animations/ScrambledText';
 
-/* ─── Sidebar card ──────────────────────────────────────────── */
-const SideCard = ({
-  icon, iconColor, title, children, delay = 0,
-}: {
-  icon: string; iconColor: string; title: string;
-  children: React.ReactNode; delay?: number;
-}) => {
-  const ref    = useRef<HTMLDivElement>(null);
+/* ─── Asymmetric Sidebar Card ──────────────────────────────── */
+const SideCard = ({ icon, title, children, delay = 0 }: any) => {
+  const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: '-40px' });
-
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, x: 40 }}
+      initial={{ opacity: 0, x: -20 }}
       animate={inView ? { opacity: 1, x: 0 } : {}}
-      transition={{ duration: 0.6, delay, ease: "easeOut" }}
-      className="glass-card glow-border rounded-2xl p-6"
+      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+      className="p-8 border-l-2 border-zinc-200 dark:border-zinc-800 hover:border-indigo-500 transition-colors duration-500 group"
     >
-      <div className="flex items-center mb-4 gap-3">
-        <div className={`w-10 h-10 rounded-xl ${iconColor} flex items-center justify-center`}>
-          <span className="text-xl leading-none">{icon}</span>
-        </div>
-        <h3 className="text-lg font-bold text-gray-900 dark:text-white">{title}</h3>
+      <div className="flex items-center mb-6 gap-4">
+        <span className="text-3xl grayscale group-hover:grayscale-0 transition-all">{icon}</span>
+        <h3 className="text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50">{title}</h3>
       </div>
-      {children}
+      <div className="pl-4 border-l-2 border-zinc-100 dark:border-zinc-900">
+        {children}
+      </div>
     </motion.div>
   );
 };
 
-/* ─── Interest list item ────────────────────────────────────── */
-const InterestItem = ({ text, color }: { text: string; color: string }) => (
-  <li className="flex items-center gap-2 text-gray-600 dark:text-gray-300 text-sm">
-    <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${color}`} />
-    {text}
-  </li>
-);
-
 const About = () => {
-  const headerRef = useRef<HTMLDivElement>(null);
-  const bioRef    = useRef<HTMLDivElement>(null);
-  const bioInView = useInView(bioRef, { once: true, margin: '-60px' });
+  const { scrollYProgress } = useScroll();
+  const yParallax = useTransform(scrollYProgress, [0, 1], [0, -200]);
 
   return (
-    <div className="min-h-screen mesh-bg pt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+    <div className="min-h-[100dvh] bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-50 selection:bg-indigo-500 selection:text-white pt-32 pb-24 overflow-hidden">
+      <DecorativeAnimations fullBackground={true} />
+      <div className="max-w-[1400px] mx-auto px-6 md:px-12 lg:px-24">
 
-        {/* ── Header ── */}
-        <div ref={headerRef} className="text-center mb-16 relative h-36 overflow-hidden">
-          <DecorativeAnimations />
-          <div className="relative z-10 pt-4">
-            <TrueFocus
-              text="About Me"
-              className="text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4"
-              enableHover={true}
-            />
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.8, duration: 0.5 }}
-              className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
+        {/* ── Header (Awwwards Style) ── */}
+        <div className="mb-32 relative">
+          <div className="overflow-hidden">
+            <motion.h1 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              className="text-[12vw] lg:text-[8vw] font-bold tracking-tighter leading-[0.85] uppercase"
             >
-              Get to know more about my journey, education, and experiences in the world of technology
-            </motion.p>
+              The Story
+            </motion.h1>
           </div>
+          <div className="overflow-hidden">
+            <motion.h1 
+              initial={{ y: "100%" }}
+              animate={{ y: 0 }}
+              transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+              className="text-[12vw] lg:text-[8vw] font-bold tracking-tighter leading-[0.85] uppercase italic text-indigo-600 dark:text-indigo-400"
+            >
+              Behind the Code
+            </motion.h1>
+          </div>
+          <motion.div 
+            style={{ y: yParallax }}
+            className="absolute top-0 right-12 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl -z-10"
+          />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] gap-24">
 
-          {/* ── Main Biography ── */}
-          <div className="lg:col-span-2 space-y-8">
+          {/* ── Main Biography (Brutalist Typography) ── */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+            className="flex flex-col gap-12"
+          >
+            <div className="text-xl md:text-2xl text-zinc-600 dark:text-zinc-400 leading-relaxed font-medium">
+              Hello! I'm Hafidz Rahmatullah, a passionate Computer Science student currently pursuing my D4 degree in Informatics Engineering at Universitas Harkat Negeri. My journey in technology began with a curiosity about how digital systems work and has evolved into a deep passion for creating innovative solutions.
+            </div>
+            
+            <div className="w-full h-px bg-zinc-200 dark:bg-zinc-800" />
+            
+            <div className="text-lg text-zinc-500 dark:text-zinc-500 leading-relaxed">
+              I specialize in web and mobile development, with a particular interest in creating user-friendly applications that solve real-world problems. My technical expertise spans across multiple domains including frontend and backend development, mobile app creation, and cybersecurity.
+            </div>
+            
+            <div className="text-lg text-zinc-500 dark:text-zinc-500 leading-relaxed">
+              Beyond coding, I'm fascinated by the intersection of technology and security. Cybersecurity has become one of my primary interests, as I believe in the importance of building secure and robust digital systems in our increasingly connected world.
+            </div>
+          </motion.div>
 
-            {/* Bio card */}
-            <motion.div
-              ref={bioRef}
-              initial={{ opacity: 0, y: 40 }}
-              animate={bioInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-              className="glass-card glow-border rounded-2xl p-8"
-            >
-              <TrueFocus
-                text="My Story"
-                className="text-2xl font-bold text-gray-900 dark:text-white mb-6"
-                enableHover={true}
-              />
-              <div className="space-y-4">
-                {[
-                  { text: "Hello! I'm Hafidz Rahmatullah, a passionate Computer Science student currently pursuing my D4 degree in Informatics Engineering at Universitas Harkat Negeri. My journey in technology began with a curiosity about how digital systems work and has evolved into a deep passion for creating innovative solutions.", speed: 100 },
-                  { text: "I specialize in web and mobile development, with a particular interest in creating user-friendly applications that solve real-world problems. My technical expertise spans across multiple domains including frontend and backend development, mobile app creation, and cybersecurity.", speed: 200 },
-                  { text: "Beyond coding, I'm fascinated by the intersection of technology and security. Cybersecurity has become one of my primary interests, as I believe in the importance of building secure and robust digital systems in our increasingly connected world.", speed: 300 },
-                  { text: "I'm always eager to learn new technologies and collaborate on projects that challenge me to grow as a developer. Whether it's exploring AI and data analysis or diving deep into the latest web frameworks, I approach every learning opportunity with enthusiasm and dedication.", speed: 400 },
-                ].map(({ text, speed }, i) => (
-                  <ScrambledText
-                    key={i}
-                    text={text}
-                    className="text-gray-600 dark:text-gray-300 leading-relaxed text-sm"
-                    scrambleSpeed={30}
-                    revealSpeed={speed}
-                  />
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Interests card */}
-            <motion.div
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.7, ease: "easeOut" }}
-              className="glass-card glow-border rounded-2xl p-8"
-            >
-              <TrueFocus
-                text="Areas of Interest"
-                className="text-2xl font-bold text-gray-900 dark:text-white mb-6"
-                enableHover={true}
-              />
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div>
-                  <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center text-xs">
-                      ⚡
-                    </span>
-                    Development
-                  </h3>
-                  <ul className="space-y-2">
-                    {['Web Development (Frontend & Backend)', 'Mobile App Development', 'Full-Stack Applications', 'API Design & Integration'].map(t => (
-                      <InterestItem key={t} text={t} color="bg-indigo-500" />
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <h3 className="text-base font-semibold text-gray-900 dark:text-white mb-3 flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center text-xs">
-                      ⚡
-                    </span>
-                    Emerging Tech
-                  </h3>
-                  <ul className="space-y-2">
-                    {['Artificial Intelligence', 'Cybersecurity', 'Data Analysis', 'IoT & Arduino Projects'].map(t => (
-                      <InterestItem key={t} text={t} color="bg-purple-500" />
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* ── Sidebar ── */}
-          <div className="space-y-6">
-            <SideCard icon="🎓" iconColor="bg-gradient-to-br from-blue-500 to-indigo-600" title="Education" delay={0}>
-              <div>
-                <h4 className="font-semibold text-gray-900 dark:text-white text-sm">D4 Informatics Engineering</h4>
-                <p className="text-gray-600 dark:text-gray-300 text-sm mt-0.5">Universitas Harkat Negeri</p>
-                <span className="inline-block mt-2 px-2 py-0.5 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 text-xs font-medium">
-                  2021 – Present
-                </span>
-              </div>
-            </SideCard>
-
-            <SideCard icon="👥" iconColor="bg-gradient-to-br from-purple-500 to-violet-600" title="Organizations" delay={0.1}>
-              <div className="space-y-4">
-                {[
-                  { title: 'Tech Community Member', desc: 'Active participant in various tech communities' },
-                  { title: 'Study Group Leader',    desc: 'Leading programming study sessions' },
-                ].map(({ title, desc }) => (
-                  <div key={title}>
-                    <h4 className="font-semibold text-gray-900 dark:text-white text-sm">{title}</h4>
-                    <p className="text-gray-500 dark:text-gray-400 text-xs mt-0.5">{desc}</p>
+          {/* ── Sticky Sidebar ── */}
+          <div className="relative">
+            <div className="sticky top-32 flex flex-col gap-8">
+              <SideCard icon="🎓" title="Education" delay={0.4}>
+                <div className="flex flex-col gap-1">
+                  <h4 className="font-semibold text-zinc-900 dark:text-zinc-50 text-lg">D4 Informatics Engineering</h4>
+                  <p className="text-zinc-500">Universitas Harkat Negeri</p>
+                  <div className="mt-2 text-indigo-500 font-mono text-sm uppercase tracking-widest">
+                    2021 - Present
                   </div>
-                ))}
-              </div>
-            </SideCard>
+                </div>
+              </SideCard>
 
-            <SideCard icon="🏆" iconColor="bg-gradient-to-br from-green-500 to-emerald-600" title="Achievements" delay={0.2}>
-              <div className="space-y-3">
-                {[
-                  { text: 'Multiple Technical Certifications', color: 'bg-blue-500' },
-                  { text: 'Scholarship Recipient',            color: 'bg-purple-500' },
-                  { text: 'Competition Participant',          color: 'bg-green-500' },
-                ].map(({ text, color }) => (
-                  <div key={text} className="flex items-center gap-2">
-                    <span className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${color}`} />
-                    <span className="text-gray-600 dark:text-gray-300 text-sm">{text}</span>
-                  </div>
-                ))}
-              </div>
-            </SideCard>
+              <SideCard icon="👥" title="Organizations" delay={0.5}>
+                <div className="flex flex-col gap-6">
+                  {[
+                    { title: 'Tech Community Member', desc: 'Active participant in various tech communities' },
+                    { title: 'Study Group Leader',    desc: 'Leading programming study sessions' },
+                  ].map(({ title, desc }) => (
+                    <div key={title} className="flex flex-col gap-1">
+                      <h4 className="font-semibold text-zinc-900 dark:text-zinc-50">{title}</h4>
+                      <p className="text-zinc-500">{desc}</p>
+                    </div>
+                  ))}
+                </div>
+              </SideCard>
 
-            <SideCard icon="📅" iconColor="bg-gradient-to-br from-pink-500 to-rose-600" title="Current Focus" delay={0.3}>
-              <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
-                Currently focusing on advanced web development techniques, cybersecurity practices, and exploring AI/ML applications in software development.
-              </p>
-            </SideCard>
+              <SideCard icon="🏆" title="Achievements" delay={0.6}>
+                <ul className="flex flex-col gap-4">
+                  {[
+                    'Multiple Technical Certifications',
+                    'Scholarship Recipient',
+                    'Competition Participant',
+                  ].map(text => (
+                    <li key={text} className="flex items-center gap-4 text-zinc-600 dark:text-zinc-400 font-medium">
+                      <span className="w-8 h-[2px] bg-indigo-500 flex-shrink-0" />
+                      {text}
+                    </li>
+                  ))}
+                </ul>
+              </SideCard>
+            </div>
           </div>
         </div>
       </div>

@@ -20,7 +20,8 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				sans: ['Inter Variable', 'Inter Fallback', 'system-ui', 'sans-serif'],
+				sans: ['"Geist Sans"', 'system-ui', 'sans-serif'],
+				mono: ['"Geist Mono"', 'monospace'],
 			},
 			perspective: {
 				'1000': '1000px',
