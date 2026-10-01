@@ -149,9 +149,9 @@ export const experiences: Experience[] = [
       'PWA',
     ],
     images: [
-      'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&q=80&w=800',
-      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800',
-      'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=800',
+      '/images/experience/usahakupos1.webp',
+      '/images/experience/usahakupos2.webp',
+      '/images/experience/usahakupos3.webp',
     ],
     liveUrl: 'https://www.usahakupos.my.id/',
     color: {
