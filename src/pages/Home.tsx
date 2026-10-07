@@ -98,23 +98,24 @@ const Home = () => {
       
       {/* ─── Hero Section (Awwwards Style) ─── */}
       <section className="relative min-h-[100dvh] flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-32 pb-16">
-        
-        {/* Floating Badge */}
-        <motion.div 
-          className="absolute top-32 left-6 md:left-12 lg:left-24 z-20 flex gap-4"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-        >
-          <div className="px-4 py-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md text-xs font-mono uppercase tracking-wider flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            Open to work
-          </div>
-        </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end relative z-10">
           
           {/* Left: Giant Typography */}
+
+          {/*Open to Work Badge*/}
+          <motion.div 
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="mb-6 w-fit"
+            >
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs font-mono uppercase tracking-widest text-zinc-600 dark:text-zinc-400">Open to work</span>
+              </div>
+            </motion.div>
+
           <div className="lg:col-span-8 flex flex-col gap-2 relative z-20">
             <div className="overflow-hidden">
               <motion.h1 
