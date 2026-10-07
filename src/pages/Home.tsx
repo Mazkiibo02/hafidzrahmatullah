@@ -102,9 +102,9 @@ const Home = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end relative z-10">
           
           {/* Left: Giant Typography */}
-
-          {/*Open to Work Badge*/}
-          <motion.div 
+          <div className="lg:col-span-8 flex flex-col gap-2 relative z-20 mt-12 lg:mt-0">
+            {/* Open to Work Badge */}
+            <motion.div 
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.2 }}
@@ -116,7 +116,6 @@ const Home = () => {
               </div>
             </motion.div>
 
-          <div className="lg:col-span-8 flex flex-col gap-2 relative z-20">
             <div className="overflow-hidden">
               <motion.h1 
                 initial={{ y: "100%" }}
@@ -132,7 +131,7 @@ const Home = () => {
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
                 transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="text-[10vw] lg:text-[7vw] font-bold tracking-tighter leading-[0.85] uppercase italic text-indigo-600 dark:text-indigo-400"
+                className="text-[10.5vw] lg:text-[7vw] font-bold tracking-tighter leading-[0.85] uppercase italic text-indigo-600 dark:text-indigo-400"
               >
                 RAHMATULLAH
               </motion.h1>
@@ -142,7 +141,7 @@ const Home = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.8, delay: 0.6 }}
-              className="mt-12 text-xl md:text-2xl font-medium max-w-xl leading-relaxed text-zinc-600 dark:text-zinc-400"
+              className="mt-8 md:mt-12 text-lg md:text-2xl font-medium max-w-xl leading-relaxed text-zinc-600 dark:text-zinc-400"
             >
               Fullstack Developer engineering high-performance web, mobile, and secure digital experiences.
             </motion.p>
