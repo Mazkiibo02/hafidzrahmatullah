@@ -131,7 +131,7 @@ const Home = () => {
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
                 transition={{ duration: 0.9, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-                className="text-[14vw] lg:text-[7vw] font-bold tracking-tighter leading-[0.85] uppercase italic text-indigo-600 dark:text-indigo-400"
+                className="text-[10vw] lg:text-[7vw] font-bold tracking-tighter leading-[0.85] uppercase italic text-indigo-600 dark:text-indigo-400"
               >
                 RAHMATULLAH
               </motion.h1>
@@ -172,7 +172,7 @@ const Home = () => {
           </div>
 
           {/* Right: Parallax Image */}
-          <div className="lg:col-span-4 relative h-[60vh] lg:h-[80vh] w-full hidden md:block">
+          <div className="lg:col-span-4 relative h-[45vh] md:h-[60vh] lg:h-[80vh] w-full mt-12 lg:mt-0 block">
             <motion.div 
               style={{ y: yParallax }}
               className="absolute top-0 right-0 w-full h-full rounded-[2.5rem] overflow-hidden grayscale hover:grayscale-0 transition-all duration-700 cursor-crosshair origin-bottom border border-zinc-200 dark:border-zinc-800"
